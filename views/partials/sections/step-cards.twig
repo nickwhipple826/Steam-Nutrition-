@@ -1,0 +1,38 @@
+<section
+  class='step-cards'
+  data-scheme='{{ color }}'
+>
+  <h2>{{ heading|esc_html }}</h2>
+
+  {% if intro %}
+    <div class='step-cards__intro'>
+      {{ intro|wp_kses_post }}
+    </div>
+  {% endif %}
+
+  <ol class='step-cards__list'>
+    {% for step in steps %}
+      <li data-scheme='{{ card_color }}'>
+        <div class='step-cards__header'>
+          <span class='step-cards__number'>{{ loop.index }}</span>
+          <h3>{{ step.title|esc_html }}</h3>
+        </div>
+
+        {% if step.subtitle %}
+          <div class='step-cards__subtitle'>{{ step.subtitle|esc_html }}</div>
+        {% endif %}
+
+        <div class='step-cards__content'>
+          {{ step.content|wp_kses_post }}
+        </div>
+      </li>
+    {% endfor %}
+  </ol>
+
+  {% if outro %}
+    <div class='step-cards__outro'>
+      {{ outro|wp_kses_post }}
+    </div>
+  {% endif %}
+
+</section>

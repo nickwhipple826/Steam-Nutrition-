@@ -1,0 +1,26 @@
+@use '../variables/colors' as *;
+
+%button {
+  border: 2px solid var(--button-background-color);
+  background-color: var(--button-background-color);
+
+  padding: var(--space-2xs, 0.5rem) var(--space-s);
+
+  color: var(--button-text-color);
+  text-decoration: none;
+  text-align: center;
+  font-size: var(--step-0);
+  font-weight: 700;
+  line-height: 1;
+
+  min-width: 100px;
+  max-width: max-content;
+
+  transition: all 250ms ease-in-out;
+
+  &:hover {
+    border-color: transparent;
+    background-color: var(--button-text-color);
+    color: var(--button-background-color);
+  }
+}

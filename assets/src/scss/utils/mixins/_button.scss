@@ -1,0 +1,21 @@
+@use 'sass:color';
+
+@mixin button-colors ($background, $text, $lighten: false) {
+  --button-background-color: #{$background};
+  --button-text-color: #{$text};
+  @if ($lighten) {
+    --button-background-color-hover: color.adjust($background, $lightness: 10%);
+  } @else {
+    --button-background-color-hover: color.adjust($background, $lightness: -10%);
+  }
+}
+
+@mixin button-outline {
+  background-color: transparent;
+  color: var(--button-background-color);
+
+  &:hover {
+    background-color: var(--button-background-color);
+    color: var(--button-text-color);
+  }
+}

@@ -1,0 +1,82 @@
+<section
+  class='team-list'
+  data-variant='{{ variant }}'
+  data-scheme='{{ color }}'
+>
+  {% if variant == 'single' %}
+    <div class='description'>
+      <h2>{{ heading|esc_html }}</h2>
+
+      {{ content|wp_kses_post }}
+    </div>
+
+    <div class='featured-member'>
+      <h3>{{ featured_member.name|esc_html }}</h3>
+
+      <div class='position'>{{ featured_member.position|esc_html }}</div>
+
+      {% if featured_member.description %}
+        <p class='description'>{{ featured_member.description|esc_html }}</p>
+      {% endif %}
+
+      {% if featured_member.phone %}
+        <a href='{{ featured_member.phone|esc_url|tel }}' class='phone'>{{ featured_member.phone|esc_html }}</a>
+      {% endif %}
+
+      {% if featured_member.email %}
+        <a href='mailto:{{ featured_member.email|esc_attr }}' class='phone'>
+          {{ featured_member.email|esc_html|obfuscate_email }}
+        </a>
+      {% endif %}
+    </div>
+
+  {% elseif variant == 'compact' %}
+
+    <h2>{{ heading|esc_html }}</h2>
+
+    {% if content %}
+      <div class='description'>
+        {{ content|wp_kses_post }}
+      </div>
+    {% endif %}
+
+    <ul class='members'>
+      {% for member in members %}
+        <li class='member'>
+          <strong>{{ member.name|esc_html }}</strong> | {{ member.position|esc_html }}
+        </li>
+      {% endfor %}
+    </ul>
+
+  {% else %}
+
+    <h2>{{ heading|esc_html }}</h2>
+
+    {% if content %}
+      <div class='description'>
+        {{ content|wp_kses_post }}
+      </div>
+    {% endif %}
+
+    <ul class='members'>
+      {% for member in members %}
+        <li class='member'>
+          <div class='position'>{{ member.position|esc_html }}</div>
+
+          <h3>{{ member.name|esc_html }}</h3>
+
+          {% if member.phone %}
+            <a href='{{ member.phone|esc_url|tel }}' class='phone'>{{ member.phone|esc_html }}</a>
+          {% endif %}
+
+          {% if member.email %}
+            <a href='mailto:{{ member.email|esc_attr }}' class='phone'>
+              {{ member.email|esc_html|obfuscate_email }}
+            </a>
+          {% endif %}
+        </li>
+      {% endfor %}
+    </ul>
+
+  {% endif %}
+</section>

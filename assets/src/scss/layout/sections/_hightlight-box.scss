@@ -1,0 +1,51 @@
+@use '../../utils/variables/colors' as *;
+
+.highlight-box {
+  padding-block: var(--space-xl);
+  padding-inline: var(--space-xl);
+  text-align: center;
+
+  &__inner {
+    max-width: 1000px;
+    margin-inline: auto;
+
+    // Only takes on the card look when it's actually carrying its own
+    // scheme (i.e. the white box nested inside a gold section)
+    &[data-scheme] {
+      padding: var(--space-l);
+      border-radius: 4px;
+    }
+  }
+
+  h2 {
+    max-width: 800px;
+    margin-inline: auto;
+    margin-bottom: var(--space-xs);
+  }
+
+  &__content {
+    max-width: 800px;
+    margin-inline: auto;
+    margin-bottom: var(--space-l);
+
+    p {
+      margin-bottom: var(--space-xs);
+    }
+
+    a {
+      text-decoration: underline;
+
+      &:hover {
+        text-decoration: none;
+      }
+    }
+  }
+
+  @media (max-width: 1000px) or (orientation: portrait) {
+    padding-inline: var(--space-m);
+
+    &__inner[data-scheme] {
+      padding: var(--space-m);
+    }
+  }
+}

@@ -1,0 +1,178 @@
+{#
+macros/picture.twig
+=====================================================================
+Renders a <picture> element with a WebP <source> and an original-
+format <img> fallback. Import this file in any template that needs
+optimised image output.
+
+Usage
+-----
+{% import 'macros/picture.twig' as picture %}
+
+{# Minimal — just an attachment ID #}
+  {{ picture.render(post.thumbnail_id) }}
+
+  {# With a specific registered size #}
+  {{ picture.render(post.thumbnail_id, 'large') }}
+
+  {# Fully specified #}
+  {{ picture.render(
+    post.thumbnail_id,
+    'hero',
+    'Hero image showing the team at work',
+    'w-full object-cover',
+    { loading: 'eager', fetchpriority: 'high' }
+  ) }}
+
+Parameters
+----------
+attachmentId  int     WordPress attachment post ID (required).
+size          string  Registered image size name. Default: 'large'.
+alt           string  Alt text. Defaults to the attachment's alt meta.
+class         string  CSS class(es) applied to the <img> element.
+attrs         object  Extra HTML attributes on <img> (loading, fetchpriority, etc.).
+loading defaults to 'lazy' unless overridden.
+
+How it works
+------------
+wp_get_attachment_image_src() is called for the requested size. Because
+ImageOptimizationService rewrites attachment metadata to point at the
+.webp file, the primary src returned is already a .webp URL.
+
+A fallback src is derived by replacing the .webp extension with the
+original format (.jpg/.png/.gif), read from the `_webp_original_ext`
+post meta key written by ImageOptimizationService. This correctly handles
+both JPEG and PNG originals rather than assuming .jpg for everything.
+Falls back to 'jpg' for attachments not processed by the service.
+
+Width and height are included on <img> to prevent layout shift (CLS).
+#}
+
+{% macro render(attachmentId, size, alt, class, attrs) %}
+  {%- set size  = size  ?? 'large' -%}
+  {%- set attrs = attrs ?? {} -%}
+
+  {#
+  Timber exposes wp_get_attachment_image_src() as a global function.
+  It returns [url, width, height, is_intermediate] or false.
+  #}
+  {%- set src_data = fn('wp_get_attachment_image_src', attachmentId, size) -%}
+
+  {%- if src_data -%}
+    {%- set webp_url  = src_data[0] -%}
+    {%- set img_w     = src_data[1] -%}
+    {%- set img_h     = src_data[2] -%}
+
+    {# Read the original extension stored by ImageOptimizationService so that
+       PNG originals get a .png fallback, not a broken .jpg URL. #}
+    {%- set original_ext = fn('get_post_meta', attachmentId, '_webp_original_ext', true) -%}
+    {%- set original_ext = (original_ext is not empty) ? original_ext : 'jpg' -%}
+    {%- set fallback_url = webp_url | replace({'.webp': '.' ~ original_ext}) -%}
+
+    {# Resolve alt text: explicit arg > attachment alt meta > empty string. #}
+    {%- set resolved_alt = alt ?? fn('get_post_meta', attachmentId, '_wp_attachment_image_alt', true) ?? '' -%}
+
+    {# Default to lazy loading unless the caller opts out. #}
+    {%- set loading = attrs.loading ?? 'lazy' -%}
+
+    <picture>
+      <source srcset="{{ webp_url }}" type="image/webp">
+      <img
+        src="{{ fallback_url }}"
+        alt="{{ resolved_alt | e }}"
+        width="{{ img_w }}"
+        height="{{ img_h }}"
+        loading="{{ loading }}"
+        {%- if class is not empty %} class="{{ class }}"{% endif %}
+      {%- for attr, value in attrs %}
+        {%- if attr != 'loading' and value is not null %} {{ attr }}="{{ value }}"{% endif %}
+      {%- endfor %}
+      >
+    </picture>
+  {%- endif -%}
+{% endmacro %}
+
+
+{#
+Srcset variant — renders a <picture> with a full WebP srcset for
+responsive images. Use when you need the browser to pick the best
+size rather than serving a single fixed image.
+
+Usage
+-----
+{% import 'macros/picture.twig' as picture %}
+
+{{ picture.responsive(
+  post.thumbnail_id,
+  ['thumbnail', 'medium', 'large', 'full'],
+  '(max-width: 640px) 100vw, 50vw',
+  'Hero banner',
+  'w-full'
+) }}
+
+Parameters
+----------
+attachmentId  int     WordPress attachment post ID (required).
+sizes_list    array   Registered size names to include in the srcset.
+                      Default: ['medium', 'large', 'full'].
+sizes_attr    string  The HTML `sizes` attribute value. Required for
+                      the browser to select the right srcset entry.
+alt           string  Alt text. Defaults to attachment alt meta.
+class         string  CSS class(es) applied to the <img> element.
+attrs         object  Extra HTML attributes on <img>.
+#}
+
+{% macro responsive(attachmentId, sizes_list, sizes_attr, alt, class, attrs) %}
+  {%- set sizes_list  = sizes_list ?? ['medium', 'large', 'full'] -%}
+  {%- set sizes_attr  = sizes_attr ?? '100vw' -%}
+  {%- set attrs       = attrs ?? {} -%}
+
+  {%- set webp_srcset      = [] -%}
+  {%- set fallback_srcset  = [] -%}
+  {%- set default_src_data = null -%}
+
+  {# Read original extension once — all sizes share the same source format. #}
+  {%- set original_ext = fn('get_post_meta', attachmentId, '_webp_original_ext', true) -%}
+  {%- set original_ext = (original_ext is not empty) ? original_ext : 'jpg' -%}
+
+  {%- for size_name in sizes_list -%}
+    {%- set src_data = fn('wp_get_attachment_image_src', attachmentId, size_name) -%}
+    {%- if src_data -%}
+      {%- set webp_url     = src_data[0] -%}
+      {%- set fallback_url = webp_url | replace({'.webp': '.' ~ original_ext}) -%}
+      {%- set width        = src_data[1] -%}
+
+      {%- set webp_srcset     = webp_srcset     | merge([webp_url     ~ ' ' ~ width ~ 'w']) -%}
+      {%- set fallback_srcset = fallback_srcset | merge([fallback_url ~ ' ' ~ width ~ 'w']) -%}
+
+      {# Use the last (largest) size as the default <img> src. #}
+      {%- set default_src_data = src_data -%}
+    {%- endif -%}
+  {%- endfor -%}
+
+  {%- if default_src_data -%}
+    {%- set resolved_alt = alt ?? fn('get_post_meta', attachmentId, '_wp_attachment_image_alt', true) ?? '' -%}
+    {%- set loading      = attrs.loading ?? 'lazy' -%}
+
+    <picture>
+      <source
+        srcset="{{ webp_srcset | join(', ') }}"
+        sizes="{{ sizes_attr }}"
+        type="image/webp"
+      >
+      <img
+        src="{{ default_src_data[0] | replace({'.webp': '.' ~ original_ext}) }}"
+        srcset="{{ fallback_srcset | join(', ') }}"
+        sizes="{{ sizes_attr }}"
+        alt="{{ resolved_alt | e }}"
+        width="{{ default_src_data[1] }}"
+        height="{{ default_src_data[2] }}"
+        loading="{{ loading }}"
+        {%- if class is not empty %} class="{{ class }}"{% endif %}
+      {%- for attr, value in attrs %}
+        {%- if attr != 'loading' and value is not null %} {{ attr }}="{{ value }}"{% endif %}
+      {%- endfor %}
+      >
+    </picture>
+  {%- endif -%}
+{% endmacro %}

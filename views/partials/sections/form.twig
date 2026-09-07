@@ -1,0 +1,20 @@
+<section
+  class='form'
+  data-scheme='{{ color }}'
+>
+
+  {% if heading %}
+    <h2>{{ heading|esc_html }}</h2>
+  {% endif %}
+
+  {% if subheading %}
+    <p class='form__subheading'>{{ subheading|esc_html }}</p>
+  {% endif %}
+
+  {% if form_id %}
+    <div class='form__wrapper'>
+      {{ fn('gravity_form', form_id, false, false, false, false, true) }}
+    </div>
+  {% endif %}
+
+</section>

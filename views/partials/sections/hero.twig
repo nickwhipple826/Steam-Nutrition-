@@ -1,0 +1,21 @@
+{% import 'macros/picture.twig' as picture %}
+
+<section class='hero'>
+  {{ picture.responsive(background) }}
+
+  <div class="hero-content">
+    {% if subheading %}
+      <p class="hero-content__subheading">{{ subheading|esc_html }}</p>
+    {% endif %}
+
+    <h1>{{ heading|esc_html }}</h1>
+
+    {% if button.url %}
+      {% include 'views/partials/components/button.twig' with {
+        label: button.title,
+        url: button.url,
+        target: button.target,
+      } %}
+    {% endif %}
+  </div>
+</section>

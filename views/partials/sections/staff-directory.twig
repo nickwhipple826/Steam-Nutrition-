@@ -1,0 +1,88 @@
+{% import 'macros/picture.twig' as picture %}
+
+<section
+  class='staff-directory'
+  data-scheme='{{ color }}'
+>
+
+  <h2>{{ heading|esc_html }}</h2>
+
+  <ul class='staff-directory__list'>
+    {% for member in staff_members %}
+      <li class='staff-directory__card'>
+
+        {% if member.photo %}
+          <div class='staff-directory__photo'>
+            {{ picture.render( member.photo, 'medium', member.name ) }}
+          </div>
+        {% endif %}
+
+        <div class='staff-directory__info'>
+          <h3>{{ member.name|esc_html }}</h3>
+          <div class='staff-directory__position'>{{ member.position|esc_html }}</div>
+
+          {% if member.phone %}
+            <a href='{{ member.phone|esc_url|tel }}' class='staff-directory__phone'>
+              {{ member.phone|esc_html }}
+            </a>
+          {% endif %}
+
+          {% if member.email %}
+            <a href='mailto:{{ member.email|esc_attr }}' class='staff-directory__email'>
+              {{ member.email|esc_html|obfuscate_email }}
+            </a>
+          {% endif %}
+
+          {% if member.bio %}
+            <button
+              type='button'
+              class='staff-directory__more-info'
+              data-modal-open='staff-{{ loop.index }}'
+            >
+              More Info
+            </button>
+          {% endif %}
+        </div>
+
+      </li>
+    {% endfor %}
+  </ul>
+
+  {% for member in staff_members %}
+    {% if member.bio %}
+      <div
+        role='dialog'
+        class='staff-directory__modal'
+        data-modal='staff-{{ loop.index }}'
+        aria-modal='true'
+        aria-labelledby='staff-{{ loop.index }}-name'
+        hidden
+      >
+        <div class='staff-directory__modal-content'>
+          <button
+            type='button'
+            class='staff-directory__modal-close'
+            data-modal-close
+            aria-label='Close'
+          >
+            &times;
+          </button>
+
+          {% if member.photo %}
+            <div class='staff-directory__modal-photo'>
+              {{ picture.render( member.photo, 'medium', member.name ) }}
+            </div>
+          {% endif %}
+
+          <h3 id='staff-{{ loop.index }}-name'>{{ member.name|esc_html }}</h3>
+          <div class='staff-directory__position'>{{ member.position|esc_html }}</div>
+
+          <div class='staff-directory__bio'>
+            {{ member.bio|wp_kses_post }}
+          </div>
+        </div>
+      </div>
+    {% endif %}
+  {% endfor %}
+
+</section>

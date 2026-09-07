@@ -1,0 +1,10 @@
+@use '@css/utils/placeholders/button' as *;
+@use '@css/utils/mixins/button' as *;
+
+.button {
+  @extend %button;
+
+  &.outline {
+    @include button-outline;
+  }
+}

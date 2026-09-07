@@ -1,0 +1,129 @@
+@use '../../utils/variables/colors' as *;
+
+.step-cards {
+  padding-block: var(--space-l);
+  padding-inline: var(--space-l);
+
+  h2 {
+    max-width: 1450px;
+    margin-inline: auto;
+    margin-bottom: var(--space-s);
+  }
+
+  &__intro {
+    max-width: 1450px;
+    margin-inline: auto;
+    margin-bottom: var(--space-s);
+
+    p {
+      margin-bottom: var(--space-xs);
+    }
+  }
+
+  &__list {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-m);
+
+    max-width: 1450px;
+    margin-inline: auto;
+    list-style: none;
+
+    li {
+      padding: var(--space-s);
+      border: 1px solid $color-navy;
+      border-radius: 4px;
+    }
+  }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+    margin-bottom: var(--space-3xs, 0.25rem);
+  }
+
+  &__number {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+
+    width: 2em;
+    height: 2em;
+    border-radius: 4px;
+
+    background-color: $color-navy;
+    color: $color-white;
+    font-weight: bold;
+    font-size: var(--step-1);
+  }
+
+  h3 {
+    margin-bottom: 0;
+    font-size: var(--step-1);
+    font-weight: 700;
+    line-height: 1.25;
+  }
+
+  &__subtitle {
+    margin-bottom: var(--space-xs);
+    color: $color-red;
+    font-weight: bold;
+    font-size: 0.9rem;
+  }
+
+  &__content {
+    color: $color-navy;
+    font-size: 0.9rem;
+
+    p {
+      margin-bottom: var(--space-xs);
+    }
+
+    ul, ol {
+      margin: var(--space-xs) 0;
+      padding-inline-start: 1.25em;
+
+      li {
+        padding: 0;
+        border: none;
+        border-radius: 0;
+        margin-bottom: var(--space-3xs, 0.25rem);
+      }
+    }
+
+    a {
+      text-decoration: underline;
+
+      &:hover {
+        text-decoration: none;
+      }
+    }
+  }
+
+  &__outro {
+    max-width: 1450px;
+    margin-inline: auto;
+    margin-top: var(--space-m);
+
+    p {
+      margin-bottom: var(--space-xs);
+    }
+  }
+
+  @media (max-width: 1000px) or (orientation: portrait) {
+    max-width: 1450px;
+    margin-inline: auto;
+    padding-inline: var(--space-m);
+
+    &__list {
+      grid-template-columns: 1fr;
+      padding-inline-start: 0; // <ol> reserves ~40px for numbering by
+                               // default even with list-style: none —
+                               // without resetting it, the whole grid
+                               // sits that much further right than the
+                               // h2/intro above it, which don't have it
+    }
+  }
+}

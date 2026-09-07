@@ -1,0 +1,87 @@
+@use 'sass:map';
+@use '@css/utils/variables/colors' as *;
+
+$schemes: (
+    'white': (
+        bg: $color-white,
+        accent: $color-red,
+        heading: $color-navy,
+        accent-text: $color-red,
+        body: $color-navy,
+        btn-bg: $color-navy,
+        btn-text: $color-white,
+        link: $color-navy
+    ),
+    'maroon': (
+        bg: $color-red,
+        accent: $color-gold,
+        heading: $color-white,
+        accent-text: $color-gold,
+        body: $color-white,
+        btn-bg: $color-white,
+        btn-text: $color-navy,
+        link: $color-navy
+    ),
+    'navy': (
+        bg: $color-navy,
+        accent: $color-red,
+        heading: $color-white,
+        accent-text: $color-gold,
+        body: $color-white,
+        btn-bg: $color-white,
+        btn-text: $color-navy,
+        link: $color-gold
+    ),
+    'gold': (
+        bg: $color-gold,
+        accent: $color-red,
+        heading: $color-navy,
+        accent-text: $color-red,
+        body: $color-navy,
+        btn-bg: $color-white,
+        btn-text: $color-navy,
+        link: $color-navy
+    ),
+);
+
+@each $name, $scheme in $schemes {
+  [data-scheme='#{$name}'] {
+    --bg-color: #{map.get($scheme, bg)};
+    --accent-color: #{map.get($scheme, accent)};
+    --heading-text-color: #{map.get($scheme, heading)};
+    --accent-text-color: #{map.get($scheme, accent-text)};
+    --body-text-color: #{map.get($scheme, body)};
+    --button-background-color: #{map.get($scheme, btn-bg)};
+    --button-text-color: #{map.get($scheme, btn-text)};
+    --link-color: #{map.get($scheme, link)};
+  }
+}
+
+[data-scheme] {
+  background-color: var(--bg-color);
+  color: var(--body-text-color);
+
+  h1, h2, h3, h4 {
+    color: var(--heading-text-color);
+  }
+
+  // Global fix: internal links inside paragraph text now follow the
+  // section's color scheme (navy on white/maroon/gold, gold on navy)
+  // instead of inheriting whatever the browser/editor default was.
+  p a {
+    color: var(--link-color);
+
+    &:hover {
+      text-decoration: none;
+    }
+  }
+
+  // White-scheme sections: the generic swap-based button hover (see
+  // _button.scss) would turn the button white-on-white against this
+  // section's own white background, so it's overridden to sky here
+  // specifically instead.
+  &[data-scheme='white'] .button:hover {
+    background-color: $color-sky;
+    color: $color-white;
+  }
+}

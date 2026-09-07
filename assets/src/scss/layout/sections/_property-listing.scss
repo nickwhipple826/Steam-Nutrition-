@@ -1,0 +1,188 @@
+@use '../../utils/variables/colors' as *;
+
+.property-listing {
+  padding-block: var(--space-l);
+  padding-inline: var(--space-l);
+
+  // HEADING
+  &__heading {
+    max-width: 1500px;
+    margin-inline: auto;
+    margin-bottom: var(--space-m);
+
+    color: var(--heading-text-color, #{$color-navy});
+    font-size: var(--step-4);
+  }
+
+    &__description {
+    color: var(--body-text-color, #{$color-navy});
+    font-size: var(--step-0);
+    max-width: 1500px;
+    margin-inline: auto;
+    margin-bottom: var(--space-m);
+    }
+
+
+
+
+  // SWIPER CONTAINER
+  &__slider {
+    max-width: 1000px;
+    position: relative;
+    justify-content: center;
+    align-items: center;
+    &.swiper {
+      overflow: hidden;
+    }
+
+    .swiper-wrapper {
+      display: flex;
+      align-items: stretch;
+    }
+
+    .swiper-slide {
+      flex-shrink: 0;
+    }
+  }
+
+  // INDIVIDUAL CARD
+  // .swiper-slide gets this class too: property-listing__card
+&__card {
+  display: grid;
+  grid-template-rows: 1fr 1fr;   // exactly two equal halves
+  height: 375px;                 // set whatever total card height you want
+  border: 1px solid $color-navy;
+  border-radius: 5px;
+  background-color: $color-white;
+  overflow: hidden;
+}
+
+&__image {
+  width: 100%;
+  height: 100%;   // fills its 50% grid row completely
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;   // crops to fill, no distortion
+    display: block;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+  }
+}
+
+&__content {
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-m);
+}
+
+  &__name {
+    font-size: var(--step-1);
+    color: $color-navy;
+    font-weight: 600;
+    padding: auto var(--space-l) 0 var(--space-l);
+  }
+
+  &__address {
+    font-size: var(--step-0);
+    color: $color-navy;
+    padding: auto var(--space-m) 0 var(--space-m);
+  }
+
+  &__more-info {
+    color: $color-navy;
+    font-size: var(--step-0);
+    padding: auto var(--space-m) 0 var(--space-m);
+    text-decoration: none;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  &__more-info-icon {
+    width: 14px;
+    height: 14px;
+  }
+
+  &__button-wrap {
+    display: flex;
+    justify-content: center;
+    margin-top: var(--space-m);
+
+    .button {
+      --button-background-color: #{$color-navy};
+      --button-text-color: #{$color-white};
+
+      &:hover {
+        background-color: $color-sky;
+        color: $color-white;
+      }
+    }
+  }
+
+  // Swiper's own nav button classes — restyle to match Figma's
+  // circular prev/next arrows
+  .swiper-button-prev,
+  .swiper-button-next {
+    color: $color-navy;
+    background-color: transparent;
+    border-radius: 0%;
+
+    svg {
+      width: 20px;
+      height: 20px;
+    }
+  }
+
+  @media (max-width: 1000px) or (orientation: portrait) {
+    &__slider {
+      max-width: 100%;
+    }
+
+    // Swiper sets slide width/transform via inline JS styles, which
+    // normal CSS specificity can't beat — !important is the correct
+    // tool here, not a hack, since we're deliberately overriding a
+    // third-party library's own inline styles.
+    .swiper-wrapper {
+      display: flex !important;
+      flex-direction: column !important;
+      transform: none !important;
+    }
+
+    .swiper-slide {
+      width: 100% !important;
+      margin-right: 0 !important;
+      margin-bottom: var(--space-m);
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+
+    &__card {
+      height: auto; // desktop's fixed 375px assumes a wide, short
+                    // card — full-width mobile cards need to grow
+                    // with their content instead
+      grid-template-rows: 220px auto; // was 1fr 1fr, which needs a
+                                      // definite container height to
+                                      // divide — meaningless once the
+                                      // card's own height is auto
+    }
+
+    &__image {
+      height: 220px; // matches the grid row above directly, instead
+                     // of relying on height:100% resolving against
+                     // an auto-sized parent (percentage heights need
+                     // a definite ancestor height to mean anything)
+    }
+
+    // Nothing to navigate between once everything's stacked in one
+    // column — hide the prev/next arrows on mobile.
+    .swiper-button-prev,
+    .swiper-button-next {
+      display: none;
+    }
+  }
+}

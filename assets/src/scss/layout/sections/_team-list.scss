@@ -1,0 +1,170 @@
+@use '../../utils/variables/colors' as *;
+
+.team-list {
+  padding-block: var(--space-l);
+  padding-inline: var(--space-l);
+
+  h2 {
+    max-width: 1200px;
+    margin-inline: auto;
+    margin-bottom: var(--space-s);
+    color: $color-white;
+    text-align: start;
+  }
+
+  > .description {
+    max-width: 800px;
+    margin-inline: auto;
+    margin-bottom: var(--space-m);
+    color: $color-white;
+    text-align: start;
+
+    p {
+      margin-bottom: var(--space-xs);
+    }
+  }
+
+  .members {
+    list-style: none;
+    padding: 0;
+    max-width: 1450px;
+    margin-inline: auto;
+  }
+
+  .phone {
+    color: $color-navy;
+    text-decoration: underline;
+
+    &:hover {
+      text-decoration: none;
+    }
+  }
+
+  // ===== Full variant (default) =====
+  // Grid of individual member cards
+  &[data-variant='full'],
+  &:not([data-variant]) {
+    .members {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-m);
+    }
+
+    .member {
+      background-color: $color-white;
+      border: 1px solid $color-sky;
+      border-radius: 4px;
+      padding: var(--space-s);
+
+      h3 {
+        margin-bottom: var(--space-3xs, 0.25rem);
+      }
+    }
+
+    .position {
+      color: $color-navy-lite;
+      font-size: var(--step--1);
+      margin-bottom: var(--space-3xs, 0.25rem);
+    }
+
+    .phone {
+      display: block;
+      font-size: var(--step--1);
+    }
+  }
+
+  // ===== Compact variant =====
+  // Condensed single-column list
+  &[data-variant='compact'] {
+    .members {
+      max-width: 800px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .member {
+      padding: var(--space-xs) 0;
+      border-bottom: 1px solid $color-sky;
+      color: $color-navy;
+
+      &:last-child {
+        border-bottom: none;
+      }
+    }
+  }
+
+  // ===== Single variant =====
+  // One featured member alongside a description block
+  &[data-variant='single'] {
+    display: grid;
+    grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+    gap: var(--space-xl) var(--space-l);
+    align-items: start;
+    max-width: 1450px;
+    margin-inline: auto;
+
+    h2 {
+      max-width: none;
+      margin-inline: 0;
+      text-align: left;
+    }
+
+    > .description {
+      max-width: none;
+      margin-inline: 0;
+      margin-bottom: 0;
+      text-align: left;
+
+      p {
+        color: $color-navy;
+      }
+    }
+
+    .featured-member {
+      background-color: $color-white;
+      border: 1px solid $color-sky;
+      border-radius: 4px;
+      padding: var(--space-m);
+
+      h3 {
+        margin-bottom: var(--space-3xs, 0.25rem);
+        color: $color-navy;
+      }
+    }
+
+    .position {
+      color: $color-navy-lite;
+      font-weight: 600;
+      margin-bottom: var(--space-xs);
+    }
+
+    .featured-member .description {
+      color: $color-navy;
+      margin-bottom: var(--space-xs);
+    }
+
+    .phone {
+      display: block;
+      margin-bottom: var(--space-3xs, 0.25rem);
+    }
+  }
+
+  @media (max-width: 1000px) or (orientation: portrait) {
+    padding-inline: var(--space-m);
+
+    &[data-variant='full'],
+    &:not([data-variant]) {
+      .members {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    &[data-variant='single'] {
+      grid-template-columns: 1fr;
+
+      h2, > .description {
+        text-align: center;
+      }
+    }
+  }
+}

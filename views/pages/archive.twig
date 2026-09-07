@@ -1,0 +1,49 @@
+{% extends 'views/layouts/base.twig' %}
+
+{% block content %}
+
+<section class="archive-listing">
+
+  <h1 class="archive-listing__heading">{{ title|esc_html }}</h1>
+
+  {% if posts %}
+    <div class="archive-listing__grid">
+      {% for item in posts %}
+        <div class="archive-listing__card">
+
+          {% if item.thumbnail %}
+            <div class="archive-listing__image">
+              <img src="{{ item.thumbnail.src }}" alt="{{ item.thumbnail.alt }}">
+            </div>
+          {% endif %}
+
+          <div class="archive-listing__content">
+
+            <h2 class="archive-listing__title">{{ item.title|esc_html }}</h2>
+
+            {% if item.post_type == 'properties' and item.acf.address %}
+              <p class="archive-listing__address">{{ item.acf.address }}</p>
+            {% endif %}
+
+            <div class="archive-listing__excerpt">
+              {{ item.preview.length(20).read_more(false) }}
+            </div>
+
+            <a href="{{ item.link }}" class="archive-listing__more-info">
+              More Info
+              <svg class="archive-listing__more-info-icon" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <path d="M3 8h9.5M8.5 3.5 13 8l-4.5 4.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </a>
+          </div>
+
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="archive-listing__empty">Nothing to show yet.</p>
+  {% endif %}
+
+</section>
+
+{% endblock %}

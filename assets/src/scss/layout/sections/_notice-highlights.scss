@@ -1,0 +1,75 @@
+@use '../../utils/variables/colors' as *;
+
+.notice-highlights {
+  padding-block: var(--space-l);
+  padding-inline: var(--space-l);
+  background-color: $color-gold;
+
+  text-align: center;
+
+  h2 {
+    margin-bottom: var(--space-m);
+    color: $color-navy;
+  }
+
+  .button {
+    margin-top: var(--space-s);
+    border-color: $color-white;
+    background-color: $color-white;
+    color: $color-navy;
+
+    &:hover {
+      border-color: $color-navy;
+      background-color: $color-navy;
+      color: $color-white;
+    }
+  }
+
+  &__cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--space-m);
+    margin-bottom: var(--space-l);
+    text-align: left;
+    max-width: 1500px;
+    margin-inline: auto;
+  }
+
+  .notice-card {
+    background-color: $color-white;
+    padding: var(--space-m);
+    border-radius: 4px;
+
+    h3 {
+      margin-top: 0;
+      color: $color-navy;
+    }
+
+    &__excerpt {
+      color: $color-navy;
+      margin-bottom: var(--space-m);
+      max-width: 75%;
+    }
+
+    .button {
+      margin-top: var(--space-s);
+      border-color: $color-navy;
+      background-color: $color-navy;
+      color: $color-white;
+
+      &:hover {
+        border-color: $color-sky;
+        background-color: $color-sky;
+        color: $color-white;
+      }
+    }
+  }
+
+  @media (max-width: 1000px) or (orientation: portrait) {
+    padding-inline: var(--space-m);
+
+    &__cards {
+      grid-template-columns: 1fr;
+    }
+  }
+}

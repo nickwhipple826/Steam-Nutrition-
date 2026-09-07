@@ -1,0 +1,15 @@
+<section
+  class='accordion'
+  data-scheme='{{ color }}'
+>
+  <h2>{{ heading|esc_html }}</h2>
+
+  <article data-accordion>
+    {% for item in accordion_items %}
+      <details data-scheme='white'>
+        <summary>{{ item.title|esc_html }}</summary>
+        <div class='accordion__answer'>{{ item.content|wp_kses_post }}</div>
+      </details>
+    {% endfor %}
+  </article>
+</section>

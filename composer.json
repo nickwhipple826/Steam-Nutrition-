@@ -1,0 +1,13 @@
+{
+  "name": "mcguinnessmedia/boilerplate-theme",
+  "type": "wordpress-theme",
+  "require": {
+    "timber/timber": "^2.3",
+    "stoutlogic/acf-builder": "^1.12"
+  },
+  "autoload": {
+    "psr-4": {
+      "MMM\\": "src/"
+    }
+  }
+}

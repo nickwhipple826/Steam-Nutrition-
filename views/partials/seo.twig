@@ -1,0 +1,37 @@
+<title>{{ seo.title }}</title>
+
+{% if seo.description %}
+  <meta name="description" content="{{ seo.description|e }}">
+{% endif %}
+
+<link rel="canonical" href="{{ seo.canonical_url }}">
+
+{% if seo.robots %}
+  <meta name="robots" content="{{ seo.robots|join(', ') }}">
+{% endif %}
+
+{# OpenGraph #}
+<meta property="og:type" content="{{ seo.og.type }}">
+<meta property="og:title" content="{{ seo.og.title|e }}">
+<meta property="og:description" content="{{ seo.og.description|e }}">
+<meta property="og:url" content="{{ seo.og.url }}">
+{% if seo.og.image %}
+  <meta property="og:image" content="{{ seo.og.image }}">
+{% endif %}
+
+{# Twitter cards #}
+<meta name="twitter:card" content="{{ seo.twitter.card }}">
+<meta name="twitter:title" content="{{ seo.twitter.title|e }}">
+<meta name="twitter:description" content="{{ seo.twitter.description|e }}">
+{% if seo.twitter.image %}
+  <meta name="twitter:image" content="{{ seo.twitter.image }}">
+{% endif %}
+
+{# Schema markup #}
+{% if schemas is defined %}
+  {% for schema in schemas %}
+    <script type="application/ld+json">
+      {{ schema|json_encode(constant('JSON_UNESCAPED_SLASHES'))|raw }}
+    </script>
+  {% endfor %}
+{% endif %}

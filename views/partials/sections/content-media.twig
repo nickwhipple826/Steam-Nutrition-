@@ -1,0 +1,32 @@
+<section
+  class='content-media'
+  data-alignment='{{ alignment }}'
+  data-scheme='{{ color }}'
+>
+  <div class='content-media__inner'>
+
+    {% include 'views/partials/components/media-selector.twig' with { media: media } %}
+
+    <div class='content'>
+
+      <h2>{{ content.heading|wp_kses_post }}</h2>
+
+      {{ content.content|wp_kses_post }}
+
+      {% if content.buttons %}
+        {% for btn in content.buttons %}
+          {% if btn.button.url %}
+            {% include 'views/partials/components/button.twig' with {
+              label: btn.button.title,
+              url: btn.button.url,
+              target: btn.button.target,
+              variant: loop.first ? 'primary' : 'outline',
+            } %}
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+
+    </div>
+
+  </div>
+</section>

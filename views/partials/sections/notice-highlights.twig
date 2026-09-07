@@ -1,0 +1,30 @@
+<section
+  class='notice-highlights'
+  data-scheme='{{ color }}'
+>
+  <h2>{{ heading|esc_html }}</h2>
+
+  <div class='notice-highlights__cards'>
+    {% for notice in recent_notices(count) %}
+      <div class='notice-card'>
+        <h3>{{ notice.title|esc_html }}</h3>
+        <div class='notice-card__excerpt'>
+          {{ notice.preview.length(20).read_more(false) }}
+        </div>
+        {% include 'views/partials/components/button.twig' with {
+          label: 'More Info',
+          url: notice.link,
+        } %}
+      </div>
+    {% endfor %}
+  </div><!-- .notice-highlights__cards -->
+
+  {% if button %}
+    {% include 'views/partials/components/button.twig' with {
+      label: button.title,
+      url: button.url,
+      target: button.target,
+    } %}
+  {% endif %}
+
+</section>

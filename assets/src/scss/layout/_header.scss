@@ -1,0 +1,397 @@
+@use '../utils/variables/colors' as *;
+
+.header-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 200;
+    display: flex;
+    flex-direction: column;
+
+  .site-header {
+    background-color: transparent;
+    position: relative;
+    z-index: 101;
+    transition: background-color 250ms ease-in-out;
+
+    .container {
+        padding-right: 1.85rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-top: 2.75rem;
+        padding-bottom: 2.25rem;
+
+        .site-branding {
+            display: flex;
+            justify-content: left;
+
+            .custom-logo-link {
+                .custom-logo {
+                    height: 100px;
+                    width: auto;
+                    padding-left: 2rem;
+                }
+            }
+        }
+
+        .main-navigation {
+            > ul {
+                list-style: none;
+                gap: 1.85rem;
+                display: flex;
+
+                li {
+                    position: relative;
+                    padding: 0 15px;
+
+                    a {
+                        color: $color-gold-light;
+                        font-weight: 600;
+                        text-decoration: none;
+                        display: flex;
+                        align-items: center;
+                        font-size: var(--step-1);
+                        transition: color 250ms ease-in-out;
+
+                        &:hover {
+                            color: $color-red;
+                        }
+                    }
+
+                    // Caret indicating this item has a dropdown
+                    &.has-dropdown > a::after {
+                        content: '';
+                        display: inline-block;
+                        width: 0;
+                        height: 0;
+                        margin-left: 6px;
+                        border-left: 4px solid transparent;
+                        border-right: 4px solid transparent;
+                        border-top: 5px solid currentColor;
+                    }
+
+                    // Dropdown reveal — hover (mouse) and focus-within
+                    // (keyboard tabbing through the links inside it)
+                    &.has-dropdown:hover > .main-navigation__dropdown,
+                    &.has-dropdown:focus-within > .main-navigation__dropdown {
+                        display: block;
+                    }
+
+                    // Last item's dropdown hangs off the right edge of
+                    // the viewport otherwise — flip it to the right.
+                    &:last-child .main-navigation__dropdown {
+                        left: auto;
+                        right: 0;
+                    }
+                }
+            }
+
+            &__dropdown {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                z-index: 10;
+
+                min-width: 200px;
+                margin: 0;
+                padding: var(--space-2xs, 0.5rem) 0;
+                list-style: none;
+
+                background-color: $color-white;
+                border-radius: 4px;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+
+                li {
+                    padding: 0;
+                }
+
+                a {
+                    display: block;
+                    padding: var(--space-2xs, 0.5rem) var(--space-s);
+                    color: $color-navy !important;
+                    font-weight: 600;
+                    font-size: var(--step-0);
+                    white-space: nowrap;
+
+                    &:hover {
+                        background-color: hsl(0 0% 96%);
+                        color: $color-red !important;
+                    }
+
+                    // No caret on the dropdown's own links
+                    &::after {
+                        display: none;
+                    }
+                }
+            }
+        }
+
+        // ===== HEADER ICONS (search / account / cart) =====
+        // Same gold-light → gold treatment as the nav items.
+        .header-icons {
+            display: flex;
+            align-items: center;
+            gap: 1.25rem;
+
+            &__link {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: $color-gold-light;
+                transition: color 250ms ease-in-out;
+
+                svg {
+                    width: 20px;
+                    height: 20px;
+                }
+
+                &:hover {
+                    color: $color-gold;
+                }
+            }
+        }
+
+        // Hovering the header flips the background to white and
+        // shifts nav items + icons from gold-light to gold.
+        &:hover,
+        &:focus-within {
+            background-color: $color-white;
+
+            .main-navigation > ul > li > a,
+            .header-icons__link {
+                color: $color-gold;
+            }
+
+            .nav-toggle__bar {
+                background-color: $color-navy;
+            }
+        }
+    }
+  }
+
+  // ===== MOBILE MENU TOGGLE (hamburger) =====
+  // Hidden on desktop by default; shown only below the mobile breakpoint.
+  .nav-toggle {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    margin-right: 1rem;
+    flex-shrink: 0;
+
+    background: none;
+    border: none;
+    cursor: pointer;
+
+    &__bar {
+      display: block;
+      width: 24px;
+      height: 2px;
+      background-color: $color-gold-light;
+      transition: transform 0.2s ease, opacity 0.2s ease, background-color 250ms ease-in-out;
+    }
+
+    // Morphs into an X when the panel is open
+    &[aria-expanded='true'] {
+      .nav-toggle__bar:nth-child(1) {
+        transform: translateY(7px) rotate(45deg);
+      }
+
+      .nav-toggle__bar:nth-child(2) {
+        opacity: 0;
+      }
+
+      .nav-toggle__bar:nth-child(3) {
+        transform: translateY(-7px) rotate(-45deg);
+      }
+    }
+  }
+
+  // ===== MOBILE NAV PANEL =====
+  // Off-canvas panel driven by initNav() in nav.ts, which toggles
+  // .is-open (for the slide transition) and [hidden] (once fully
+  // closed, to remove it from the a11y tree / tab order). Hidden
+  // entirely on desktop; JS-controlled below the breakpoint.
+  .mobile-nav-panel,
+  .mobile-nav-backdrop {
+    display: none;
+  }
+
+  @media (max-width: 1000px) or (orientation: portrait) {
+    .site-header .main-navigation,
+    .site-header .header-icons {
+      display: none;
+    }
+
+    .site-header .container {
+  padding-inline: var(--space-m);
+  padding-top: var(--space-l);
+  padding-bottom: var(--space-m);
+  gap: var(--space-3xl);
+  justify-content: space-between;
+}
+
+    .site-header .container .site-branding .custom-logo-link .custom-logo {
+      height: 70px;
+      width: auto;
+      padding-left: 0;
+      justify-content: flex-start;
+    }
+
+    .nav-toggle {
+      display: flex;
+      margin-right: 0;
+      padding-top: 25px;
+    }
+
+    .mobile-nav-backdrop {
+      display: block;
+      position: fixed;
+      inset: 0;
+      z-index: 149; // below the panel, but above the (now-covered) header
+
+      background-color: rgba(0, 0, 0, 0.4);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+
+      &.is-open {
+        opacity: 1;
+      }
+
+      &[hidden] {
+        display: none;
+      }
+    }
+
+    .mobile-nav-panel {
+      display: block;
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      right: 0;
+      z-index: 150; // above the header — fully covers the logo when open
+
+      width: min(85vw, 340px);
+
+      background-color: $color-navy;
+      box-shadow: -4px 0 24px rgba(0, 0, 0, 0.15);
+
+      transform: translateX(100%);
+      transition: transform 0.3s ease;
+
+      &.is-open {
+        transform: translateX(0);
+      }
+
+      &[hidden] {
+        display: none;
+      }
+
+      &__inner {
+        height: 100%;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        padding: calc(var(--space-l) + 56px) var(--space-m) calc(var(--space-l) + 72px);
+      }
+
+      &__close {
+        position: absolute;
+        top: var(--space-m);
+        right: var(--space-m);
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 44px;
+        height: 85px;
+
+        background: none;
+        border: none;
+        cursor: pointer;
+
+        &::before,
+        &::after {
+          content: '';
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          width: 22px;
+          height: 2px;
+          background-color: $color-white;
+        }
+
+        &::before {
+          transform: translate(-50%, -50%) rotate(45deg);
+        }
+
+        &::after {
+          transform: translate(-50%, -50%) rotate(-45deg);
+        }
+
+        &:hover::before,
+        &:hover::after {
+          background-color: $color-gold;
+        }
+      }
+
+      &__logo {
+        position: absolute;
+        bottom: var(--space-l);
+        left: 50%;
+        transform: translateX(-50%);
+
+        img {
+          display: block;
+          height: 40px;
+          width: auto;
+        }
+      }
+
+      &__primary {
+        ul {
+          list-style: none;
+          padding: 0;
+          margin: 0;
+          display: flex;
+          flex-direction: column;
+        }
+
+        a {
+          display: block;
+          padding: var(--space-s) 0;
+          color: $color-white;
+          font-weight: 600;
+          font-size: var(--step-1);
+          text-decoration: none;
+
+          &:hover {
+            color: $color-gold;
+          }
+        }
+      }
+
+      &__sub {
+        padding-left: var(--space-m);
+
+        a {
+          padding: var(--space-2xs, 0.5rem) 0;
+          font-size: var(--step-0);
+          font-weight: 400;
+          color: rgba(255, 255, 255, 0.8);
+
+          &:hover {
+            color: $color-gold;
+          }
+        }
+      }
+    }
+  }
+}

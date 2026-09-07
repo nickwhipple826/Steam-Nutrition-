@@ -1,0 +1,172 @@
+@use '../utils/variables/colors' as *;
+
+.footer {
+    background-color: $color-navy;
+    padding: 25px;
+
+    .container {
+        max-width: 1700px;
+        display: flex;
+        justify-content: space-between;
+        gap: var(--space-xl);
+        flex-wrap: wrap;
+
+        .footer__logo {
+            .footer-logo {
+                height: 75px;
+                width: auto;
+                padding-left: 2rem;
+            }
+        }
+
+        .footer__contact {
+            .footer__contact-group {
+                margin-bottom: 16px;
+
+                &:last-child {
+                    margin-bottom: 0;
+                }
+
+                .footer__contact-label {
+                    color: $color-white;
+                    font-weight: 700;
+                    margin: 0 0 4px;
+                }
+
+                p {
+                    color: rgba(255, 255, 255, 0.8);
+                    margin: 0;
+
+                    a {
+                        color: inherit;
+                        text-decoration: none;
+
+                        &:hover{
+                    color: $color-gold;
+                }
+                    }
+                }
+            }
+        }
+
+        .footer__hours {
+            .footer__hours-label {
+                color: $color-white;
+                font-weight: 700;
+                margin: 0 0 4px;
+            }
+
+            ul {
+                list-style: none;
+                margin: 0;
+                padding: 0;
+
+                li {
+                    color: rgba(255, 255, 255, 0.8);
+                    font-size: 14px;
+                    margin-bottom: 4px;
+
+                    &:last-child {
+                        margin-bottom: 0;
+                    }
+                }
+            }
+        }
+
+        .footer__navigation {
+            .footer__nav {
+                ul {
+                    list-style: none;
+                    margin: 0;
+                    padding: 0;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 12px;
+
+                    li {
+                        a {
+                            color: $color-white;
+                            font-size: 14px;
+                            font-weight: 700;
+                            text-decoration: none;
+
+                            &:hover {
+                                text-decoration: none;
+                                color: $color-gold;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+    }
+
+    .footer__reserved {
+    border-top: 1px solid $color-gold;
+    padding: 16px 0;
+    margin-top: 32px;
+
+    .container {
+        display: block;      // undo the flex from .footer .container
+        margin: 0 auto;      // actually center the container on the page
+        text-align: center;
+
+        p {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 13px;
+            margin: 0;
+
+            & + p {
+                margin-top: 4px;
+            }
+
+            a {
+                color: $color-white;
+                text-decoration: underline;
+
+                &:hover {
+                    color: $color-sky;
+                }
+            }
+        }
+    }
+}
+
+    @media (max-width: 1000px) or (orientation: portrait) {
+    padding: var(--space-m);
+
+    .container {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-areas:
+            "logo    logo"
+            "contact nav"
+            "hours   hours";
+        gap: var(--space-m);
+
+        .footer__logo {
+            grid-area: logo;
+            justify-self: start;
+
+            .footer-logo {
+                height: 50px;
+                width: auto;
+                padding-left: 0;
+            }
+        }
+
+        .footer__contact {
+            grid-area: contact;
+        }
+
+        .footer__navigation {
+            grid-area: nav;
+        }
+
+        .footer__hours {
+            grid-area: hours;
+        }
+    }
+}
+}

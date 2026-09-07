@@ -1,0 +1,17 @@
+{% extends 'views/layouts/base.twig' %}
+
+{% block content %}
+
+  {% if post.acf.hero %}
+    {% include 'views/partials/sections/hero.twig' with {
+      heading: post.acf.hero.heading,
+      background: post.acf.hero.background,
+    } %}
+  {% endif %}
+
+  {% for component in post.components %}
+    {% if not component.fields.section_hidden %}
+      {% include component.view with component %}
+    {% endif %}
+  {% endfor %}
+{% endblock %}

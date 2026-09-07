@@ -1,0 +1,36 @@
+<section class="open-position-listing" data-scheme="{{ color }}">
+
+  <h2 class="open-position-listing__heading">{{ heading|esc_html }}</h2>
+
+  {% if description %}
+    <p class="open-position-listing__description">{{ description|esc_html }}</p>
+  {% endif %}
+
+  <div class="open-position-listing__grid">
+    {% for position in recent_open_positions(3) %}
+    <div class="open-position-listing__card">
+      <h3 class="open-position-listing__name">{{ position.title|esc_html }}</h3>
+      <div class="open-position-listing__excerpt">
+        {{ position.preview.length(12).read_more(false) }}
+      </div>
+      <a href="{{ position.link }}" class="open-position-listing__more-info">
+        More Info
+        <svg class="open-position-listing__more-info-icon" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M3 8h9.5M8.5 3.5 13 8l-4.5 4.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+    </div>
+    {% endfor %}
+  </div>
+
+  {% if button.url %}
+    <div class="open-position-listing__button-wrap">
+      {% include 'views/partials/components/button.twig' with {
+        label: button.title,
+        url: button.url,
+        target: button.target,
+      } %}
+    </div>
+  {% endif %}
+
+</section>

@@ -1,0 +1,6 @@
+<a
+    class='button {{ variant|default('primary')|esc_attr }}'
+    href='{{ url|esc_url }}'
+    target='{{ target|default('_self')|esc_attr }}'>
+  {{ label|esc_html }}
+</a>

@@ -1,0 +1,34 @@
+<section
+  class='callout'
+  data-scheme='{{ color }}'
+>
+  {% if variant == 'card' %}
+  <div
+    class='card'
+    data-scheme='{{ card_color }}'
+  >
+    {% endif %}
+
+    <h2>{{ heading|esc_html }}</h2>
+
+    <div class='content'>
+      {{ content|wp_kses_post }}
+    </div>
+
+    {% if buttons %}
+      <div class='callout__buttons'>
+        {% for row in buttons %}
+          {% include 'views/partials/components/button.twig' with {
+            label: row.link.title,
+            url: row.link.url,
+            target: row.link.target,
+          } %}
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    {% if variant == 'card' %}
+  </div>
+  {% endif %}
+
+</section>

@@ -1,0 +1,68 @@
+{% if media %}
+  <div class='media-wrapper {{ media.type }}'>
+
+    {% if media.type == 'image' and media.image %}
+      <img src="{{ media.image.url }}" alt="{{ media.image.alt }}" />
+
+    {% elseif media.type == 'slider' and media.gallery %}
+      {# TODO: Configure Swiper as needed #}
+      <div class='swiper' data-slider-loop='true' data-slider-navigation='true'>
+        <div class='swiper-wrapper'>
+          {% for image in media.gallery %}
+            <div class='swiper-slide'>
+              <img src="{{ image.url }}" alt="{{ image.alt }}" />
+            </div>
+          {% endfor %}
+        </div>
+        <button class='swiper-button-prev'></button>
+        <button class='swiper-button-next'></button>
+      </div>
+
+    {% elseif media.type == 'embed' and media.embed %}
+      <div class='embed-container'>
+        {{ media.embed|raw }}
+      </div>
+
+    {% elseif media.type == 'upload' and media.upload %}
+      <video controls {% if media.upload_poster %}poster='{{ media.upload_poster.url }}'{% endif %}>
+        {% for source in media.upload %}
+          {% if source.file %}
+            <source
+              src='{{ source.file.url }}'
+              type='{{ source.file.mime_type }}'
+              {% if source.media_query %}media='{{ source.media_query }}'{% endif %}
+            />
+          {% endif %}
+        {% endfor %}
+        <p>Your browser doesn't support HTML5 video. <a href="{{ media.upload[0].file.url }}">Download the video</a> instead.</p>
+      </video>
+
+    {% elseif media.type == 'card' %}
+      <div class='media-card'>
+        <h3 class='media-card__heading'>{{ media.card_heading|esc_html }}</h3>
+
+        {% if media.card_intro %}
+          <p class='media-card__intro'>{{ media.card_intro|esc_html }}</p>
+        {% endif %}
+
+        {% if media.card_list %}
+          <ul class='media-card__list'>
+            {% for row in media.card_list %}
+              <li>{{ row.item|esc_html }}</li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+
+        {% if media.card_button.url %}
+          {% include 'views/partials/components/button.twig' with {
+            label: media.card_button.title,
+            url: media.card_button.url,
+            target: media.card_button.target,
+          } %}
+        {% endif %}
+      </div>
+
+    {% endif %}
+
+  </div>
+{% endif %}

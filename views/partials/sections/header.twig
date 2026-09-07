@@ -1,0 +1,129 @@
+<div class="header-wrapper">
+
+    {# ===== MAIN HEADER =====
+       Fixed/transparent — sits on top of the hero. Turns solid white
+       on hover; nav items + icons shift from gold-light to gold. #}
+    <header class="site-header">
+        <div class="container">
+            <div class="site-branding">
+                {% if site.nav_logo %}
+                    <a href="{{ site.url }}" class="custom-logo-link" rel="home" aria-current="page">
+                        <img src="{{ site.nav_logo }}" class="custom-logo" alt="{{ site.name }}">
+                    </a>
+                {% else %}
+                    <h1 class="site-title"><a href="{{ site.url }}" rel="home">{{ site.name }}</a></h1>
+                {% endif %}
+            </div><!-- .site-branding -->
+
+            <nav id="site-navigation" class="main-navigation">
+                <ul>
+                    {% for item in menu.items %}
+                        <li class="{{ item.children ? 'has-dropdown' : '' }}">
+                            <a href="{{ item.url|e }}" target="{{ item.target|e }}">
+                                {{ item.title|e }}
+                            </a>
+
+                            {% if item.children %}
+                                <ul class="main-navigation__dropdown">
+                                    {% for child in item.children %}
+                                        <li>
+                                            <a href="{{ child.url|e }}" target="{{ child.target|e }}">
+                                                {{ child.title|e }}
+                                            </a>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            </nav><!-- #site-navigation -->
+
+            {# ===== HEADER ICONS ===== #}
+            <div class="header-icons">
+                <a href="#" class="header-icons__link" data-icon="search" aria-label="Search">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="7"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                </a>
+
+                <a href="#" class="header-icons__link" data-icon="account" aria-label="Account">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                </a>
+
+                <a href="#" class="header-icons__link" data-icon="cart" aria-label="Cart">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="9" cy="21" r="1"></circle>
+                        <circle cx="20" cy="21" r="1"></circle>
+                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                    </svg>
+                </a>
+            </div><!-- .header-icons -->
+
+            {# ===== MOBILE MENU TOGGLE ===== #}
+            {# Only visible below the 1000px breakpoint; opens #mobile-nav-panel. #}
+            <button
+                type="button"
+                class="nav-toggle"
+                data-nav-toggle
+                aria-expanded="false"
+                aria-controls="mobile-nav-panel"
+            >
+                <span class="nav-toggle__bar"></span>
+                <span class="nav-toggle__bar"></span>
+                <span class="nav-toggle__bar"></span>
+                <span class="screen-reader-text">Menu</span>
+            </button>
+        </div><!-- .container -->
+    </header><!-- .site-header -->
+
+    {# ===== MOBILE NAV BACKDROP =====
+       Dims the page behind the slide-in panel; clicking it closes the
+       menu. Managed by initNav() the same way as the panel itself. #}
+    <div class="mobile-nav-backdrop" data-nav-backdrop hidden></div>
+
+    {# ===== MOBILE NAV PANEL =====
+       Slide-in panel holding the same links as .main-navigation.
+       Fully hidden on desktop — only relevant below the mobile breakpoint. #}
+    <div id="mobile-nav-panel" class="mobile-nav-panel" data-nav-panel hidden>
+        <button
+            type="button"
+            class="mobile-nav-panel__close"
+            data-nav-close
+        >
+            <span class="screen-reader-text">Close menu</span>
+        </button>
+
+        <div class="mobile-nav-panel__inner">
+            <nav class="mobile-nav-panel__primary" aria-label="Primary">
+                <ul>
+                    {% for item in menu.items %}
+                        <li>
+                            <a href="{{ item.url|e }}" target="{{ item.target|e }}">
+                                {{ item.title|e }}
+                            </a>
+
+                            {% if item.children %}
+                                <ul class="mobile-nav-panel__sub">
+                                    {% for child in item.children %}
+                                        <li>
+                                            <a href="{{ child.url|e }}" target="{{ child.target|e }}">
+                                                {{ child.title|e }}
+                                            </a>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            </nav>
+        </div><!-- .mobile-nav-panel__inner -->
+
+    </div><!-- #mobile-nav-panel -->
+
+</div><!-- .header-wrapper -->

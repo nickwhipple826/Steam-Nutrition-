@@ -1,0 +1,22 @@
+<section
+  class='cta-links'
+  data-scheme='{{ color }}'
+>
+  {% if intro %}
+    <div class='intro'>
+      {{ intro|wp_kses_post }}
+    </div>
+  {% endif %}
+
+  <div class='cta-links__buttons'>
+    {% for row in links %}
+      {% include 'views/partials/components/button.twig' with {
+        label: row.link.title,
+        url: row.link.url,
+        target: row.link.target,
+        variant: 'outline',
+      } %}
+    {% endfor %}
+  </div>
+
+</section>

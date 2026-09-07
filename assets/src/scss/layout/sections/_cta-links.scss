@@ -1,0 +1,73 @@
+@use '../../utils/variables/colors' as *;
+
+.cta-links {
+  padding-block: var(--space-m);
+  padding-inline: var(--space-l);
+
+  text-align: start;
+
+  .intro {
+    max-width: 1500px;
+    margin-inline: auto;
+    margin-bottom: var(--space-m);
+
+    color: $color-navy;
+    font-size: var(--step-1);
+
+    p:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  &__buttons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-m) var(--space-s);
+
+    max-width: 1500px;
+    margin-inline: auto;
+
+    border-bottom: 1px solid $color-gold;
+    padding: 16px 0;
+    margin-top: 32px;
+
+    .button {
+      flex: 1 1 auto;
+      min-width: 360px;
+      text-align: center;
+      border: solid 2.5px $color-navy;
+      border-radius: 15px;
+
+      &:hover {
+        background-color: $color-navy-lite;
+        color: $color-white;
+      }
+    }
+  }
+
+  @media (max-width: 1000px) or (orientation: portrait) {
+    padding-inline: var(--space-m);
+
+    &__buttons {
+      flex-direction: column;
+      flex-wrap: nowrap; // base rule sets wrap for the desktop row
+                         // layout — without overriding it here, a
+                         // column flex container can still wrap into
+                         // a second column instead of staying single-file
+      align-items: stretch;
+
+      .button {
+        min-width: 0;
+        max-width: none; // %button's own `max-width: max-content` caps
+                         // it back down to its text width even with
+                         // align-items: stretch above, which is why
+                         // buttons weren't matching widths or centering
+        width: 100%;
+        text-transform: uppercase;
+        padding: var(--space-s) var(--space-m);
+        font-size: var(--step-0);
+      }
+    }
+  }
+}

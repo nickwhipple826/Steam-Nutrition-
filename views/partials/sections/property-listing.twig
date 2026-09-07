@@ -1,0 +1,59 @@
+<section class="property-listing" data-scheme="{{ color }}">
+
+  <h2 class="property-listing__heading">{{ heading|esc_html }}</h2>
+
+  {% if description %}
+    <p class="property-listing__description">{{ description|esc_html }}</p>
+  {% endif %}
+
+  <div class="swiper property-listing__slider"
+    data-slider-navigation="true"
+    data-slider-slides-per-view="3"
+    data-slider-space-between="24"
+    data-slider-loop="true"
+    data-slider-grab-cursor="true"
+    data-slider-disable-mobile="true"
+  >
+    <div class="swiper-wrapper">
+      {% for property in recent_properties(count) %}
+      <div class="swiper-slide property-listing__card">
+  <div class="property-listing__image">
+    <img src="{{ property.thumbnail.src }}" alt="{{ property.thumbnail.alt }}">
+  </div>
+  <div class="property-listing__content">
+    <h3 class="property-listing__name">{{ property.title|esc_html }}</h3>
+    <p class="property-listing__address">{{ property.acf.address }}</p>
+    <a href="{{ property.link }}" class="property-listing__more-info">
+      More Info
+      <svg class="property-listing__more-info-icon" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M3 8h9.5M8.5 3.5 13 8l-4.5 4.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </a>
+  </div>
+</div>
+      {% endfor %}
+    </div>
+
+    <button class="swiper-button-prev" aria-label="Previous property">
+      <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M10 3 5 8l5 5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+    <button class="swiper-button-next" aria-label="Next property">
+      <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M6 3l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+  </div>
+
+  {% if button.url %}
+    <div class="property-listing__button-wrap">
+      {% include 'views/partials/components/button.twig' with {
+        label: button.title,
+        url: button.url,
+        target: button.target,
+      } %}
+    </div>
+  {% endif %}
+
+</section>

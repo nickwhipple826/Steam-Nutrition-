@@ -1,0 +1,46 @@
+<section
+  class='mission-vision'
+  data-scheme='{{ color }}'
+>
+
+  <div class='mission-vision__text'>
+
+    <h2>{{ mission_heading|esc_html }}</h2>
+    {{ mission_content|wp_kses_post }}
+
+    <h2>{{ vision_heading|esc_html }}</h2>
+    {{ vision_content|wp_kses_post }}
+
+  </div><!-- .mission-vision__text -->
+
+  {% if stats %}
+    <div class='mission-vision__stats'>
+      {% for stat in stats %}
+        <div class='stat-card'>
+          {% if stat.icon %}
+            <i class='stat-card__icon {{ stat.icon }}' aria-hidden='true'></i>
+          {% endif %}
+          <div class='stat-card__body'>
+            <p class='stat-card__number'>{{ stat.number|esc_html }}</p>
+            <p class='stat-card__label'>{{ stat.label|esc_html }}</p>
+          </div>
+        </div>
+      {% endfor %}
+    </div><!-- .mission-vision__stats -->
+  {% endif %}
+
+  {% if button %}
+    {# Sits after .mission-vision__stats in the DOM on purpose — on
+       mobile the grid collapses to one column and stacks in DOM order,
+       so this needs to come after the 4 stat cards, not the text. #}
+    <div class='mission-vision__cta'>
+      {% include 'views/partials/components/button.twig' with {
+        label: button.title,
+        url: button.url,
+        target: button.target,
+        variant: 'primary',
+      } %}
+    </div><!-- .mission-vision__cta -->
+  {% endif %}
+
+</section>

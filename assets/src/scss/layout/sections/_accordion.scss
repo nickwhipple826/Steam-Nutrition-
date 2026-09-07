@@ -1,0 +1,114 @@
+@use '../../utils/variables/colors' as *;
+
+.accordion {
+  h2 {
+    padding-block: var(--space-s);
+    padding-inline: var(--space-l);
+    margin-bottom: 0;
+    align-items: center;
+    max-width: 1450px;
+    margin-inline: auto;
+    text-align: center;
+
+  }
+
+  [data-accordion] {
+    max-width: 1450px;
+    margin-inline: auto;
+    padding: var(--space-l);
+  }
+
+  details {
+    padding-inline: var(--space-m);
+    border-radius: 4px;
+    margin-bottom: var(--space-xs);
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  summary {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+
+    padding-block: var(--space-xs);
+    padding-right: 2em;
+    cursor: pointer;
+    list-style: none;
+    color: $color-navy;
+    font-weight: 700;
+
+    // Remove default marker, replace with custom indicator
+    &::-webkit-details-marker {
+      display: none;
+    }
+
+    // Horizontal bar of the plus — stays put, far right
+    &::before {
+      content: '';
+      position: absolute;
+      right: 0;
+      top: 50%;
+
+      width: 0.75em;
+      height: 2px;
+      background-color: $color-navy;
+      transform: translateY(-50%);
+    }
+
+    // Vertical bar of the plus — rotates flat to form a minus when open
+    &::after {
+      content: '';
+      position: absolute;
+      right: 0;
+      top: 50%;
+
+      width: 0.75em;
+      height: 2px;
+      background-color: $color-navy;
+      transform: translateY(-50%) rotate(90deg);
+      transition: transform 0.2s ease;
+    }
+  }
+
+  details[open] summary::after {
+    // Collapses onto the horizontal bar, leaving a minus sign
+    transform: translateY(-50%) rotate(0deg);
+  }
+
+  &__answer {
+    padding-block-end: var(--space-s);
+    color: $color-navy;
+
+    p {
+      margin-bottom: var(--space-xs);
+    }
+
+    ul, ol {
+      margin: var(--space-xs) 0;
+      padding-inline-start: 1.25em;
+    }
+
+    a {
+      text-decoration: underline;
+
+      &:hover {
+        text-decoration: none;
+      }
+    }
+  }
+
+  @media (max-width: 1000px) or (orientation: portrait) {
+    h2 {
+      max-width: 100%;
+      padding-inline: var(--space-m);
+    }
+
+    [data-accordion] {
+      padding: var(--space-m);
+    }
+  }
+}

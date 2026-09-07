@@ -1,0 +1,26 @@
+<section
+  class='highlight-box'
+  data-scheme='{{ color }}'
+>
+  <div
+    class='highlight-box__inner'
+    {% if color == 'gold' %}data-scheme='white'{% endif %}
+  >
+    <h2>{{ heading|esc_html }}</h2>
+
+    {% if content %}
+      <div class='highlight-box__content'>
+        {{ content|wp_kses_post }}
+      </div>
+    {% endif %}
+
+    {% if button %}
+      {% include 'views/partials/components/button.twig' with {
+        label: button.title,
+        url: button.url,
+        target: button.target,
+      } %}
+    {% endif %}
+  </div>
+
+</section>

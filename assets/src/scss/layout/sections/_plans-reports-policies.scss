@@ -1,0 +1,99 @@
+@use '../../utils/variables/colors' as *;
+
+.plans-reports-policies {
+  padding-block: var(--space-l);
+  padding-inline: var(--space-l);
+
+  &__heading {
+    max-width: 1450px;
+    margin-inline: auto;
+    margin-bottom: var(--space-s);
+    color: $color-navy;
+  }
+
+  &__intro {
+    max-width: 1450px;
+    margin-inline: auto;
+    margin-bottom: var(--space-m);
+    color: $color-navy;
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-m);
+    max-width: 1450px;
+    margin-inline: auto;
+  }
+
+  &__card {
+    background-color: $color-white;
+    border: 1px solid $color-sky;
+    border-radius: 4px;
+    padding: var(--space-s);
+
+    .plans-reports-policies__title {
+      color: $color-navy;
+    }
+  }
+
+  &__title {
+    margin-bottom: var(--space-3xs, 0.25rem);
+    font-size: var(--step-0);
+    font-weight: 700;
+  }
+
+  &__description {
+    margin-bottom: var(--space-s);
+    color: $color-navy;
+    font-size: var(--step--1);
+  }
+
+  &__download {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-3xs, 0.25rem);
+
+    border: 1px solid $color-navy;
+    border-radius: 4px;
+    padding: var(--space-2xs) var(--space-s);
+
+    color: $color-navy;
+    font-size: var(--step--1);
+    font-weight: 600;
+    text-decoration: none;
+
+    transition: background-color 0.2s ease, color 0.2s ease;
+
+    &:hover {
+      background-color: $color-navy;
+      color: $color-white;
+    }
+  }
+
+  &__download-icon {
+    width: 1em;
+    height: 1em;
+    flex-shrink: 0;
+  }
+
+  // Colored-scheme sections: heading/intro text needs to go white to
+  // stay legible against the fill. Cards stay solid white always, so
+  // their contents keep the navy styles set above regardless.
+  &[data-scheme='navy'],
+  &[data-scheme='maroon'],
+  &[data-scheme='gold'] {
+    .plans-reports-policies__heading,
+    .plans-reports-policies__intro {
+      color: $color-white;
+    }
+  }
+
+  @media (max-width: 1000px) or (orientation: portrait) {
+    padding-inline: var(--space-m);
+
+    &__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+}

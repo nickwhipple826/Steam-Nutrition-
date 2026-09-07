@@ -1,0 +1,200 @@
+@use '../../utils/variables/colors' as *;
+
+.content-media {
+  padding-block: var(--space-l);
+
+  &__inner {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: var(--space-l);
+    align-items: stretch;
+
+    max-width: 1450px;
+    margin-inline: auto;
+    padding-inline: var(--space-l);
+  }
+
+  // Media sits in column 1 by default; 'right' alignment flips it to
+  // column 2 without touching the markup order (keeps content first
+  // in the DOM/source order for accessibility either way).
+  &[data-alignment='right'] {
+    .media-wrapper {
+      order: 2;
+    }
+
+    .content {
+      order: 1;
+    }
+  }
+
+  .media-wrapper {
+    // Stretches to match the height of the content column beside it
+    // (set by the grid's align-items: stretch above) rather than
+    // floating at its own intrinsic height.
+    height: 100%;
+
+    img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 4px;
+    }
+
+    &.embed {
+      position: relative;
+      aspect-ratio: 16 / 9;
+
+      iframe, .embed-container {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+      }
+    }
+
+    video {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 4px;
+    }
+
+    // Info Card media type — always navy background with white text,
+    // regardless of the section's own color scheme.
+    .media-card {
+      background-color: $color-navy;
+      border: 4px solid $color-white;
+      border-radius: 4px;
+      padding: var(--space-l);
+
+      &__heading {
+        margin-bottom: var(--space-s);
+        color: $color-white;
+        font-size: var(--step-1);
+      }
+
+      &__intro {
+        margin-bottom: var(--space-2xs, 0.5rem);
+        color: $color-white;
+        font-weight: 600;
+        font-size: var(--step--1);
+      }
+
+      &__list {
+        margin: 0 0 var(--space-s);
+        padding-inline-start: 1.1em;
+        color: $color-white;
+        font-size: var(--step--1);
+
+        li {
+          margin-bottom: var(--space-3xs, 0.25rem);
+        }
+      }
+
+      .button {
+        --button-background-color: #{$color-white};
+        --button-text-color: #{$color-navy};
+        border-color: $color-white;
+        min-width: 0;
+        text-transform: uppercase;
+        letter-spacing: 0.02em;
+      }
+    }
+  }
+
+  .content {
+    // The field-level heading (e.g. "Security"). Any additional h2s an
+    // editor adds inside the WYSIWYG body (e.g. "Reporting Security
+    // Concerns") are structurally identical siblings of this one, so
+    // they're distinguished below via the sibling combinator rather
+    // than relying on a wrapping element that doesn't exist.
+    h2 {
+      font-size: var(--step-4);
+      margin-bottom: var(--space-s);
+      color: $color-navy;
+    }
+
+    // Any h2 that comes after another h2 — i.e. a subheading typed
+    // into the WYSIWYG body — renders smaller than the primary heading
+    // above it, matching the design's visual hierarchy.
+    h2 ~ h2 {
+      font-size: var(--step-0);
+      margin-top: var(--space-m);
+      margin-bottom: var(--space-2xs, 0.5rem);
+    }
+
+    h3 {
+      font-size: var(--step-0);
+      margin-top: var(--space-m);
+      margin-bottom: var(--space-2xs, 0.5rem);
+      color: $color-navy;
+    }
+
+    p {
+      color: $color-navy;
+      margin-bottom: var(--space-xs);
+    }
+
+    ul, ol {
+      margin: var(--space-xs) 0;
+      padding-inline-start: 1.25em;
+      color: $color-navy;
+      font-size: var(--step--1);
+
+      li {
+        margin-bottom: var(--space-3xs, 0.25rem);
+      }
+    }
+
+    a {
+      text-decoration: underline;
+
+      &:hover {
+        text-decoration: none;
+      }
+    }
+
+    .button {
+      margin-top: var(--space-xs);
+      margin-right: var(--space-xs);
+    }
+  }
+
+  // Colored-scheme sections: heading/body text and list markers need
+  // to go white to stay legible against the fill.
+  &:not([data-scheme='white']) {
+    .content {
+      h2, h3, p, ul, ol {
+        color: $color-white;
+      }
+    }
+  }
+
+  @media (max-width: 1000px) or (orientation: portrait) {
+    &__inner {
+      grid-template-columns: 1fr;
+      padding-inline: var(--space-m);
+    }
+
+    &[data-alignment='right'] {
+      .media-wrapper {
+        order: 1;
+      }
+
+      .content {
+        order: 2;
+      }
+    }
+
+    .media-wrapper {
+      height: auto;
+
+      img, video {
+        height: auto;
+        aspect-ratio: 4 / 3;
+      }
+    }
+  }
+}

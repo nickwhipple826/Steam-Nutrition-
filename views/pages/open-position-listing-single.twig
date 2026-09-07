@@ -1,0 +1,24 @@
+{% extends 'views/layouts/base.twig' %}
+
+{% block content %}
+
+<section class="open-position-listing-single">
+
+  {% if post.thumbnail %}
+    <div class="open-position-listing-single__image">
+      <img src="{{ post.thumbnail.src }}" alt="{{ post.thumbnail.alt }}">
+    </div>
+  {% endif %}
+
+  <div class="open-position-listing-single__header">
+    
+    <h2 class="open-position-listing-single__title">{{ post.title|esc_html }}</h2>
+  </div>
+
+  <div class="open-position-listing-single__content">
+    {{ post.content }}
+  </div>
+
+</section>
+
+{% endblock %}

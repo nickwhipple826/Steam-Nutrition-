@@ -1,0 +1,40 @@
+<section
+  class="bordered-callout"
+  data-scheme="{{ color }}"
+>
+  <div class="bordered-callout__box">
+
+    <h2 class="bordered-callout__heading">{{ heading|esc_html }}</h2>
+
+    {% if intro %}
+      <p class="bordered-callout__intro">{{ intro|esc_html }}</p>
+    {% endif %}
+
+    {% if list_heading or list_items %}
+      <div class="bordered-callout__list-wrap">
+        {% if list_heading %}
+          <h3 class="bordered-callout__list-heading">{{ list_heading|esc_html }}</h3>
+        {% endif %}
+
+        {% if list_items %}
+          <ul class="bordered-callout__list">
+            {% for row in list_items %}
+              <li>{{ row.item|esc_html }}</li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    {% if emphasis_button.url %}
+      <div class="bordered-callout__emphasis">
+        {% include 'views/partials/components/button.twig' with {
+          label: emphasis_button.title,
+          url: emphasis_button.url,
+          target: emphasis_button.target,
+        } %}
+      </div>
+    {% endif %}
+
+  </div>
+</section>

@@ -1,0 +1,50 @@
+<footer class="footer">
+    <div class="container">
+
+        <div class="footer__logo">
+            <img src="{{ site.footer_logo }}" class="footer-logo" alt="{{ site.name }}">
+        </div><!-- .footer__logo -->
+
+        <div class="footer__contact">
+
+            <div class="footer__contact-group">
+                <p class="footer__contact-label">Administrative office:</p>
+                <p><a href="{{ site.address_url }}">{{ site.address }}</a></p>
+            </div>
+
+            <div class="footer__contact-group">
+                <p class="footer__contact-label">Phone:</p>
+                <p><a href="tel:{{ site.phone }}">{{ site.phone }}</a></p>
+            </div>
+
+        </div><!-- .footer__contact -->
+
+        <div class="footer__hours">
+            <p class="footer__hours-label">Office Hours:</p>
+            <ul>
+                {% for line in site.office_hours_lines %}
+                    <li>{{ line }}</li>
+                {% endfor %}
+            </ul>
+        </div><!-- .footer__hours -->
+
+        <div class="footer__navigation">
+            <nav class="footer__nav">
+                <ul>
+                    {% for link in footer_links %}
+                        <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+                    {% endfor %}
+                </ul>
+            </nav>
+        </div><!-- .footer__navigation -->
+
+    </div><!-- .container -->
+
+    <div class="footer__reserved">
+        <div class="container">
+            <p>&copy; {{ "now"|date("Y") }} {{ site.name }}. All rights reserved.</p>
+            <p>Powered by <a href="https://mcguinnessmedia.com/" target="_blank" rel="noopener">McGuinness Media &amp; Marketing</a></p>
+        </div>
+    </div><!-- .footer__content -->
+
+</footer><!-- .footer -->

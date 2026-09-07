@@ -1,0 +1,19 @@
+{% extends 'views/layouts/base.twig' %}
+
+{% block content %}
+
+<section class="property-listing-single">
+
+  <div class="property-listing-single__image">
+    <img src="{{ post.thumbnail.src }}" alt="{{ post.thumbnail.alt }}">
+  </div>
+
+  <div class="property-listing-single__header">
+    <h2 class="property-listing-single__title">{{ post.title|esc_html }}</h2>
+  </div>
+
+  <p class="property-listing-single__address">{{ post.acf.address }}</p>
+
+</section>
+
+{% endblock %}

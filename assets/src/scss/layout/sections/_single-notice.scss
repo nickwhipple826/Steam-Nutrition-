@@ -1,0 +1,75 @@
+@use '../../utils/variables/colors' as *;
+
+.notice-listing-single {
+  max-width: 900px;
+  margin-inline: auto;
+  padding-block: var(--space-l);
+  padding-inline: var(--space-l);
+
+  // FEATURED IMAGE (optional — not every notice will have one)
+  &__image {
+    width: 100%;
+    max-height: 400px;
+    overflow: hidden;
+    border-radius: 5px;
+    margin-bottom: var(--space-l);
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+  }
+
+  // HEADER: date + title
+  &__header {
+    margin-bottom: var(--space-m);
+  }
+
+  &__date {
+    font-size: var(--step--1);
+    color: $color-red;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    margin-bottom: var(--space-3xs);
+  }
+
+  &__title {
+    color: $color-navy;
+    font-size: var(--step-4);
+  }
+
+  // BODY CONTENT (native WP editor content)
+  &__content {
+    color: $color-navy;
+    font-size: var(--step-0);
+
+    p {
+      margin-bottom: var(--space-xs);
+    }
+
+    ul,
+    ol {
+      margin: var(--space-xs) 0;
+      padding-inline-start: 1.25em;
+    }
+
+    a {
+      text-decoration: underline;
+
+      &:hover {
+        text-decoration: none;
+      }
+    }
+  }
+
+  @media (max-width: 1000px) or (orientation: portrait) {
+    padding-inline: var(--space-m);
+
+    &__image {
+      max-height: 260px;
+    }
+  }
+}

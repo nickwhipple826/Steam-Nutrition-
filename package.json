@@ -1,0 +1,27 @@
+{
+  "name": "mmm-boilerplate",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "vite build --mode production",
+    "dev": "vite build --watch --mode development"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "autoprefixer": "^10.4.23",
+    "postcss": "^8.5.6",
+    "sass": "^1.97.1",
+    "terser": "^5.44.1",
+    "typescript": "^5.9.3",
+    "utopia-core-scss": "^1.3.1",
+    "vite": "^7.3.6"
+  },
+  "dependencies": {
+    "focus-trap": "^8.0.0",
+    "swiper": "^12.0.3"
+  }
+}
