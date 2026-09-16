@@ -1,0 +1,31 @@
+<details class="filter-panel__section">
+  <summary>Size</summary>
+  <div class="filter-panel__options">
+    {% for f in filters %}
+      {% if f.label == 'Size' %}
+        {% for v in f.values %}
+          <label class="filter-option">
+            <input type="checkbox" name="filter[Size][]" value="{{ v.label }}">
+            {{ v.label }} ({{ v.count }})
+          </label>
+        {% endfor %}
+      {% endif %}
+    {% endfor %}
+  </div>
+</details>
+
+<details class="filter-panel__section">
+  <summary>Color</summary>
+  <div class="filter-panel__options">
+    {% for f in filters %}
+      {% if f.label == 'Color' %}
+        {% for v in f.values %}
+          <label class="filter-option">
+            <input type="checkbox" name="filter[Color][]" value="{{ v.label }}">
+            {{ v.label }} ({{ v.count }})
+          </label>
+        {% endfor %}
+      {% endif %}
+    {% endfor %}
+  </div>
+</details>

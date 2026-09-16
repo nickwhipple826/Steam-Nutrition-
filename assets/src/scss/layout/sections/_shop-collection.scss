@@ -1,0 +1,252 @@
+@use '../../utils/variables/colors' as *;
+
+.shop-collection {
+  &__layout {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: var(--space-l);
+    max-width: 1450px;
+    margin-inline: auto;
+    padding: var(--space-l);
+  }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-m);
+    margin-bottom: var(--space-m);
+  }
+
+  &__title {
+    color: $color-black;
+  }
+
+  &__sort select {
+    border: 1px solid $color-smoke;
+    background: $color-white;
+    padding: 0.4em 0.75em;
+    font-weight: 600;
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: var(--space-m);
+  }
+
+  &__empty {
+    color: $color-smoke;
+  }
+
+  @media (max-width: 900px) {
+    &__layout {
+      grid-template-columns: 1fr;
+    }
+  }
+}
+
+.shop-sidebar {
+  &__nav-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 var(--space-m);
+    border-top: 1px solid $color-parchment;
+  }
+
+  &__nav-item {
+    border-bottom: 1px solid $color-parchment;
+  }
+
+  &__nav-link {
+    display: block;
+    padding: 0.6em 0;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    color: $color-charcoal;
+
+    &.is-active,
+    &:hover {
+      color: $color-brass;
+    }
+  }
+
+  &__filters-trigger {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0.6em 0.9em;
+    border: 1px solid $color-black;
+    background: transparent;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    cursor: pointer;
+
+    &:hover {
+      background: $color-black;
+      color: $color-white;
+    }
+  }
+}
+
+.filter-panel {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+
+  &[hidden] {
+    display: none;
+  }
+
+  &__backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgb(8 5 4 / 55%);
+  }
+
+  &__drawer {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: min(360px, 100%);
+    height: 100%;
+    background: $color-white;
+    overflow-y: auto;
+  }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-m);
+    border-bottom: 1px solid $color-parchment;
+  }
+
+  &__title {
+    margin: 0;
+    color: $color-black;
+  }
+
+  &__close {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    line-height: 1;
+    cursor: pointer;
+    color: $color-black;
+  }
+
+  &__form {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+
+  &__section {
+    border-bottom: 1px solid $color-parchment;
+    padding: 0 var(--space-m);
+
+    summary {
+      position: relative;
+      display: flex;
+      align-items: center;
+      padding-block: var(--space-s);
+      padding-right: 2em;
+      cursor: pointer;
+      list-style: none;
+      font-weight: 700;
+      text-transform: uppercase;
+      font-size: 0.8rem;
+      letter-spacing: 0.04em;
+      color: $color-black;
+
+      &::-webkit-details-marker {
+        display: none;
+      }
+
+      &::before {
+        content: '';
+        position: absolute;
+        right: 0;
+        top: 50%;
+        width: 0.75em;
+        height: 2px;
+        background-color: $color-black;
+        transform: translateY(-50%);
+      }
+
+      &::after {
+        content: '';
+        position: absolute;
+        right: 0;
+        top: 50%;
+        width: 0.75em;
+        height: 2px;
+        background-color: $color-black;
+        transform: translateY(-50%) rotate(90deg);
+        transition: transform 0.2s ease;
+      }
+    }
+
+    &[open] summary::after {
+      transform: translateY(-50%) rotate(0deg);
+    }
+  }
+
+  &__options {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+    padding-bottom: var(--space-s);
+  }
+
+  &__footer {
+    display: flex;
+    gap: var(--space-s);
+    padding: var(--space-m);
+    margin-top: auto;
+    border-top: 1px solid $color-parchment;
+    position: sticky;
+    bottom: 0;
+    background: $color-white;
+  }
+
+  &__reset,
+  &__save {
+    flex: 1;
+    padding: 0.75em;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    cursor: pointer;
+  }
+
+  &__reset {
+    background: transparent;
+    border: 1px solid $color-smoke;
+  }
+
+  &__save {
+    background: $color-black;
+    color: $color-white;
+    border: 1px solid $color-black;
+
+    &:hover {
+      background: $color-brass;
+      border-color: $color-brass;
+    }
+  }
+}
+
+.filter-option {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  font-size: 0.9rem;
+  color: $color-charcoal;
+}

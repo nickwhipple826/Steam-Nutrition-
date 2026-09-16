@@ -1,0 +1,23 @@
+<div class="shop-sidebar">
+  {% if post.acf.category_nav %}
+    <nav class="shop-sidebar__nav" aria-label="Product categories">
+      <ul class="shop-sidebar__nav-list">
+        <li class="shop-sidebar__nav-item">
+          <a href="{{ post.link }}" class="shop-sidebar__nav-link is-active">All</a>
+        </li>
+        {% for item in post.acf.category_nav %}
+          <li class="shop-sidebar__nav-item">
+            <a href="{{ item.link.url }}" class="shop-sidebar__nav-link" target="{{ item.link.target }}">
+              {{ item.label }}
+            </a>
+          </li>
+        {% endfor %}
+      </ul>
+    </nav>
+  {% endif %}
+
+  <button type="button" class="shop-sidebar__filters-trigger" data-modal-open="shop-filters">
+    Filters
+    <span class="shop-sidebar__filters-trigger-icon" aria-hidden="true">+</span>
+  </button>
+</div>

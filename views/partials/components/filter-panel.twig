@@ -1,0 +1,49 @@
+<div
+  role="dialog"
+  data-modal="shop-filters"
+  aria-modal="true"
+  aria-label="Filter products"
+  hidden
+  class="filter-panel"
+>
+  <div class="filter-panel__backdrop" data-modal-close></div>
+
+  <div class="filter-panel__drawer">
+    <div class="filter-panel__header">
+      <h2 class="filter-panel__title">Filters</h2>
+      <button type="button" class="filter-panel__close" data-modal-close aria-label="Close filters">&times;</button>
+    </div>
+
+    <form class="filter-panel__form" data-filter-form>
+
+      <details class="filter-panel__section" open>
+        <summary>Availability</summary>
+        <div class="filter-panel__options">
+          <label class="filter-option">
+            <input type="checkbox" name="filter[available]" value="1"> In stock only
+          </label>
+        </div>
+      </details>
+
+      <details class="filter-panel__section">
+        <summary>Price</summary>
+        <div class="filter-panel__options">
+          <label class="filter-option"><input type="radio" name="filter[Price]" value="0-25"> Under $25</label>
+          <label class="filter-option"><input type="radio" name="filter[Price]" value="25-50"> $25 – $50</label>
+          <label class="filter-option"><input type="radio" name="filter[Price]" value="50-"> $50+</label>
+        </div>
+      </details>
+
+      {% if filter_group == 'apparel' %}
+        {% include 'views/partials/components/filter-apparel.twig' with { filters: filters } %}
+      {% else %}
+        {% include 'views/partials/components/filter-supplements.twig' with { filters: filters } %}
+      {% endif %}
+
+      <div class="filter-panel__footer">
+        <button type="button" class="filter-panel__reset" data-filter-reset>Reset</button>
+        <button type="button" class="filter-panel__save" data-filter-save data-modal-close>Save</button>
+      </div>
+    </form>
+  </div>
+</div>

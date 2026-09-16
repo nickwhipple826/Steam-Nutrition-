@@ -3,6 +3,7 @@ import { initTabs } from './ui/tabs.js';
 import { initModals } from './ui/modal.js';
 import { initSliders } from './ui/slider.js';
 import { initAccordions } from './ui/accordion.js';
+import { initShopFilters } from './ui/shop-filters.js';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
@@ -16,6 +17,7 @@ document.addEventListener( 'DOMContentLoaded', () => {
     { name: 'modals', fn: initModals },
     { name: 'sliders', fn: initSliders },
     { name: 'accordions', fn: initAccordions },
+    { name: 'shop-filters', fn: initShopFilters },
   ];
 
   modules.forEach( ( { name, fn } ) => {

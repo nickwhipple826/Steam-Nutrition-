@@ -1,0 +1,15 @@
+<details class="filter-panel__section">
+  <summary>Flavor</summary>
+  <div class="filter-panel__options">
+    {% for f in filters %}
+      {% if f.label == 'Flavor' %}
+        {% for v in f.values %}
+          <label class="filter-option">
+            <input type="checkbox" name="filter[Flavor][]" value="{{ v.label }}">
+            {{ v.label }} ({{ v.count }})
+          </label>
+        {% endfor %}
+      {% endif %}
+    {% endfor %}
+  </div>
+</details>

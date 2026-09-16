@@ -2,7 +2,7 @@
 
 namespace MMM;
 
-use MMM\FieldGroups\{HeroFieldGroup, PageContent, SeoFields, SiteSettingsFieldGroup, PropertyFields};
+use MMM\FieldGroups\{HeroFieldGroup, PageContent, SeoFields, SiteSettingsFieldGroup, PropertyFields, ShopCollectionFields};
 use MMM\PostTypes\{DocumentPostType, NoticePostType, OpenPositionPostType, PropertyPostType};
 use MMM\Models\Post;
 use MMM\Models\Site;
@@ -133,6 +133,7 @@ class Theme
     $fieldsRegistry->register( PageContent::class );
     $fieldsRegistry->register( SiteSettingsFieldGroup::class );
     $fieldsRegistry->register( PropertyFields::class );
+    $fieldsRegistry->register( ShopCollectionFields::class );
 
     $fieldsRegistry->init();
   }

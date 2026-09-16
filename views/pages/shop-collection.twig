@@ -1,0 +1,57 @@
+{% extends 'views/layouts/base.twig' %}
+
+{% block content %}
+
+  {% if post.acf.hero %}
+    {% include 'views/partials/sections/hero.twig' with {
+      heading: post.acf.hero.heading,
+      background: post.acf.hero.background,
+    } %}
+  {% endif %}
+
+  <div class="shop-collection" data-filter-group="{{ filter_group }}">
+    <div class="shop-collection__layout">
+
+      <aside class="shop-collection__sidebar">
+        {% include 'views/partials/components/filter-sidebar.twig' %}
+        {% include 'views/partials/components/filter-panel.twig' with {
+          filter_group: filter_group,
+          filters: collection.filters,
+        } %}
+      </aside>
+
+      <div class="shop-collection__main">
+
+        <header class="shop-collection__header">
+          <h1 class="shop-collection__title">{{ post.title }}</h1>
+
+          <div class="shop-collection__sort">
+            <label for="shop-sort">Sort by</label>
+            <select id="shop-sort" data-shop-sort>
+              <option value="BEST_SELLING" {{ current_sort == 'BEST_SELLING' ? 'selected' }}>Best Selling</option>
+              <option value="PRICE_LOW_HIGH" {{ current_sort == 'PRICE_LOW_HIGH' ? 'selected' }}>Price: Low to High</option>
+              <option value="PRICE_HIGH_LOW" {{ current_sort == 'PRICE_HIGH_LOW' ? 'selected' }}>Price: High to Low</option>
+              <option value="TITLE" {{ current_sort == 'TITLE' ? 'selected' }}>Alphabetical</option>
+              <option value="CREATED" {{ current_sort == 'CREATED' ? 'selected' }}>Newest</option>
+            </select>
+          </div>
+        </header>
+
+        {% for component in post.components %}
+          {% if not component.fields.section_hidden %}
+            {% include component.view with component %}
+          {% endif %}
+        {% endfor %}
+
+        <div class="shop-collection__grid" data-product-grid>
+          {% for product in collection.products %}
+            {% include 'views/partials/components/product-card.twig' with { product: product } %}
+          {% else %}
+            <p class="shop-collection__empty">No products found in this collection yet.</p>
+          {% endfor %}
+        </div>
+
+      </div>
+    </div>
+  </div>
+{% endblock %}
