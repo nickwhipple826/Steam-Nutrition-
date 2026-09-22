@@ -2,6 +2,8 @@
 
 namespace MMM\FieldGroups;
 
+use MMM\Shopify\ShopifyCollectionQuery;
+
 class ShopCollectionFields extends BaseFieldGroup
 {
   protected function getTitle(): string
@@ -11,8 +13,11 @@ class ShopCollectionFields extends BaseFieldGroup
 
   protected function getLocation(): array
   {
+    // The template file is templates/shop-collections.php — plural.
+    // This previously read shop-collection.php, so the rule never
+    // matched and none of these fields appeared on the page.
     return [
-      [ 'page_template', '==', 'templates/shop-collection.php' ],
+      [ 'page_template', '==', 'templates/shop-collections.php' ],
     ];
   }
 
@@ -22,8 +27,8 @@ class ShopCollectionFields extends BaseFieldGroup
       ->addTab( 'shop' )
       ->addSelect( 'shopify_collection_handle', [
         'label' => 'Shopify Collection',
-        'instructions' => 'Which Shopify collection powers this page.',
-        'choices' => $this->getCollectionChoices(),
+        'instructions' => 'Which Shopify collection powers this page. Handles are pulled live and cached for an hour.',
+        'choices' => ShopifyCollectionQuery::collectionChoices(),
         'ui' => 1,
         'allow_null' => false,
       ] )
@@ -57,14 +62,5 @@ class ShopCollectionFields extends BaseFieldGroup
         ->addText( 'label', [ 'label' => 'Label', 'required' => true ] )
         ->addLink( 'link', [ 'label' => 'Link', 'required' => true, 'return_format' => 'array' ] )
       ->endRepeater();
-  }
-
-  /**
-   * TODO: swap for whatever method your Shopify product-slider layout
-   * already uses to populate its collection dropdown.
-   */
-  private function getCollectionChoices(): array
-  {
-    return [];
   }
 }

@@ -1,87 +1,129 @@
+// =====================================================================
+// base/_colors.scss
+// ---------------------------------------------------------------------
+// Four schemes:
+//
+//   iron       near-black page floor. The default for most sections.
+//   soot       raised panel. Alternate it against iron so the page
+//              reads as stacked plates rather than one dark field.
+//   brass      inverted — brass ground, dark type. Campaign bands.
+//   parchment  light. Long-form copy, legal, anything text-heavy.
+// =====================================================================
+
 @use 'sass:map';
 @use '@css/utils/variables/colors' as *;
 
 $schemes: (
-    'white': (
-        bg: $color-white,
-        accent: $color-red,
-        heading: $color-navy,
-        accent-text: $color-red,
-        body: $color-navy,
-        btn-bg: $color-navy,
-        btn-text: $color-white,
-        link: $color-navy
-    ),
-    'maroon': (
-        bg: $color-red,
+    'iron': (
+        bg: $color-black,
+        panel: $color-soot,
         accent: $color-gold,
-        heading: $color-white,
+        heading: $color-gold-light,
         accent-text: $color-gold,
-        body: $color-white,
-        btn-bg: $color-white,
-        btn-text: $color-navy,
-        link: $color-navy
+        body: $color-parchment,
+        btn-bg: $color-gold,
+        btn-text: $color-black,
+        btn-gradient: $gradient-button,
+        link: $color-gold,
+        rule: $color-rule-dark,
+        seal: $color-vermilion
     ),
-    'navy': (
-        bg: $color-navy,
-        accent: $color-red,
-        heading: $color-white,
+    'soot': (
+        bg: $color-soot,
+        panel: $color-soot-raised,
+        accent: $color-gold,
+        heading: $color-gold-light,
         accent-text: $color-gold,
-        body: $color-white,
-        btn-bg: $color-white,
-        btn-text: $color-navy,
-        link: $color-gold
+        body: $color-parchment,
+        btn-bg: $color-gold,
+        btn-text: $color-black,
+        btn-gradient: $gradient-button,
+        link: $color-gold,
+        rule: $color-rule-dark,
+        seal: $color-vermilion
     ),
-    'gold': (
+    'brass': (
         bg: $color-gold,
-        accent: $color-red,
-        heading: $color-navy,
-        accent-text: $color-red,
-        body: $color-navy,
-        btn-bg: $color-white,
-        btn-text: $color-navy,
-        link: $color-navy
+        panel: $color-gold-light,
+        accent: $color-black,
+        heading: $color-black,
+        accent-text: $color-copper,
+        body: $color-charcoal,
+        btn-bg: $color-black,
+        btn-text: $color-gold-light,
+        btn-gradient: none,
+        link: $color-copper,
+        rule: $color-rule-light,
+        seal: $color-vermilion
+    ),
+    'parchment': (
+        bg: $color-parchment,
+        panel: $color-white,
+        accent: $color-copper,
+        heading: $color-black,
+        accent-text: $color-copper,
+        body: $color-charcoal,
+        btn-bg: $color-black,
+        btn-text: $color-gold-light,
+        btn-gradient: none,
+        link: $color-copper,
+        rule: $color-rule-light,
+        seal: $color-vermilion
     ),
 );
 
+@mixin scheme-vars($scheme) {
+  --bg-color: #{map.get($scheme, bg)};
+  --panel-color: #{map.get($scheme, panel)};
+  --accent-color: #{map.get($scheme, accent)};
+  --heading-text-color: #{map.get($scheme, heading)};
+  --accent-text-color: #{map.get($scheme, accent-text)};
+  --body-text-color: #{map.get($scheme, body)};
+  --button-background-color: #{map.get($scheme, btn-bg)};
+  --button-text-color: #{map.get($scheme, btn-text)};
+  --button-gradient: #{map.get($scheme, btn-gradient)};
+  --link-color: #{map.get($scheme, link)};
+  --rule-color: #{map.get($scheme, rule)};
+  --seal-color: #{map.get($scheme, seal)};
+}
+
+// Iron values on :root, so anything that sits outside a data-scheme
+// block — the header, the footer, a template that renders straight
+// into <main> — still has every token defined.
+:root {
+  @include scheme-vars(map.get($schemes, 'iron'));
+}
+
 @each $name, $scheme in $schemes {
   [data-scheme='#{$name}'] {
-    --bg-color: #{map.get($scheme, bg)};
-    --accent-color: #{map.get($scheme, accent)};
-    --heading-text-color: #{map.get($scheme, heading)};
-    --accent-text-color: #{map.get($scheme, accent-text)};
-    --body-text-color: #{map.get($scheme, body)};
-    --button-background-color: #{map.get($scheme, btn-bg)};
-    --button-text-color: #{map.get($scheme, btn-text)};
-    --link-color: #{map.get($scheme, link)};
+    @include scheme-vars($scheme);
   }
+}
+
+// Without this the page floor is white, and it shows anywhere a
+// section does not paint its own background.
+body {
+  background-color: $color-black;
+  color: $color-parchment;
 }
 
 [data-scheme] {
   background-color: var(--bg-color);
   color: var(--body-text-color);
+}
 
-  h1, h2, h3, h4 {
-    color: var(--heading-text-color);
-  }
+// :where() drops both of these to zero specificity. At full
+// specificity `[data-scheme] h2` is (0,1,1) and beats `.brass-face`
+// (0,1,0), painting the heading solid over its own clipped gradient —
+// which is why the foil headings rendered flat. Any class now wins.
+:where([data-scheme]) :where(h1, h2, h3, h4) {
+  color: var(--heading-text-color);
+}
 
-  // Global fix: internal links inside paragraph text now follow the
-  // section's color scheme (navy on white/maroon/gold, gold on navy)
-  // instead of inheriting whatever the browser/editor default was.
-  p a {
-    color: var(--link-color);
+:where([data-scheme]) :where(p) a {
+  color: var(--link-color);
 
-    &:hover {
-      text-decoration: none;
-    }
-  }
-
-  // White-scheme sections: the generic swap-based button hover (see
-  // _button.scss) would turn the button white-on-white against this
-  // section's own white background, so it's overridden to sky here
-  // specifically instead.
-  &[data-scheme='white'] .button:hover {
-    background-color: $color-sky;
-    color: $color-white;
+  &:hover {
+    text-decoration: none;
   }
 }

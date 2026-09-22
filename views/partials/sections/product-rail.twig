@@ -1,0 +1,93 @@
+{% set data = shopify_collection(collection, sort|default('BEST_SELLING'), limit|default(8)) %}
+{% set rail_id = 'rail-' ~ (heading|slugify) %}
+
+<section class="section product-rail" data-scheme="{{ color|default('iron') }}">
+  <div class="section__inner">
+    {% include 'views/partials/components/rail-tag.twig' with { text: rail_text } %}
+
+    <div class="section__head">
+      <div class="section__head-copy">
+        <h2 class="brass-face">{{ heading|esc_html }}</h2>
+        {% if note %}<p class="section__note">{{ note|esc_html }}</p>{% endif %}
+      </div>
+
+      <div class="section__head-aside">
+        {% if link.url %}
+          {% include 'views/partials/components/button.twig' with {
+            label: link.title, url: link.url, target: link.target, variant: 'outline',
+          } %}
+        {% endif %}
+
+        {% if data.products|length > 1 %}
+          <div class="rail-nav">
+            <button type="button" class="rail-nav__btn" data-rail-target="{{ rail_id }}"
+                    data-rail-dir="-1" aria-label="Scroll {{ heading|esc_attr }} left">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+                <path d="M15 5 8 12l7 7"/>
+              </svg>
+            </button>
+            <button type="button" class="rail-nav__btn" data-rail-target="{{ rail_id }}"
+                    data-rail-dir="1" aria-label="Scroll {{ heading|esc_attr }} right">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+                <path d="m9 5 7 7-7 7"/>
+              </svg>
+            </button>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+
+    {% if data.products %}
+      <ul class="rail" id="{{ rail_id }}" tabindex="0"
+          role="region" aria-label="{{ heading|esc_attr }}">
+        {% for product in data.products %}
+          <li class="rail__item">
+            <article class="product-card{{ not product.available ? ' product-card--sold-out' : '' }}">
+              <a class="product-card__link" href="/products/{{ product.handle|esc_attr }}">
+                <div class="product-card__shot">
+                  {% if product.image %}
+                    <img src="{{ product.image|esc_url }}" alt="{{ product.alt|esc_attr }}" loading="lazy">
+                  {% endif %}
+
+                  {% if not product.available %}
+                    <span class="product-card__flag product-card__flag--out">Sold out</span>
+                  {% elseif product.compare_at %}
+                    <span class="product-card__flag">On sale</span>
+                  {% endif %}
+                </div>
+
+                <div class="product-card__meta">
+                  <h3 class="product-card__title">{{ product.title|esc_html }}</h3>
+                  {% if product.type %}
+                    <p class="product-card__type">{{ product.type|esc_html }}</p>
+                  {% endif %}
+                  <p class="product-card__price">
+                    {{ product.price|money(product.currency) }}
+                    {% if product.compare_at %}
+                      <s>{{ product.compare_at|money(product.currency) }}</s>
+                    {% endif %}
+                  </p>
+                </div>
+              </a>
+            </article>
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      {#
+        Reached when the collection is empty, the handle is wrong, or
+        the Storefront token is missing. Editors see it, visitors get
+        nothing rather than an empty scroll region.
+      #}
+      {% if function('current_user_can', 'edit_posts') %}
+        <p class="section__empty">
+          No products came back for the collection
+          <code>{{ collection|default('(none selected)')|esc_html }}</code>.
+          Check the handle on this component, and that
+          SHOPIFY_STORE_DOMAIN and SHOPIFY_STOREFRONT_TOKEN are defined
+          in wp-config.php.
+        </p>
+      {% endif %}
+    {% endif %}
+  </div>
+</section>

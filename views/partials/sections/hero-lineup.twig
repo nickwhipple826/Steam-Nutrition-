@@ -1,0 +1,73 @@
+{% import 'macros/picture.twig' as picture %}
+
+{#
+  The hero sits under a transparent fixed header, so it pulls itself up
+  by the header height. See the has-hero body class note in the README —
+  without it the header stays solid and the top of this image is hidden.
+#}
+<section class="hero-lineup" data-scheme="{{ color|default('iron') }}">
+  <div class="hero-lineup__bg" style="--scrim: {{ (scrim|default(90)) / 100 }}">
+    {{ picture.responsive(
+      background,
+      ['medium', 'large', 'full'],
+      '100vw',
+      null,
+      'hero-lineup__img',
+      { loading: 'eager', fetchpriority: 'high' }
+    ) }}
+  </div>
+
+  <div class="hero-lineup__steam" aria-hidden="true"></div>
+
+  <div class="hero-lineup__inner">
+    <div class="hero-lineup__grid">
+      {% if rail_text %}
+        <div class="hero-lineup__gutter" aria-hidden="true">
+          <span class="hero-lineup__tate">{{ rail_text|esc_html }}</span>
+        </div>
+      {% endif %}
+
+      <div class="hero-lineup__copy">
+        {% if eyebrow %}
+          <span class="eyebrow"><span class="eyebrow__dot"></span>{{ eyebrow|esc_html }}</span>
+        {% endif %}
+
+        <h1 class="hero-lineup__heading brass-face">{{ heading|esc_html }}</h1>
+
+        {% if subheading %}
+          <div class="hero-lineup__sub">{{ subheading|esc_html }}</div>
+        {% endif %}
+
+        {% if lede %}
+          <p class="hero-lineup__lede">{{ lede|esc_html }}</p>
+        {% endif %}
+
+        {% if buttons %}
+          <div class="hero-lineup__cta">
+            {% for row in buttons %}
+              {% if row.button.url %}
+                {% include 'views/partials/components/button.twig' with {
+                  label: row.button.title,
+                  url: row.button.url,
+                  target: row.button.target,
+                  variant: loop.first ? 'primary' : 'outline',
+                } %}
+              {% endif %}
+            {% endfor %}
+          </div>
+        {% endif %}
+
+        {% if stats %}
+          <dl class="hero-lineup__stats">
+            {% for stat in stats %}
+              <div class="hero-lineup__stat">
+                <dt class="hero-lineup__stat-value">{{ stat.value|esc_html }}</dt>
+                <dd class="hero-lineup__stat-label">{{ stat.label|esc_html }}</dd>
+              </div>
+            {% endfor %}
+          </dl>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>

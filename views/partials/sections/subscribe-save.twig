@@ -1,0 +1,77 @@
+{% import 'macros/picture.twig' as picture %}
+
+{% set panel_id = 'subs-' ~ (heading|slugify) %}
+
+<section class="section subscribe-save" data-scheme="{{ color|default('iron') }}">
+  <div class="section__inner">
+    {% include 'views/partials/components/rail-tag.twig' with { text: rail_text } %}
+
+    <div class="subscribe-save__grid">
+      <div class="subscribe-save__panel" id="{{ panel_id }}"
+           data-subscribe data-base-price="{{ base_price }}">
+
+        <h2 class="brass-face">{{ heading|esc_html }}</h2>
+        {% if note %}<p class="section__note">{{ note|esc_html }}</p>{% endif %}
+
+        {% if plans %}
+          <div class="subscribe-save__plans" role="radiogroup"
+               aria-label="Delivery frequency">
+            {% for plan in plans %}
+              <label class="subscribe-save__plan">
+                <input type="radio"
+                       name="{{ panel_id }}-plan"
+                       value="{{ plan.days }}"
+                       data-discount="{{ plan.discount }}"
+                       {{ loop.first ? 'checked' : '' }}>
+                <span>{{ plan.label|esc_html }}</span>
+              </label>
+            {% endfor %}
+          </div>
+
+          {#
+            Server-rendered from the first plan so the figure is right
+            before JS runs and stays right if it never does.
+          #}
+          {% set first_plan = plans|first %}
+          <div class="subscribe-save__readout">
+            <span class="subscribe-save__price" data-subscribe-price>
+              {{ (base_price * (100 - first_plan.discount) / 100)|money }}
+            </span>
+            <span class="subscribe-save__per" data-subscribe-per>
+              per tub, billed every {{ first_plan.days }} days
+            </span>
+            <span class="subscribe-save__saving" data-subscribe-saving>
+              Save {{ first_plan.discount }}%
+            </span>
+          </div>
+        {% endif %}
+
+        {% if perks %}
+          <ul class="subscribe-save__perks">
+            {% for perk in perks %}
+              <li>
+                {% if perk.kanji %}
+                  <span class="subscribe-save__perk-mark" aria-hidden="true">{{ perk.kanji|esc_html }}</span>
+                {% endif %}
+                {{ perk.text|esc_html }}
+              </li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+
+        {% if link.url %}
+          {% include 'views/partials/components/button.twig' with {
+            label: link.title, url: link.url, target: link.target,
+          } %}
+        {% endif %}
+      </div>
+
+      {% if image %}
+        <div class="subscribe-save__shot">
+          {{ picture.render(image, 'large', '', 'subscribe-save__img') }}
+          {% include 'views/partials/components/seal.twig' with { text: seal } only %}
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</section>

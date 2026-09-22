@@ -1,0 +1,48 @@
+<section class="section drop-grid" data-scheme="{{ color|default('iron') }}">
+  <div class="section__inner">
+    {% include 'views/partials/components/rail-tag.twig' with { text: rail_text } %}
+
+    <div class="section__head">
+      <div class="section__head-copy">
+        <h2 class="brass-face">{{ heading|esc_html }}</h2>
+        {% if note %}<p class="section__note">{{ note|esc_html }}</p>{% endif %}
+      </div>
+
+      {% if link.url %}
+        <div class="section__head-aside">
+          {% include 'views/partials/components/button.twig' with {
+            label: link.title, url: link.url, target: link.target, variant: 'outline',
+          } %}
+        </div>
+      {% endif %}
+    </div>
+
+    <ul class="drop-grid__list">
+      {% for tile in tiles %}
+        <li class="drop-grid__item">
+          <a class="drop-tile" href="{{ tile.link.url|default('#')|esc_url }}"
+             target="{{ tile.link.target|default('_self')|esc_attr }}">
+            <span class="drop-tile__tex" aria-hidden="true"></span>
+
+            <span class="drop-tile__top">
+              {% include 'views/partials/components/seal.twig' with { text: tile.seal, size: 'sm' } only %}
+              {% if tile.status %}
+                <span class="drop-tile__status">{{ tile.status|esc_html }}</span>
+              {% endif %}
+            </span>
+
+            <span class="drop-tile__bottom">
+              <span class="drop-tile__title">{{ tile.title|esc_html }}</span>
+              {% if tile.subtitle %}
+                <span class="drop-tile__subtitle">{{ tile.subtitle|esc_html }}</span>
+              {% endif %}
+              {% if tile.price %}
+                <span class="drop-tile__price">{{ tile.price|esc_html }}</span>
+              {% endif %}
+            </span>
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+</section>

@@ -3,25 +3,27 @@
 <html {{ site.language_attributes }}>
   <head>
     <meta charset='UTF-8'>
-    <meta name='viewport'
-          content='width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0'>
+    {#
+      No user-scalable=no / maximum-scale here. Blocking pinch-zoom fails
+      WCAG 1.4.4, and iOS has ignored it since 10 anyway — it only ever
+      stopped the Android users who needed zoom from getting it.
+    #}
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
     <title>{{ post.acf.seo_metadata.title }}</title>
     {{ function('wp_head') }}
   </head>
   <body {{ function('body_class') }}>
     {{ function('wp_body_open') }}
 
-    <header>
-    {% include 'partials/sections/header.twig' %}
-    </header>
+    {# One banner landmark. header.twig renders divs inside it. #}
+   
 
     <main>
       {% block content %}{% endblock %}
     </main>
 
-    <footer>
-  {% include 'partials/sections/footer.twig' %}
-    </footer>
+    {# footer.twig renders its own <footer>, so no wrapper here. #}
+    {% include 'partials/sections/footer.twig' %}
 
     {{ function('wp_footer') }}
   </body>

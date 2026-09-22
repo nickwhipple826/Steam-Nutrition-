@@ -18,6 +18,15 @@ use MMM\FieldGroups\FlexibleContent\{AccordionLayout,
   OpenPositionLayout,
   PlansReportsPoliciesLayout,
   BorderedCalloutLayout,
+  HeroLineupLayout,
+  QuickTilesLayout,
+  ProductRailLayout,
+  GaugeClusterLayout,
+  CampaignBannerLayout,
+  DropGridLayout,
+  SubscribeSaveLayout,
+  WorkshopFactsLayout,
+  NewsletterBandLayout,
   };
 use MMM\Traits\HasFlexibleContent;
 
@@ -26,6 +35,24 @@ class PageContent extends BaseFieldGroup {
 
   public function __construct()
   {
+    // ---- Steam ----------------------------------------------------
+    // Registration order is the order of the Add Component dropdown,
+    // so these sit in roughly the order a homepage uses them.
+    $this->registerLayout( new HeroLineupLayout() );
+    $this->registerLayout( new QuickTilesLayout() );
+    $this->registerLayout( new ProductRailLayout() );
+    $this->registerLayout( new GaugeClusterLayout() );
+    $this->registerLayout( new CampaignBannerLayout() );
+    $this->registerLayout( new DropGridLayout() );
+    $this->registerLayout( new SubscribeSaveLayout() );
+    $this->registerLayout( new WorkshopFactsLayout() );
+    $this->registerLayout( new NewsletterBandLayout() );
+
+    // ---- Inherited from Woonsocket --------------------------------
+    // Still registered so existing pages do not fatal on an orphaned
+    // layout reference. Delete a line here only after you have cleared
+    // that layout off every page, and drop its @forward from main.scss
+    // at the same time.
     $this->registerLayout( new ContentMediaLayout() );
     $this->registerLayout( new AccordionLayout() );
     $this->registerLayout( new TeamListLayout() );

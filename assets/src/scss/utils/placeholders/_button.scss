@@ -1,26 +1,48 @@
 @use '../variables/colors' as *;
+@use '../mixins/industrial' as *;
 
+// A chamfered brass plate on dark schemes, a flat dark plate on light
+// ones. Which one is decided by --button-gradient in the scheme map, so
+// nothing here branches on scheme names.
 %button {
-  border: 2px solid var(--button-background-color);
-  background-color: var(--button-background-color);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.625rem;
 
-  padding: var(--space-2xs, 0.5rem) var(--space-s);
+  padding: 0.8125rem 1.625rem;
+  border: 0;
+
+  background-color: var(--button-background-color);
+  background-image: var(--button-gradient, none);
+  box-shadow: inset 0 1px 0 rgba(255, 248, 230, 0.55);
 
   color: var(--button-text-color);
-  text-decoration: none;
-  text-align: center;
-  font-size: var(--step-0);
+  font-family: var(--ff-body);
+  font-size: 0.875rem;
   font-weight: 700;
+  letter-spacing: 0.06em;
   line-height: 1;
+  text-align: center;
+  text-decoration: none;
 
   min-width: 100px;
   max-width: max-content;
+  cursor: pointer;
 
-  transition: all 250ms ease-in-out;
+  @include chamfer(10px);
+  transition: filter 140ms ease, transform 140ms ease;
 
   &:hover {
-    border-color: transparent;
-    background-color: var(--button-text-color);
-    color: var(--button-background-color);
+    filter: brightness(1.12);
+  }
+
+  &:active {
+    transform: translateY(1px);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--heading-text-color);
+    outline-offset: 3px;
   }
 }

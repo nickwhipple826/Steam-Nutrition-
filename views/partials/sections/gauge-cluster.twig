@@ -1,0 +1,34 @@
+<section class="section gauge-cluster" data-scheme="{{ color|default('iron') }}">
+  <span class="gauge-cluster__tex" aria-hidden="true"></span>
+
+  <div class="section__inner">
+    {% include 'views/partials/components/rail-tag.twig' with { text: rail_text } %}
+
+    <div class="section__head">
+      <div class="section__head-copy">
+        <h2 class="brass-face">{{ heading|esc_html }}</h2>
+        {% if note %}<p class="section__note">{{ note|esc_html }}</p>{% endif %}
+      </div>
+
+      {% if link.url %}
+        <div class="section__head-aside">
+          {% include 'views/partials/components/button.twig' with {
+            label: link.title, url: link.url, target: link.target, variant: 'outline',
+          } %}
+        </div>
+      {% endif %}
+    </div>
+
+    <div class="gauge-cluster__grid">
+      {% for row in gauges %}
+        {% include 'views/partials/components/gauge.twig' with {
+          value: row.value,
+          label: row.label,
+          product: row.product,
+          kanji: row.kanji,
+          level: (row.level|default(70)) / 100,
+        } only %}
+      {% endfor %}
+    </div>
+  </div>
+</section>

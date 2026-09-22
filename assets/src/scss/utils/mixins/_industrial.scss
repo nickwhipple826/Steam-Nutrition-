@@ -1,0 +1,166 @@
+// =====================================================================
+// assets/src/scss/utils/mixins/_industrial.scss
+// ---------------------------------------------------------------------
+// The material language: machined plate edges, rivets, asanoha lattice,
+// brass foil type, riveted seams, vertical Japanese text.
+//
+// @use '@css/utils/mixins/industrial' as *;
+// =====================================================================
+
+@use 'sass:string';
+@use 'sass:math';
+@use '@css/utils/variables/colors' as *;
+
+// ---------------------------------------------------------------------
+// Hex -> %23RRGGBB for inlining a colour inside an SVG data URI.
+// Takes a hex colour only. rgba()/named colours will not encode.
+// ---------------------------------------------------------------------
+@function encode-hex($color) {
+  @return '%23' + string.slice('#{$color}', 2);
+}
+
+// ---------------------------------------------------------------------
+// chamfer — cuts the top-left and bottom-right corners off a box so it
+// reads as a machined plate rather than a rounded card. Square corners
+// everywhere else; this is the only corner treatment on the site.
+// ---------------------------------------------------------------------
+@mixin chamfer($size: 16px) {
+  clip-path: polygon(
+      #{$size} 0,
+      100% 0,
+      100% calc(100% - #{$size}),
+      calc(100% - #{$size}) 100%,
+      0 100%,
+      0 #{$size}
+  );
+}
+
+// ---------------------------------------------------------------------
+// rivets — four corner rivets drawn as pseudo-element gradients. One
+// gradient layer per corner, each positioned within its own background
+// box, so there is no markup cost and nothing to keep in sync.
+//
+// Needs position: relative on the host. Occupies ::after.
+// ---------------------------------------------------------------------
+@mixin rivets($inset: 11px, $size: 3.2px, $color: $color-gold-light) {
+  position: relative;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: $inset;
+    z-index: 3;
+    pointer-events: none;
+    background-repeat: no-repeat;
+    background-image:
+        radial-gradient(circle #{$size} at 0 0, #{$color} 40%, rgba(0, 0, 0, 0.75) 56%, transparent 62%),
+        radial-gradient(circle #{$size} at 100% 0, #{$color} 40%, rgba(0, 0, 0, 0.75) 56%, transparent 62%),
+        radial-gradient(circle #{$size} at 0 100%, #{$color} 40%, rgba(0, 0, 0, 0.75) 56%, transparent 62%),
+        radial-gradient(circle #{$size} at 100% 100%, #{$color} 40%, rgba(0, 0, 0, 0.75) 56%, transparent 62%);
+  }
+}
+
+// ---------------------------------------------------------------------
+// plate — the standard raised panel: panel fill, chamfered corners, a
+// lit top edge and a dark bottom edge. Compose with rivets().
+// ---------------------------------------------------------------------
+@mixin plate($chamfer: 16px) {
+  position: relative;
+  background-color: var(--panel-color, #{$color-soot});
+  @include chamfer($chamfer);
+  box-shadow:
+      inset 0 1px 0 rgba(248, 206, 121, 0.13),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.7);
+}
+
+// ---------------------------------------------------------------------
+// asanoha — 麻の葉, the hemp-leaf lattice. A hexagon divided into six
+// triangles. It is a traditional pattern and it is also, read straight,
+// a truss diagram — which is why it replaces the blueprint grid rather
+// than sitting next to it.
+//
+// Apply to a positioned ::before/overlay, not to the content element,
+// so opacity does not cascade onto the text.
+// ---------------------------------------------------------------------
+@mixin asanoha($color: $color-gold, $tile: 60px, $stroke: 1) {
+  $c: encode-hex($color);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='104' viewBox='0 0 60 104'%3E%3Cg fill='none' stroke='#{$c}' stroke-width='#{$stroke}'%3E%3Cpath d='M30 0 60 26 60 78 30 104 0 78 0 26Z'/%3E%3Cpath d='M30 0 30 104M0 26 60 78M60 26 0 78'/%3E%3Cpath d='M15 13 45 13M15 91 45 91M45 39 45 65M15 39 15 65'/%3E%3C/g%3E%3C/svg%3E");
+  background-size: $tile math.div($tile * 104, 60);
+}
+
+// ---------------------------------------------------------------------
+// brass-face — foil type. Gradient clipped to the glyphs, with a solid
+// fallback for anything that cannot clip a background to text.
+// ---------------------------------------------------------------------
+@mixin brass-face {
+  background: $gradient-brass;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+
+  @supports not (background-clip: text) {
+    background: none;
+    color: $color-gold;
+  }
+}
+
+// ---------------------------------------------------------------------
+// seam — the divider between stacked sections. A rivet strip rather
+// than a hairline, so section joins read as two plates bolted together.
+// ---------------------------------------------------------------------
+@mixin seam($height: 14px, $pitch: 52px) {
+  height: $height;
+  border-top: 1px solid var(--rule-color, #{$color-rule-dark});
+  border-bottom: 1px solid rgba(0, 0, 0, 0.8);
+  background-image: radial-gradient(
+      circle 2.6px,
+      #{$color-gold-light} 0 44%,
+      rgba(0, 0, 0, 0.65) 55%,
+      transparent 62%
+  );
+  background-size: $pitch 100%;
+  background-position: center;
+  opacity: 0.45;
+}
+
+// ---------------------------------------------------------------------
+// tategaki — 縦書き, vertical Japanese text for the gutter rails.
+//
+// $chars is required and it is not decorative. An element in
+// vertical-rl has its inline axis running vertically, so its physical
+// height has no intrinsic value to resolve against — inside a flex
+// column or a grid item with align-items other than stretch, Chrome
+// collapses it to roughly one character and the rest overflows
+// invisibly. display:inline-block, height:max-content and
+// height:fit-content all collapse the same way. An explicit height is
+// the only thing that holds.
+//
+// The 1.34em per character is the em box plus the 0.34em tracking
+// below; change one and change the other.
+// ---------------------------------------------------------------------
+@mixin tategaki($chars, $tracking: 0.34em) {
+  display: block;
+  flex: none;
+  writing-mode: vertical-rl;
+  text-orientation: upright;
+  letter-spacing: $tracking;
+  height: #{$chars * 1.34 + 0.6}em;
+}
+
+// ---------------------------------------------------------------------
+// seal — 印, the hanko stamp. The only vermilion on the page. Use it
+// for drop markers and section stamps, never as a generic badge.
+// ---------------------------------------------------------------------
+@mixin seal($size: 58px, $font-size: 20px, $border: 2px) {
+  display: grid;
+  place-items: center;
+  width: $size;
+  height: $size;
+  padding: 3px;
+  border: $border solid var(--seal-color, #{$color-vermilion});
+  color: var(--seal-color, #{$color-vermilion});
+  font-size: $font-size;
+  font-weight: 700;
+  line-height: 1.04;
+  text-align: center;
+}

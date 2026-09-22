@@ -1,0 +1,62 @@
+@use '@css/utils/variables/colors' as *;
+
+.newsletter-band {
+  border-top: 1px solid var(--rule-color);
+  text-align: center;
+}
+
+.newsletter-band__inner .seal {
+  margin: 0 auto 1.125rem;
+}
+
+.newsletter-band__inner .section__note {
+  margin-inline: auto;
+  max-width: 46ch;
+}
+
+.newsletter-band__form {
+  display: flex;
+  max-width: 32.5rem;
+  margin: 1.375rem auto 0.625rem;
+
+  input {
+    flex: 1;
+    min-width: 0;
+    padding: 0.875rem 1rem;
+    border: 1px solid var(--rule-color);
+    border-right: 0;
+    background-color: $color-pitch;
+    color: var(--body-text-color);
+    font: inherit;
+    font-size: 0.875rem;
+
+    &::placeholder { color: $color-smoke; }
+
+    &:focus {
+      outline: none;
+      border-color: var(--accent-color);
+    }
+  }
+
+  // The field and the button meet, so the button drops the chamfer it
+  // carries elsewhere.
+  .button {
+    clip-path: none;
+    white-space: nowrap;
+  }
+}
+
+.newsletter-band__status {
+  min-height: 1.4em;
+  margin: 0.5rem 0 0;
+  font-size: 0.875rem;
+  color: var(--heading-text-color);
+
+  &[data-state='error'] { color: var(--seal-color); }
+}
+
+.newsletter-band__fine {
+  margin: 0;
+  font-size: 0.71875rem;
+  color: $color-smoke;
+}

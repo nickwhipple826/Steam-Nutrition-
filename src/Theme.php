@@ -2,7 +2,12 @@
 
 namespace MMM;
 
-use MMM\FieldGroups\{HeroFieldGroup, PageContent, SeoFields, SiteSettingsFieldGroup, PropertyFields, ShopCollectionFields};
+use MMM\FieldGroups\{MenuItemFields,
+  PageContent,
+  SeoFields,
+  SiteSettingsFieldGroup,
+  PropertyFields,
+  ShopCollectionFields};
 use MMM\PostTypes\{DocumentPostType, NoticePostType, OpenPositionPostType, PropertyPostType};
 use MMM\Models\Post;
 use MMM\Models\Site;
@@ -21,6 +26,24 @@ class Theme
 {
   use Singleton;
 
+  /**
+   * Google Fonts request for the three brand faces. Weights are trimmed
+   * to what the stylesheet actually uses — every extra weight is another
+   * file the first paint waits on.
+   */
+  private const FONTS_URL = 'https://fonts.googleapis.com/css2'
+    . '?family=Rye'
+    . '&family=Shippori+Mincho+B1:wght@600;700;800'
+    . '&family=Zen+Kaku+Gothic+New:wght@400;500;700'
+    . '&display=swap';
+
+  /**
+   * Flexible content layouts that open a page under the fixed header.
+   * A page whose first visible component is one of these gets the
+   * has-hero body class and no top padding on <main>.
+   */
+  private const HERO_LAYOUTS = [ 'hero-lineup' ];
+
   private Security $security;
   private TwigFilterService $twigFilterService;
 
@@ -35,6 +58,7 @@ class Theme
     register_nav_menus( [
       'primary' => __( 'Primary Menu' ),
       'footer' => __( 'Footer Menu' ),
+      'legal' => __( 'Legal Menu' ),
     ] );
   }
 
@@ -60,12 +84,71 @@ class Theme
    */
   public function addToContext( array $context ): array
   {
+    $footerMenu = Timber::get_menu( 'footer' );
+
     $context['site'] = new Site();
     $context['menu'] = Timber::get_menu( 'primary' );
-    $context['top_bar_menu'] = Timber::get_menu( 'top_bar' );
-    $context['footer_links'] = Timber::get_menu( 'footer' )?->items ?? [];
+    $context['footer_menu'] = $footerMenu;
+    $context['legal_menu'] = Timber::get_menu( 'legal' );
+
+    // Still read by anything inherited that expects the flat list.
+    $context['footer_links'] = $footerMenu?->items ?? [];
 
     return $context;
+  }
+
+  /**
+   * Adds has-hero when the page opens on a full-bleed hero, so the fixed
+   * header can sit over it. Every other page gets top padding on <main>
+   * instead (see layout/_header.scss).
+   * @param array $classes
+   * @return array
+   */
+  public function bodyClass( array $classes ): array
+  {
+    if ( !is_singular() || !function_exists( 'get_field' ) ) {
+      return $classes;
+    }
+
+    $id = get_queried_object_id();
+
+    // First component that is not hidden.
+    foreach ( get_field( 'components', $id ) ?: [] as $component ) {
+      if ( !empty( $component['section_hidden'] ) ) {
+        continue;
+      }
+
+      if ( in_array( $component['acf_fc_layout'] ?? '', self::HERO_LAYOUTS, true ) ) {
+        $classes[] = 'has-hero';
+      }
+
+      break;
+    }
+
+    return $classes;
+  }
+
+  public function enqueueFonts(): void
+  {
+    wp_enqueue_style( 'mmm-fonts', self::FONTS_URL, [], null );
+  }
+
+  /**
+   * Preconnect to both font hosts. fonts.gstatic.com serves the files
+   * cross-origin, so it needs the crossorigin flag or the early
+   * connection is thrown away and opened again.
+   * @param array $urls
+   * @param string $relation
+   * @return array
+   */
+  public function fontResourceHints( array $urls, string $relation ): array
+  {
+    if ( 'preconnect' === $relation ) {
+      $urls[] = 'https://fonts.googleapis.com';
+      $urls[] = [ 'href' => 'https://fonts.gstatic.com', 'crossorigin' ];
+    }
+
+    return $urls;
   }
 
   private function init(): void
@@ -93,6 +176,9 @@ class Theme
 
     // Register hooks
     add_action( 'after_setup_theme', [ $this, 'setup' ] );
+    add_action( 'wp_enqueue_scripts', [ $this, 'enqueueFonts' ] );
+    add_filter( 'wp_resource_hints', [ $this, 'fontResourceHints' ], 10, 2 );
+    add_filter( 'body_class', [ $this, 'bodyClass' ] );
     add_filter( 'use_block_editor_for_post_type', '__return_false' );
 
     // Always enqueue Font Awesome's frontend assets. The ACF Font
@@ -129,9 +215,9 @@ class Theme
 
     // Add field groups here
     $fieldsRegistry->register( SeoFields::class );
-    $fieldsRegistry->register( HeroFieldGroup::class );
     $fieldsRegistry->register( PageContent::class );
     $fieldsRegistry->register( SiteSettingsFieldGroup::class );
+    $fieldsRegistry->register( MenuItemFields::class );
     $fieldsRegistry->register( PropertyFields::class );
     $fieldsRegistry->register( ShopCollectionFields::class );
 

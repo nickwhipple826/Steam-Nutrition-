@@ -1,0 +1,31 @@
+{% import 'macros/picture.twig' as picture %}
+
+<section class="quick-tiles" data-scheme="{{ color|default('soot') }}">
+  <ul class="quick-tiles__list">
+    {% for tile in tiles %}
+      <li class="quick-tiles__item">
+        <a class="quick-tiles__link" href="{{ tile.link.url|esc_url }}"
+           target="{{ tile.link.target|default('_self')|esc_attr }}">
+
+          {% if tile.image %}
+            <span class="quick-tiles__shot">
+              {{ picture.render(tile.image, 'medium', '', 'quick-tiles__img') }}
+            </span>
+          {% endif %}
+
+          <span class="quick-tiles__body">
+            {% if tile.kanji %}
+              <span class="quick-tiles__kanji" aria-hidden="true">{{ tile.kanji|esc_html }}</span>
+            {% endif %}
+            <span class="quick-tiles__title">{{ tile.title|esc_html }}</span>
+            {% if tile.subtitle %}
+              <span class="quick-tiles__subtitle">{{ tile.subtitle|esc_html }}</span>
+            {% endif %}
+          </span>
+
+          <span class="quick-tiles__go">{{ tile.link.title|default('Shop')|esc_html }}</span>
+        </a>
+      </li>
+    {% endfor %}
+  </ul>
+</section>

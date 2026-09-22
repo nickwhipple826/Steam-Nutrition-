@@ -10,9 +10,21 @@
 // Layout
 @forward "layout/header";
 @forward "layout/footer";
-@forward "layout/hero";
+@forward "layout/section-chrome";
 
-// Sections
+// Sections — Steam
+@forward 'layout/sections/hero-lineup';
+@forward 'layout/sections/quick-tiles';
+@forward 'layout/sections/product-rail';
+@forward 'layout/sections/gauge-cluster';
+@forward 'layout/sections/campaign-banner';
+@forward 'layout/sections/drop-grid';
+@forward 'layout/sections/subscribe-save';
+@forward 'layout/sections/workshop-facts';
+@forward 'layout/sections/newsletter-band';
+
+// Sections — inherited from Woonsocket. Drop a line here and its
+// PageContent registration together, once the layout is off every page.
 @forward 'layout/sections/content-media';
 @forward 'layout/sections/cta-links';
 @forward 'layout/sections/mission-vision';
@@ -33,7 +45,6 @@
 @forward 'layout/sections/plans-reports-policies';
 @forward 'layout/sections/bordered-callout';
 @forward 'layout/sections/shop-collection';
-
 
 // Pages
 @forward "pages/home";

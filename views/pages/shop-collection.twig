@@ -2,13 +2,6 @@
 
 {% block content %}
 
-  {% if post.acf.hero %}
-    {% include 'views/partials/sections/hero.twig' with {
-      heading: post.acf.hero.heading,
-      background: post.acf.hero.background,
-    } %}
-  {% endif %}
-
   <div class="shop-collection" data-filter-group="{{ filter_group }}">
     <div class="shop-collection__layout">
 
@@ -38,7 +31,7 @@
         </header>
 
         {% for component in post.components %}
-          {% if not component.fields.section_hidden %}
+          {% if not component.section_hidden %}
             {% include component.view with component %}
           {% endif %}
         {% endfor %}

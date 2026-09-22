@@ -1,0 +1,113 @@
+@use '@css/utils/variables/colors' as *;
+@use '@css/utils/mixins/industrial' as *;
+
+.gauge-cluster {
+  overflow: hidden;
+  border-top: 1px solid var(--rule-color);
+  border-bottom: 1px solid var(--rule-color);
+}
+
+.gauge-cluster__tex {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.055;
+  @include asanoha($color-gold);
+}
+
+.gauge-cluster__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(14.375rem, 1fr));
+  gap: clamp(1rem, 2.4vw, 1.75rem);
+  margin-top: var(--space-l, clamp(1.75rem, 4vw, 2.875rem));
+}
+
+.gauge {
+  @include plate;
+  @include rivets;
+  padding: 1.625rem 1.375rem 1.5rem;
+  text-align: center;
+}
+
+.gauge__dial {
+  display: block;
+  width: min(11.875rem, 58vw);
+  height: auto;
+  margin: 0 auto 0.875rem;
+}
+
+.gauge__bezel { fill: $color-pitch; stroke: $color-gold; stroke-width: 2; }
+.gauge__inner { fill: none; stroke: #3A2A12; stroke-width: 1; }
+
+.gauge__ticks {
+  fill: none;
+  stroke: #6F5A33;
+  stroke-width: 7;
+  stroke-linecap: round;
+  stroke-dasharray: 1.6 8.6;
+}
+
+.gauge__redline {
+  fill: none;
+  stroke: $color-vermilion;
+  stroke-width: 4;
+  stroke-linecap: round;
+  opacity: 0.95;
+}
+
+.gauge__cap { fill: $color-gold; }
+.gauge__pin { fill: $color-pitch; }
+
+.gauge__needle {
+  transform-box: view-box;
+  transform-origin: 60px 60px;
+  // --v is a unitless 0-1 set inline from the Needle Position field.
+  transform: rotate(calc(135deg + var(--v) * 270deg));
+
+  path {
+    stroke: $color-gold-light;
+    stroke-width: 3;
+    stroke-linecap: round;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    animation: gauge-sweep 1.9s cubic-bezier(0.18, 0.9, 0.25, 1) 0.35s both;
+  }
+}
+
+// Sweeps from zero, overshoots once, settles. The 288deg at 68% is the
+// overshoot; the 270deg at 100% is the resting value and must match the
+// static transform above.
+@keyframes gauge-sweep {
+  0%   { transform: rotate(135deg); }
+  68%  { transform: rotate(calc(135deg + var(--v) * 288deg)); }
+  100% { transform: rotate(calc(135deg + var(--v) * 270deg)); }
+}
+
+.gauge__value {
+  font-family: var(--ff-wood);
+  font-size: 1.625rem;
+  font-weight: 400;
+  line-height: 1;
+  color: var(--heading-text-color);
+}
+
+.gauge__label {
+  margin-top: 0.5rem;
+  font-size: 0.75rem;
+  letter-spacing: 0.14em;
+  color: $color-smoke;
+}
+
+.gauge__product {
+  font-family: var(--ff-jp);
+  margin-top: 0.125rem;
+  font-size: 0.8125rem;
+  letter-spacing: 0.14em;
+  color: var(--accent-color);
+}
+
+.gauge__kanji {
+  margin-right: 0.25rem;
+}

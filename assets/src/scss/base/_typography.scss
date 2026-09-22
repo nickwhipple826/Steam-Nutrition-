@@ -4,7 +4,6 @@
   @link https://utopia.fyi/type/calculator?c=360,14,1.2,2560,20,1.333,5,2,&s=0.75|0.5|0.25,1.5|2|3|4|6,s-l&g=s,l,xl,12
 */
 
-
 :root {
   @include utopia.generateTypeScale((
       "minWidth": 320,
@@ -18,31 +17,66 @@
       "relativeTo": "viewport",
       "prefix": "step-",
   ));
+
+  // -------------------------------------------------------------------
+  // Faces. Loaded from Google Fonts in Theme::enqueueFonts().
+  //
+  //   --ff-body    Zen Kaku Gothic New — a Japanese gothic that also
+  //                sets Latin cleanly, so running text and kana share
+  //                one face.
+  //   --ff-mincho  Shippori Mincho B1 — headings. A mincho and a
+  //                Victorian roman share vertical stress and bracketed
+  //                serifs, which is what lets one face carry both halves
+  //                of the brand.
+  //   --ff-wood    Rye — spurred woodtype. Wordmark and gauge numerals
+  //                only; it gets loud fast.
+  //   --ff-jp      Any element rendering Japanese. See the note below.
+  //
+  // Every stack names a CJK-capable fallback. When the first family in
+  // a stack lacks CJK coverage, Chrome takes the character ADVANCE from
+  // that font and the glyph from the fallback — in vertical-rl that
+  // piles the characters on top of each other (measured: 11px pitch on
+  // a 31px font instead of 41px).
+  // -------------------------------------------------------------------
+  --ff-body: "Zen Kaku Gothic New", "Hiragino Sans", "Yu Gothic",
+      "Noto Sans JP", "Noto Sans CJK JP", system-ui, sans-serif;
+  --ff-mincho: "Shippori Mincho B1", "Hiragino Mincho ProN", "Yu Mincho",
+      "Noto Serif JP", "Noto Serif CJK JP", Georgia, serif;
+  --ff-wood: "Rye", "Shippori Mincho B1", Georgia, serif;
+  --ff-jp: var(--ff-mincho);
 }
 
 body {
-  font-family: -apple-system, "system-ui", Segoe UI, Roboto, Oxygen-Sans, Ubuntu, Cantarell, Helvetica Neue, sans-serif;
+  font-family: var(--ff-body);
   font-size: var(--step-0);
+  line-height: 1.62;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--ff-mincho);
+  line-height: 1.04;
+  letter-spacing: -0.01em;
 }
 
 h1 {
   font-size: var(--step-5);
-  font-weight: 900;
+  font-weight: 800;
 }
 
 h2 {
-  font-size: var(--step-4);
-  font-weight: 700;
+  font-size: clamp(1.875rem, 4.4vw, 3.25rem);
+  font-weight: 800;
 }
 
 h3 {
-  font-size: var(--step-3);
-  font-weight: 600;
+  font-size: clamp(1.1875rem, 2vw, 1.5rem);
+  font-weight: 700;
+  line-height: 1.2;
 }
 
 h4 {
-  font-size: var(--step-2);
-  font-weight: 500;
+  font-size: var(--step-1);
+  font-weight: 700;
 }
 
 h5 {
@@ -52,4 +86,8 @@ h5 {
 
 h6 {
   font-weight: 500;
+}
+
+.jp {
+  font-family: var(--ff-jp);
 }

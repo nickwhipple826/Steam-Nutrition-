@@ -1,0 +1,172 @@
+@use '@css/utils/variables/colors' as *;
+@use '@css/utils/mixins/industrial' as *;
+
+.hero-lineup {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  min-height: min(92vh, 55rem);
+  overflow: hidden;
+  // No pull-up. The header is position:fixed and takes no space, so the
+  // hero already starts at the top of the viewport underneath it.
+}
+
+.hero-lineup__bg {
+  position: absolute;
+  inset: 0;
+
+  picture, img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+    // Holds the subject right of centre so the copy column sits on
+    // background rather than on product.
+    object-position: 68% center;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+        linear-gradient(90deg,
+            rgba(6, 5, 4, var(--scrim, 0.9)) 0%,
+            rgba(6, 5, 4, calc(var(--scrim, 0.9) * 0.93)) 26%,
+            rgba(6, 5, 4, calc(var(--scrim, 0.9) * 0.45)) 56%,
+            rgba(6, 5, 4, 0.08) 80%,
+            rgba(6, 5, 4, 0.5) 100%),
+        linear-gradient(0deg,
+            rgba(6, 5, 4, 0.95) 0%,
+            rgba(6, 5, 4, 0.25) 34%,
+            transparent 52%);
+  }
+}
+
+// One orchestrated moment on load, then nothing else moves on its own.
+.hero-lineup__steam {
+  position: absolute;
+  top: -12%;
+  left: 38%;
+  width: 44vw;
+  height: 70%;
+  opacity: 0;
+  pointer-events: none;
+  filter: blur(24px);
+  background: radial-gradient(ellipse at 50% 80%, rgba(231, 222, 195, 0.16), transparent 62%);
+
+  @media (prefers-reduced-motion: no-preference) {
+    animation: hero-steam-rise 5.2s cubic-bezier(0.22, 0.7, 0.3, 1) 0.5s both;
+  }
+}
+
+@keyframes hero-steam-rise {
+  0%   { opacity: 0; transform: translateY(3.75rem) scale(0.9); }
+  35%  { opacity: 0.9; }
+  100% { opacity: 0; transform: translateY(-4.375rem) scale(1.25); }
+}
+
+.hero-lineup__inner {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 1480px;
+  margin-inline: auto;
+  padding: 0 var(--space-m, clamp(1.25rem, 5vw, 4rem)) var(--space-xl, clamp(2.75rem, 6vw, 5.375rem));
+}
+
+.hero-lineup__grid {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: end;
+  gap: clamp(1.125rem, 3vw, 2.75rem);
+}
+
+.hero-lineup__gutter {
+  display: none;
+
+  @media (min-width: 900px) {
+    display: flex;
+    flex: none;
+    flex-direction: column;
+    align-items: center;
+    padding-bottom: 0.375rem;
+  }
+}
+
+.hero-lineup__tate {
+  // 4 characters. An element in vertical-rl has no intrinsic height to
+  // resolve against inside a grid item that is not stretching, so the
+  // mixin sets an explicit one — see _industrial.scss.
+  @include tategaki(4);
+  font-family: var(--ff-jp);
+  font-size: clamp(1.5rem, 2.2vw, 1.9375rem);
+  font-weight: 700;
+  color: var(--accent-color);
+  opacity: 0.92;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.9);
+}
+
+.hero-lineup__copy {
+  max-width: 40rem;
+}
+
+.hero-lineup__heading {
+  margin: 0 0 0.375rem;
+  font-size: clamp(3.375rem, 10.6vw, 8.375rem);
+  line-height: 0.86;
+  letter-spacing: -0.035em;
+}
+
+.hero-lineup__sub {
+  font-family: var(--ff-wood);
+  margin-bottom: var(--space-s, 1.375rem);
+  font-size: clamp(0.8125rem, 1.5vw, 1.125rem);
+  letter-spacing: 0.3em;
+  color: $color-brass;
+}
+
+.hero-lineup__lede {
+  max-width: 56ch;
+  margin-bottom: var(--space-m, 1.75rem);
+  font-size: clamp(1rem, 1.35vw, 1.1875rem);
+  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.9);
+}
+
+.hero-lineup__cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.hero-lineup__stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  max-width: 38.75rem;
+  margin: var(--space-m, clamp(1.5rem, 4vw, 2.75rem)) 0 0;
+  border-top: 1px solid var(--rule-color);
+}
+
+.hero-lineup__stat {
+  padding: 0.875rem 1.125rem 0.25rem;
+  border-right: 1px solid var(--rule-color);
+
+  &:last-child { border-right: 0; }
+}
+
+.hero-lineup__stat-value {
+  font-family: var(--ff-mincho);
+  font-size: 1.375rem;
+  font-weight: 700;
+  color: var(--heading-text-color);
+}
+
+.hero-lineup__stat-label {
+  display: block;
+  margin: 0;
+  padding-bottom: 0.75rem;
+  font-size: 0.6875rem;
+  line-height: 1.35;
+  letter-spacing: 0.09em;
+  color: $color-smoke;
+}

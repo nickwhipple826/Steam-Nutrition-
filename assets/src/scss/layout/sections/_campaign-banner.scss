@@ -1,0 +1,96 @@
+@use '@css/utils/variables/colors' as *;
+
+.campaign-banner {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: min(74vh, 41.25rem);
+  overflow: hidden;
+  text-align: center;
+}
+
+.campaign-banner__bg {
+  position: absolute;
+  inset: 0;
+  filter: saturate(0.8);
+
+  picture, img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 50% 40%, rgba(6, 5, 4, 0.35), rgba(6, 5, 4, 0.93) 72%);
+  }
+}
+
+// 暖簾 — the split curtain hung in a shop doorway, on a brass rod.
+.campaign-banner__noren {
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  z-index: 1;
+  display: flex;
+  gap: 5px;
+  height: min(30%, 11.875rem);
+  pointer-events: none;
+  filter: drop-shadow(0 6px 18px rgba(0, 0, 0, 0.6));
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset-inline: 0;
+    top: 0;
+    z-index: 2;
+    height: 5px;
+    background: linear-gradient(180deg, $color-gold-light, $color-copper);
+  }
+}
+
+.campaign-banner__panel {
+  flex: 1;
+  border-top: 1px solid rgba(248, 206, 121, 0.45);
+  background: linear-gradient(180deg,
+      #171008 0%,
+      #120D07 52%,
+      rgba(18, 13, 7, 0.55) 84%,
+      rgba(18, 13, 7, 0) 100%);
+}
+
+.campaign-banner__inner {
+  position: relative;
+  z-index: 2;
+  max-width: 52rem;
+  padding: var(--space-m, clamp(1.25rem, 5vw, 4rem));
+
+  .eyebrow { justify-content: center; }
+}
+
+.campaign-banner__heading {
+  // Two-word headings at this size sit right on the wrap point, and
+  // which side they land depends on the face that ends up loading.
+  text-wrap: balance;
+  margin-bottom: 0.5rem;
+  font-size: clamp(2.625rem, 8vw, 6rem);
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+
+.campaign-banner__kanji {
+  font-family: var(--ff-jp);
+  margin-bottom: var(--space-s, 1.25rem);
+  font-size: clamp(0.9375rem, 1.8vw, 1.25rem);
+  letter-spacing: 0.5em;
+  color: var(--accent-color);
+}
+
+.campaign-banner__copy {
+  max-width: 46ch;
+  margin: 0 auto var(--space-m, 1.625rem);
+  color: $color-parchment;
+}

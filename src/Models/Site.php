@@ -23,6 +23,8 @@ class Site extends TimberSite
     return get_field( $selector, 'option' );
   }
 
+  // ---- Branding -------------------------------------------------------
+
   public function nav_logo(): string
   {
     return $this->acfOption( 'nav_logo' ) ?: '';
@@ -30,12 +32,83 @@ class Site extends TimberSite
 
   /**
    * Falls back to the nav logo if no footer-specific logo is set.
-   * @return string
    */
   public function footer_logo(): string
   {
     return $this->acfOption( 'footer_logo' ) ?: $this->nav_logo();
   }
+
+  public function wordmark(): string
+  {
+    return $this->acfOption( 'wordmark' ) ?: 'Steam';
+  }
+
+  public function wordmark_sub(): string
+  {
+    return $this->acfOption( 'wordmark_sub' ) ?? 'NUTRITION';
+  }
+
+  // ---- Header ---------------------------------------------------------
+
+  /**
+   * @return string[]
+   */
+  public function ticker_items(): array
+  {
+    $rows = $this->acfOption( 'ticker_items' ) ?: [];
+
+    return array_values( array_filter( array_map(
+      fn( array $row ) => trim( $row['line'] ?? '' ),
+      $rows
+    ) ) );
+  }
+
+  public function search_url(): string
+  {
+    return $this->acfOption( 'search_url' ) ?: home_url( '/?s=' );
+  }
+
+  public function account_url(): string
+  {
+    return $this->acfOption( 'account_url' ) ?: '#';
+  }
+
+  public function cart_url(): string
+  {
+    return $this->acfOption( 'cart_url' ) ?: '#';
+  }
+
+  // ---- Footer ---------------------------------------------------------
+
+  public function footer_tagline(): string
+  {
+    return $this->acfOption( 'footer_tagline' ) ?: '';
+  }
+
+  /**
+   * @return array<int, array{network: string, url: string}>
+   */
+  public function socials(): array
+  {
+    $rows = $this->acfOption( 'socials' ) ?: [];
+
+    return array_values( array_filter(
+      $rows,
+      fn( array $row ) => !empty( $row['url'] )
+    ) );
+  }
+
+  public function locale_label(): string
+  {
+    return $this->acfOption( 'locale_label' ) ?: '';
+  }
+
+  public function disclaimer(): string
+  {
+    return $this->acfOption( 'disclaimer' ) ?: '';
+  }
+
+  // ---- Inherited from Woonsocket -------------------------------------
 
   public function address(): string
   {

@@ -2,7 +2,6 @@
 
 namespace MMM\FieldGroups\Partials;
 
-use MMM\FieldGroups\Partials\BasePartial;
 use StoutLogic\AcfBuilder\FieldsBuilder;
 
 class SchemeSelectorPartial extends BasePartial {
@@ -13,13 +12,14 @@ class SchemeSelectorPartial extends BasePartial {
     $fields->addRadio( $fieldName, [
       'label' => 'Color Scheme',
       'layout' => 'horizontal',
+      'instructions' => 'Alternate Iron and Soot down the page so sections read as separate plates. Brass and Parchment are for occasional bands, not runs.',
       'choices' => [
-        'white' => 'White',
-        'navy' => 'Navy',
-        'maroon' => 'Maroon',
-        'gold' => 'Gold',
+        'iron' => 'Iron',
+        'soot' => 'Soot',
+        'brass' => 'Brass',
+        'parchment' => 'Parchment',
       ],
-      'default_value' => 'white',
+      'default_value' => 'iron',
       'conditional_logic' => $condition,
     ] );
 

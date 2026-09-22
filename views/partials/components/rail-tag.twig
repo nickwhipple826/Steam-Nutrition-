@@ -1,0 +1,14 @@
+{#
+  components/rail-tag.twig
+  ---------------------------------------------------------------
+  Vertical Japanese marker in a section's left gutter. Desktop only —
+  below 1180px the gutter collapses and this is display:none.
+
+  {% include 'views/partials/components/rail-tag.twig' with { text: rail_text } %}
+#}
+{% if text %}
+  <div class="section__rail" aria-hidden="true">
+    <span class="section__rail-text">{{ text|esc_html }}</span>
+    <span class="section__rail-line"></span>
+  </div>
+{% endif %}

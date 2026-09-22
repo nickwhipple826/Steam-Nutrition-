@@ -1,0 +1,216 @@
+// =====================================================================
+// layout/_section-chrome.scss
+// ---------------------------------------------------------------------
+// Shared furniture for the Steam sections: the max-width inner, the
+// left gutter rail that carries the vertical Japanese marker, the
+// heading row, rail arrows, the seam divider, the eyebrow and the seal.
+//
+// Everything here is class-scoped rather than element-scoped, so it
+// cannot collide with the inherited Woonsocket section partials.
+// =====================================================================
+
+@use '@css/utils/variables/colors' as *;
+@use '@css/utils/mixins/industrial' as *;
+
+$section-max: 1480px;
+$rail-width: 76px;
+$rail-breakpoint: 1180px;
+
+.section {
+  position: relative;
+  padding-block: var(--space-2xl, clamp(3.5rem, 7vw, 6.25rem));
+}
+
+.section__inner {
+  position: relative;
+  max-width: $section-max;
+  margin-inline: auto;
+  padding-inline: var(--space-m, clamp(1.25rem, 5vw, 4rem));
+
+  @media (min-width: $rail-breakpoint) {
+    padding-left: calc(var(--space-m, 4rem) + #{$rail-width});
+  }
+}
+
+// ---------------------------------------------------------------------
+// Gutter rail
+// ---------------------------------------------------------------------
+.section__rail {
+  display: none;
+
+  @media (min-width: $rail-breakpoint) {
+    position: absolute;
+    inset-block: 0;
+    left: var(--space-m, 4rem);
+    width: $rail-width;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-s, 1rem);
+    padding-top: 0.375rem;
+  }
+}
+
+.section__rail-text {
+  @include tategaki(2);
+  font-family: var(--ff-jp);
+  font-size: 1.1875rem;
+  color: var(--accent-color);
+  opacity: 0.85;
+}
+
+.section__rail-line {
+  flex: 1;
+  width: 1px;
+  background: linear-gradient(180deg, var(--rule-color), transparent);
+}
+
+// ---------------------------------------------------------------------
+// Heading row
+// ---------------------------------------------------------------------
+.section__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-s, 1.5rem);
+  margin-bottom: var(--space-l, clamp(1.625rem, 3vw, 2.5rem));
+}
+
+.section__head-copy {
+  // Without a basis the copy column collapses to whatever the button
+  // leaves behind and the note wraps at ~30 characters.
+  flex: 1 1 27.5rem;
+}
+
+.section__head-aside {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2xs, 0.5rem);
+}
+
+.section__note {
+  max-width: 44ch;
+  margin: 0.5rem 0 0;
+  font-size: 0.875rem;
+  color: $color-smoke;
+}
+
+.section__empty {
+  padding: var(--space-s, 1rem);
+  border: 1px dashed var(--rule-color);
+  font-size: 0.875rem;
+  color: $color-smoke;
+
+  code {
+    color: var(--accent-color);
+  }
+}
+
+// ---------------------------------------------------------------------
+// Brass foil headings
+// ---------------------------------------------------------------------
+.brass-face {
+  @include brass-face;
+}
+
+// ---------------------------------------------------------------------
+// Eyebrow — a seal dot, then one line. Sentence case, not tracked caps.
+// ---------------------------------------------------------------------
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.625rem;
+  margin-bottom: var(--space-s, 1.125rem);
+  font-size: 0.75rem;
+  letter-spacing: 0.16em;
+  color: $color-parchment;
+}
+
+.eyebrow__dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--seal-color);
+  box-shadow: 0 0 10px rgba(197, 67, 44, 0.9);
+}
+
+// ---------------------------------------------------------------------
+// Seal
+// ---------------------------------------------------------------------
+.seal {
+  @include seal;
+  font-family: var(--ff-jp);
+}
+
+.seal--sm {
+  @include seal(38px, 13px, 1.5px);
+}
+
+.seal__char {
+  display: block;
+}
+
+// ---------------------------------------------------------------------
+// Horizontal rails
+// ---------------------------------------------------------------------
+.rail {
+  display: flex;
+  gap: var(--space-2xs, 1rem);
+  margin: 0;
+  padding: 0 0 0.375rem;
+  list-style: none;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar { display: none; }
+
+  // The rail is focusable so it can be scrolled from the keyboard;
+  // give that focus somewhere visible to land.
+  &:focus-visible {
+    outline: 2px solid var(--accent-color);
+    outline-offset: 4px;
+  }
+}
+
+.rail__item {
+  flex: 0 0 clamp(14.25rem, 25vw, 18.25rem);
+  scroll-snap-align: start;
+}
+
+.rail-nav {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.rail-nav__btn {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--rule-color);
+  background: none;
+  color: var(--accent-color);
+  cursor: pointer;
+  transition: background-color 150ms ease, border-color 150ms ease;
+
+  svg { width: 18px; height: 18px; }
+
+  &:hover {
+    border-color: var(--accent-color);
+    background-color: rgba(219, 152, 67, 0.12);
+  }
+
+  &[disabled] {
+    opacity: 0.35;
+    cursor: default;
+  }
+}
+
+// ---------------------------------------------------------------------
+// Seam — drop between two stacked sections where the join needs marking
+// ---------------------------------------------------------------------
+.seam {
+  @include seam;
+}

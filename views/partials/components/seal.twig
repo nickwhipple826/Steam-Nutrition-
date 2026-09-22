@@ -1,0 +1,15 @@
+{#
+  components/seal.twig
+  ---------------------------------------------------------------
+  印 — the hanko stamp. The only vermilion on the page. Characters are
+  stacked one per line, so pass one or two.
+
+  {% include 'views/partials/components/seal.twig' with { text: '定期', size: 'sm' } %}
+#}
+{% if text %}
+  <span class="seal {{ size ? 'seal--' ~ size : '' }}" aria-hidden="true">
+    {%- for char in text|split('') -%}
+      <span class="seal__char">{{ char }}</span>
+    {%- endfor -%}
+  </span>
+{% endif %}

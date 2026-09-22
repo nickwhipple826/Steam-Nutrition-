@@ -1,0 +1,83 @@
+@use '@css/utils/variables/colors' as *;
+@use '@css/utils/mixins/industrial' as *;
+
+.workshop-facts__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(1.625rem, 4vw, 3.75rem);
+  align-items: center;
+
+  @media (min-width: 900px) {
+    grid-template-columns: 0.8fr 1.2fr;
+  }
+}
+
+.workshop-facts__grid--right {
+  @media (min-width: 900px) {
+    grid-template-columns: 1.2fr 0.8fr;
+
+    .workshop-facts__shot { order: 2; }
+    .workshop-facts__copy { order: 1; }
+  }
+}
+
+.workshop-facts__shot {
+  @include plate(14px);
+  @include rivets;
+  border: 1px solid var(--rule-color);
+}
+
+.workshop-facts__img,
+.workshop-facts__shot img {
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+}
+
+.workshop-facts__lede {
+  max-width: 56ch;
+  margin: 0.875rem 0 1.375rem;
+  font-size: clamp(1rem, 1.35vw, 1.1875rem);
+}
+
+.workshop-facts__list {
+  margin: 0;
+}
+
+.workshop-facts__row {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 1.125rem;
+  padding: 1.25rem 0;
+  border-top: 1px solid var(--rule-color);
+
+  &:last-child { border-bottom: 1px solid var(--rule-color); }
+}
+
+.workshop-facts__mark {
+  font-family: var(--ff-jp);
+  padding-top: 0.125rem;
+  font-size: 1.75rem;
+  line-height: 1;
+  color: var(--accent-color);
+}
+
+.workshop-facts__body {
+  margin: 0;
+}
+
+.workshop-facts__title {
+  display: block;
+  font-family: var(--ff-mincho);
+  margin-bottom: 0.3125rem;
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--heading-text-color);
+}
+
+.workshop-facts__text {
+  display: block;
+  max-width: 52ch;
+  font-size: 0.875rem;
+  color: $color-smoke;
+}

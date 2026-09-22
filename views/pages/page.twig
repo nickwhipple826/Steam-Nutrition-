@@ -2,15 +2,8 @@
 
 {% block content %}
 
-  {% if post.acf.hero %}
-    {% include 'views/partials/sections/hero.twig' with {
-      heading: post.acf.hero.heading,
-      background: post.acf.hero.background,
-    } %}
-  {% endif %}
-
   {% for component in post.components %}
-    {% if not component.fields.section_hidden %}
+    {% if not component.section_hidden %}
       {% include component.view with component %}
     {% endif %}
   {% endfor %}

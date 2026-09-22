@@ -1,0 +1,80 @@
+@use '@css/utils/variables/colors' as *;
+
+.quick-tiles__list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(13.4375rem, 1fr));
+  gap: 1px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  // The gap shows through as the hairline between tiles, so the rule
+  // colour lives on the grid rather than on four borders.
+  background-color: var(--rule-color);
+}
+
+.quick-tiles__link {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  height: 100%;
+  padding: 1.625rem 1.375rem 1.375rem;
+  background: linear-gradient(180deg, #120E08, #0A0806);
+  text-decoration: none;
+  transition: background 180ms ease;
+
+  &:hover {
+    background: linear-gradient(180deg, #1C1509, #0D0A07);
+  }
+}
+
+.quick-tiles__shot {
+  flex: none;
+}
+
+.quick-tiles__img,
+.quick-tiles__shot img {
+  // Fixed box with contain, so a tall shaker crop and a squat tub crop
+  // still line up along the row.
+  width: 4.625rem;
+  height: 6.5rem;
+  object-fit: contain;
+  filter: drop-shadow(0 8px 14px rgba(0, 0, 0, 0.7));
+}
+
+.quick-tiles__body {
+  display: block;
+}
+
+.quick-tiles__kanji {
+  display: block;
+  font-family: var(--ff-jp);
+  margin-bottom: 0.25rem;
+  font-size: 0.6875rem;
+  letter-spacing: 0.2em;
+  color: var(--accent-color);
+}
+
+.quick-tiles__title {
+  display: block;
+  font-family: var(--ff-mincho);
+  font-size: 1.375rem;
+  font-weight: 700;
+  color: var(--heading-text-color);
+}
+
+.quick-tiles__subtitle {
+  display: block;
+  margin-top: 0.125rem;
+  font-size: 0.75rem;
+  color: $color-smoke;
+}
+
+.quick-tiles__go {
+  margin-left: auto;
+  font-size: 0.8125rem;
+  letter-spacing: 0.1em;
+  color: var(--accent-color);
+  opacity: 0.65;
+
+  .quick-tiles__link:hover & { opacity: 1; }
+}

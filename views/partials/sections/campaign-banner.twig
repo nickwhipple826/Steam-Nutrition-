@@ -1,0 +1,39 @@
+{% import 'macros/picture.twig' as picture %}
+
+{#
+  Full-bleed. Like hero-lineup.twig this bypasses the section wrapper entirely
+  rather than fighting its max-width.
+#}
+<section class="campaign-banner" data-scheme="{{ color|default('iron') }}">
+  <div class="campaign-banner__bg">
+    {{ picture.responsive(background, ['large', 'full'], '100vw', null, 'campaign-banner__img') }}
+  </div>
+
+  {% if show_noren %}
+    <div class="campaign-banner__noren" aria-hidden="true">
+      {% for i in 1..(noren_panels|default(8)) %}
+        <span class="campaign-banner__panel"></span>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  <div class="campaign-banner__inner">
+    {% if eyebrow %}
+      <span class="eyebrow"><span class="eyebrow__dot"></span>{{ eyebrow|esc_html }}</span>
+    {% endif %}
+
+    <h2 class="campaign-banner__heading brass-face">{{ heading|esc_html }}</h2>
+
+    {% if kanji %}
+      <div class="campaign-banner__kanji" aria-hidden="true">{{ kanji|esc_html }}</div>
+    {% endif %}
+
+    {% if copy %}<p class="campaign-banner__copy">{{ copy|esc_html }}</p>{% endif %}
+
+    {% if link.url %}
+      {% include 'views/partials/components/button.twig' with {
+        label: link.title, url: link.url, target: link.target,
+      } %}
+    {% endif %}
+  </div>
+</section>

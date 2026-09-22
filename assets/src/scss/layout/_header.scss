@@ -1,397 +1,511 @@
-@use '../utils/variables/colors' as *;
+// =====================================================================
+// layout/_header.scss
+// ---------------------------------------------------------------------
+// Fixed wrapper: ticker + 78px bar. Transparent with a top-down scrim
+// while the page sits at the top, solid once ui/header.ts adds
+// .is-solid — and at that moment the ticker slides up out of view so
+// only the bar stays pinned.
+// =====================================================================
 
-.header-wrapper {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    z-index: 200;
-    display: flex;
-    flex-direction: column;
+@use '@css/utils/variables/colors' as *;
+@use '@css/utils/mixins/industrial' as *;
 
-  .site-header {
-    background-color: transparent;
-    position: relative;
-    z-index: 101;
-    transition: background-color 250ms ease-in-out;
+$mobile: '(max-width: 1000px), (orientation: portrait)';
+$desktop: '(min-width: 1001px) and (orientation: landscape)';
 
-    .container {
-        padding-right: 1.85rem;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding-top: 2.75rem;
-        padding-bottom: 2.25rem;
-
-        .site-branding {
-            display: flex;
-            justify-content: left;
-
-            .custom-logo-link {
-                .custom-logo {
-                    height: 100px;
-                    width: auto;
-                    padding-left: 2rem;
-                }
-            }
-        }
-
-        .main-navigation {
-            > ul {
-                list-style: none;
-                gap: 1.85rem;
-                display: flex;
-
-                li {
-                    position: relative;
-                    padding: 0 15px;
-
-                    a {
-                        color: $color-gold-light;
-                        font-weight: 600;
-                        text-decoration: none;
-                        display: flex;
-                        align-items: center;
-                        font-size: var(--step-1);
-                        transition: color 250ms ease-in-out;
-
-                        &:hover {
-                            color: $color-red;
-                        }
-                    }
-
-                    // Caret indicating this item has a dropdown
-                    &.has-dropdown > a::after {
-                        content: '';
-                        display: inline-block;
-                        width: 0;
-                        height: 0;
-                        margin-left: 6px;
-                        border-left: 4px solid transparent;
-                        border-right: 4px solid transparent;
-                        border-top: 5px solid currentColor;
-                    }
-
-                    // Dropdown reveal — hover (mouse) and focus-within
-                    // (keyboard tabbing through the links inside it)
-                    &.has-dropdown:hover > .main-navigation__dropdown,
-                    &.has-dropdown:focus-within > .main-navigation__dropdown {
-                        display: block;
-                    }
-
-                    // Last item's dropdown hangs off the right edge of
-                    // the viewport otherwise — flip it to the right.
-                    &:last-child .main-navigation__dropdown {
-                        left: auto;
-                        right: 0;
-                    }
-                }
-            }
-
-            &__dropdown {
-                display: none;
-                position: absolute;
-                top: 100%;
-                left: 0;
-                z-index: 10;
-
-                min-width: 200px;
-                margin: 0;
-                padding: var(--space-2xs, 0.5rem) 0;
-                list-style: none;
-
-                background-color: $color-white;
-                border-radius: 4px;
-                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-
-                li {
-                    padding: 0;
-                }
-
-                a {
-                    display: block;
-                    padding: var(--space-2xs, 0.5rem) var(--space-s);
-                    color: $color-navy !important;
-                    font-weight: 600;
-                    font-size: var(--step-0);
-                    white-space: nowrap;
-
-                    &:hover {
-                        background-color: hsl(0 0% 96%);
-                        color: $color-red !important;
-                    }
-
-                    // No caret on the dropdown's own links
-                    &::after {
-                        display: none;
-                    }
-                }
-            }
-        }
-
-        // ===== HEADER ICONS (search / account / cart) =====
-        // Same gold-light → gold treatment as the nav items.
-        .header-icons {
-            display: flex;
-            align-items: center;
-            gap: 1.25rem;
-
-            &__link {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                color: $color-gold-light;
-                transition: color 250ms ease-in-out;
-
-                svg {
-                    width: 20px;
-                    height: 20px;
-                }
-
-                &:hover {
-                    color: $color-gold;
-                }
-            }
-        }
-
-        // Hovering the header flips the background to white and
-        // shifts nav items + icons from gold-light to gold.
-        &:hover,
-        &:focus-within {
-            background-color: $color-white;
-
-            .main-navigation > ul > li > a,
-            .header-icons__link {
-                color: $color-gold;
-            }
-
-            .nav-toggle__bar {
-                background-color: $color-navy;
-            }
-        }
-    }
-  }
-
-  // ===== MOBILE MENU TOGGLE (hamburger) =====
-  // Hidden on desktop by default; shown only below the mobile breakpoint.
-  .nav-toggle {
-    display: none;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 5px;
-
-    width: 44px;
-    height: 44px;
-    padding: 0;
-    margin-right: 1rem;
-    flex-shrink: 0;
-
-    background: none;
-    border: none;
-    cursor: pointer;
-
-    &__bar {
-      display: block;
-      width: 24px;
-      height: 2px;
-      background-color: $color-gold-light;
-      transition: transform 0.2s ease, opacity 0.2s ease, background-color 250ms ease-in-out;
-    }
-
-    // Morphs into an X when the panel is open
-    &[aria-expanded='true'] {
-      .nav-toggle__bar:nth-child(1) {
-        transform: translateY(7px) rotate(45deg);
-      }
-
-      .nav-toggle__bar:nth-child(2) {
-        opacity: 0;
-      }
-
-      .nav-toggle__bar:nth-child(3) {
-        transform: translateY(-7px) rotate(-45deg);
-      }
-    }
-  }
-
-  // ===== MOBILE NAV PANEL =====
-  // Off-canvas panel driven by initNav() in nav.ts, which toggles
-  // .is-open (for the slide transition) and [hidden] (once fully
-  // closed, to remove it from the a11y tree / tab order). Hidden
-  // entirely on desktop; JS-controlled below the breakpoint.
-  .mobile-nav-panel,
-  .mobile-nav-backdrop {
-    display: none;
-  }
-
-  @media (max-width: 1000px) or (orientation: portrait) {
-    .site-header .main-navigation,
-    .site-header .header-icons {
-      display: none;
-    }
-
-    .site-header .container {
-  padding-inline: var(--space-m);
-  padding-top: var(--space-l);
-  padding-bottom: var(--space-m);
-  gap: var(--space-3xl);
-  justify-content: space-between;
+:root {
+  --header-h: 78px;
+  --ticker-h: 36px;
 }
 
-    .site-header .container .site-branding .custom-logo-link .custom-logo {
-      height: 70px;
-      width: auto;
-      padding-left: 0;
-      justify-content: flex-start;
-    }
+// No ticker configured -> nothing to offset for.
+body:not(:has(.ticker)) {
+  --ticker-h: 0px;
+}
 
-    .nav-toggle {
-      display: flex;
-      margin-right: 0;
-      padding-top: 25px;
-    }
+// Pages that do not open on a hero need to start below the header.
+// Theme::bodyClass() adds has-hero when the first component is one.
+body:not(.has-hero) main {
+  padding-top: calc(var(--ticker-h) + var(--header-h));
+}
 
-    .mobile-nav-backdrop {
-      display: block;
-      position: fixed;
-      inset: 0;
-      z-index: 149; // below the panel, but above the (now-covered) header
+.header-wrapper {
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: 200;
+  transition: transform 280ms cubic-bezier(0.4, 0, 0.2, 1);
 
-      background-color: rgba(0, 0, 0, 0.4);
-      opacity: 0;
-      transition: opacity 0.3s ease;
-
-      &.is-open {
-        opacity: 1;
-      }
-
-      &[hidden] {
-        display: none;
-      }
-    }
-
-    .mobile-nav-panel {
-      display: block;
-      position: fixed;
-      top: 0;
-      bottom: 0;
-      right: 0;
-      z-index: 150; // above the header — fully covers the logo when open
-
-      width: min(85vw, 340px);
-
-      background-color: $color-navy;
-      box-shadow: -4px 0 24px rgba(0, 0, 0, 0.15);
-
-      transform: translateX(100%);
-      transition: transform 0.3s ease;
-
-      &.is-open {
-        transform: translateX(0);
-      }
-
-      &[hidden] {
-        display: none;
-      }
-
-      &__inner {
-        height: 100%;
-        overflow-y: auto;
-        -webkit-overflow-scrolling: touch;
-        padding: calc(var(--space-l) + 56px) var(--space-m) calc(var(--space-l) + 72px);
-      }
-
-      &__close {
-        position: absolute;
-        top: var(--space-m);
-        right: var(--space-m);
-
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 44px;
-        height: 85px;
-
-        background: none;
-        border: none;
-        cursor: pointer;
-
-        &::before,
-        &::after {
-          content: '';
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          width: 22px;
-          height: 2px;
-          background-color: $color-white;
-        }
-
-        &::before {
-          transform: translate(-50%, -50%) rotate(45deg);
-        }
-
-        &::after {
-          transform: translate(-50%, -50%) rotate(-45deg);
-        }
-
-        &:hover::before,
-        &:hover::after {
-          background-color: $color-gold;
-        }
-      }
-
-      &__logo {
-        position: absolute;
-        bottom: var(--space-l);
-        left: 50%;
-        transform: translateX(-50%);
-
-        img {
-          display: block;
-          height: 40px;
-          width: auto;
-        }
-      }
-
-      &__primary {
-        ul {
-          list-style: none;
-          padding: 0;
-          margin: 0;
-          display: flex;
-          flex-direction: column;
-        }
-
-        a {
-          display: block;
-          padding: var(--space-s) 0;
-          color: $color-white;
-          font-weight: 600;
-          font-size: var(--step-1);
-          text-decoration: none;
-
-          &:hover {
-            color: $color-gold;
-          }
-        }
-      }
-
-      &__sub {
-        padding-left: var(--space-m);
-
-        a {
-          padding: var(--space-2xs, 0.5rem) 0;
-          font-size: var(--step-0);
-          font-weight: 400;
-          color: rgba(255, 255, 255, 0.8);
-
-          &:hover {
-            color: $color-gold;
-          }
-        }
-      }
-    }
+  &.is-solid {
+    transform: translateY(calc(-1 * var(--ticker-h)));
   }
+}
+
+// The WP admin bar is fixed too; without this the two overlap for
+// anyone logged in.
+.admin-bar .header-wrapper {
+  top: 32px;
+
+  @media (max-width: 782px) {
+    top: 46px;
+  }
+}
+
+// ---------------------------------------------------------------------
+// Ticker
+// ---------------------------------------------------------------------
+.ticker {
+  height: var(--ticker-h);
+  overflow: hidden;
+  border-bottom: 1px solid $color-rule-dark;
+  background: linear-gradient(180deg, #1A1409, #0C0906);
+}
+
+.ticker__track {
+  display: flex;
+  width: max-content;
+
+  // Two identical lists side by side; the track slides exactly one
+  // list-width (-50%) and loops without a seam.
+  @media (prefers-reduced-motion: no-preference) {
+    animation: ticker-roll 42s linear infinite;
+  }
+
+  .ticker:hover & {
+    animation-play-state: paused;
+  }
+}
+
+@keyframes ticker-roll {
+  to { transform: translateX(-50%); }
+}
+
+.ticker__list {
+  display: flex;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ticker__item {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  height: var(--ticker-h);
+  padding: 0 1.75rem;
+  white-space: nowrap;
+  font-size: 0.78125rem;
+  letter-spacing: 0.08em;
+  color: #B7A784;
+
+  &::after {
+    content: '';
+    width: 6px;
+    height: 6px;
+    background-color: $color-gold;
+    opacity: 0.6;
+    transform: rotate(45deg);
+  }
+}
+
+// ---------------------------------------------------------------------
+// Bar
+// ---------------------------------------------------------------------
+.site-header {
+  position: relative;
+  // Own stacking context, so the scrim can sit at z-index -1 behind the
+  // bar's content without the content needing position:relative. That
+  // matters: the mega panel positions against the nearest positioned
+  // ancestor, and it has to be this full-width element, not the
+  // max-width inner, or the dropdown stops short on wide screens.
+  isolation: isolate;
+  // The bottom hairline is an inset shadow, not a border: a border adds
+  // a pixel to the bar's height that --header-h does not account for,
+  // and the first section on a hero-less page slides 1px under it.
+  transition: background-color 250ms ease, box-shadow 250ms ease;
+
+  // The scrim is a pseudo-element so it can fade out independently of
+  // the solid background fading in.
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background: linear-gradient(180deg, rgba(6, 5, 4, 0.92), rgba(6, 5, 4, 0.55) 60%, transparent);
+    transition: opacity 250ms ease;
+  }
+
+  .is-solid & {
+    background-color: rgba(8, 7, 5, 0.97);
+    box-shadow: inset 0 -1px 0 $color-rule-dark;
+    backdrop-filter: blur(6px);
+
+    &::before { opacity: 0; }
+  }
+}
+
+.site-header__inner {
+  display: flex;
+  align-items: center;
+  gap: clamp(1rem, 3vw, 2.5rem);
+  max-width: 1480px;
+  height: var(--header-h);
+  margin-inline: auto;
+  padding-inline: var(--space-m, clamp(1.25rem, 5vw, 4rem));
+}
+
+// ---------------------------------------------------------------------
+// Brand — shared with the footer
+// ---------------------------------------------------------------------
+.brand {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 0.75rem;
+  text-decoration: none;
+  color: $color-gold;
+}
+
+.brand__logo {
+  height: 44px;
+  width: auto;
+}
+
+.brand__mon {
+  width: 34px;
+  height: 34px;
+  flex: none;
+}
+
+.brand__words {
+  display: block;
+}
+
+.brand__word {
+  display: block;
+  font-family: var(--ff-wood);
+  font-size: 1.4375rem;
+  line-height: 1;
+  letter-spacing: 0.02em;
+}
+
+.brand__sub {
+  display: block;
+  margin-top: 0.1875rem;
+  font-size: 0.59375rem;
+  letter-spacing: 0.42em;
+  color: $color-smoke;
+}
+
+// ---------------------------------------------------------------------
+// Mega-nav
+// ---------------------------------------------------------------------
+.mega-nav {
+  display: none;
+  margin-left: auto;
+  height: var(--header-h);
+
+  @media #{$desktop} {
+    display: block;
+  }
+}
+
+.mega-nav__list {
+  display: flex;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.mega-nav__item {
+  display: flex;
+  align-items: stretch;
+}
+
+.mega-nav__top {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  padding: 0 1rem;
+  border-bottom: 2px solid transparent;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: #D6CBB4;
+  transition: color 150ms ease, border-color 150ms ease;
+
+  .mega-nav__item:hover &,
+  .mega-nav__item:focus-within &,
+  &[aria-current='page'] {
+    color: $color-gold-light;
+    border-bottom-color: $color-gold;
+  }
+}
+
+// The panel spans the whole bar, not the item, so it is positioned
+// against .site-header (the nearest positioned ancestor) — the
+// .mega-nav__item deliberately stays static.
+.mega-nav__panel {
+  position: absolute;
+  inset-inline: 0;
+  top: 100%;
+  border-top: 1px solid $color-rule-dark;
+  border-bottom: 1px solid $color-rule-dark;
+  background: linear-gradient(180deg, #100C06, #0A0806);
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.75);
+
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-6px);
+  transition: opacity 160ms ease, transform 160ms ease, visibility 160ms;
+
+  .mega-nav__item:hover &,
+  .mega-nav__item:focus-within & {
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+  }
+}
+
+.mega-nav__inner {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(9.375rem, 1fr);
+  gap: clamp(1.5rem, 3vw, 3.25rem);
+  max-width: 1480px;
+  margin-inline: auto;
+  padding: 2.25rem var(--space-m, clamp(1.25rem, 5vw, 4rem)) 2.5rem;
+}
+
+.mega-nav__cards {
+  grid-column: span 2;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.875rem;
+}
+
+.mega-nav__heading {
+  display: flex;
+  gap: 0.5rem;
+  margin: 0 0 0.875rem;
+  font-family: var(--ff-mincho);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: $color-gold;
+}
+
+.mega-nav__col {
+  ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  a {
+    display: block;
+    padding: 0.375rem 0;
+    font-size: 0.875rem;
+    text-decoration: none;
+    color: #BFB49D;
+
+    &:hover { color: $color-gold-light; }
+  }
+}
+
+.mega-card {
+  display: block;
+  text-decoration: none;
+}
+
+.mega-card__shot {
+  display: block;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  border: 1px solid $color-rule-dark;
+  background-color: $color-pitch;
+  @include chamfer(10px);
+
+  img, picture {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .mega-card:hover & { border-color: $color-gold; }
+}
+
+.mega-card__label {
+  display: block;
+  margin-top: 0.5625rem;
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  color: #BFB49D;
+
+  .mega-card:hover & { color: $color-gold-light; }
+}
+
+// ---------------------------------------------------------------------
+// Icons
+// ---------------------------------------------------------------------
+.header-icons {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  margin-left: auto;
+
+  @media #{$desktop} {
+    margin-left: 0;
+  }
+}
+
+.header-icons__link,
+.nav-toggle {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: #CFC4AD;
+  cursor: pointer;
+  text-decoration: none;
+
+  svg { width: 19px; height: 19px; }
+
+  &:hover { color: $color-gold-light; }
+}
+
+.header-icons__count {
+  position: absolute;
+  top: 5px;
+  right: 3px;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  border-radius: 9px;
+  background-color: $color-vermilion;
+  color: #FFF;
+  font-size: 0.625rem;
+  font-weight: 700;
+  line-height: 16px;
+  text-align: center;
+}
+
+.nav-toggle {
+  @media #{$desktop} {
+    display: none;
+  }
+
+  svg { width: 21px; height: 21px; }
+}
+
+// ---------------------------------------------------------------------
+// Mobile drawer — driven by ui/nav.ts via data-nav-* attributes
+// ---------------------------------------------------------------------
+.mobile-nav-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 210;
+  background-color: rgba(0, 0, 0, 0.7);
+  opacity: 0;
+  transition: opacity 300ms ease;
+
+  &.is-open { opacity: 1; }
+}
+
+.mobile-nav-panel {
+  position: fixed;
+  inset: 0 0 0 auto;
+  z-index: 220;
+  width: min(26.25rem, 88vw);
+  overflow-y: auto;
+  padding: 1.375rem var(--space-m, 1.5rem) 3.75rem;
+  border-left: 1px solid $color-rule-dark;
+  background-color: #0B0906;
+  transform: translateX(100%);
+  transition: transform 300ms cubic-bezier(0.4, 0, 0.2, 1);
+
+  &.is-open { transform: none; }
+}
+
+.mobile-nav-panel__close {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  margin-left: auto;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: #CFC4AD;
+  cursor: pointer;
+
+  svg { width: 22px; height: 22px; }
+}
+
+.mobile-nav__group,
+.mobile-nav__single {
+  border-bottom: 1px solid $color-rule-dark;
+}
+
+.mobile-nav__group summary,
+.mobile-nav__single {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 0;
+  font-size: 0.875rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: $color-parchment;
+  cursor: pointer;
+  list-style: none;
+
+  &::-webkit-details-marker { display: none; }
+}
+
+.mobile-nav__group[open] summary { color: $color-gold-light; }
+
+.mobile-nav__chev {
+  width: 8px;
+  height: 8px;
+  border-right: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  transform: rotate(45deg);
+  transition: transform 200ms ease;
+
+  [open] > summary & { transform: rotate(-135deg); }
+}
+
+.mobile-nav__group ul {
+  margin: 0 0 0.875rem;
+  padding: 0;
+  list-style: none;
+
+  a {
+    display: block;
+    padding: 0.4375rem 0;
+    font-size: 0.875rem;
+    text-decoration: none;
+    color: #B6AB94;
+  }
+}
+
+.mobile-nav__heading {
+  margin-top: 0.75rem;
+  font-family: var(--ff-mincho);
+  font-size: 0.75rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: $color-gold;
 }

@@ -1,0 +1,32 @@
+{% set form_id = 'news-' ~ (heading|slugify) %}
+
+<section class="section newsletter-band" data-scheme="{{ color|default('soot') }}">
+  <div class="section__inner newsletter-band__inner">
+    {% include 'views/partials/components/seal.twig' with { text: seal } only %}
+
+    <h2 class="brass-face">{{ heading|esc_html }}</h2>
+    {% if note %}<p class="section__note">{{ note|esc_html }}</p>{% endif %}
+
+    <form class="newsletter-band__form"
+          id="{{ form_id }}"
+          data-newsletter
+          data-success="{{ success_message|esc_attr }}"
+          {% if action %}action="{{ action|esc_url }}" method="post"{% endif %}
+          novalidate>
+      <label class="screen-reader-text" for="{{ form_id }}-email">Email address</label>
+      <input type="email"
+             id="{{ form_id }}-email"
+             name="{{ field_name|default('email')|esc_attr }}"
+             placeholder="{{ placeholder|default('you@example.com')|esc_attr }}"
+             autocomplete="email"
+             required>
+      <button class="button" type="submit">{{ button_label|default('Sign up')|esc_html }}</button>
+    </form>
+
+    <p class="newsletter-band__status" role="status" data-newsletter-status></p>
+
+    {% if fine_print %}
+      <p class="newsletter-band__fine">{{ fine_print|esc_html }}</p>
+    {% endif %}
+  </div>
+</section>

@@ -1,0 +1,32 @@
+{% import 'macros/picture.twig' as picture %}
+
+<section class="section workshop-facts" data-scheme="{{ color|default('iron') }}">
+  <div class="section__inner">
+    {% include 'views/partials/components/rail-tag.twig' with { text: rail_text } %}
+
+    <div class="workshop-facts__grid workshop-facts__grid--{{ image_side|default('left') }}">
+      {% if image %}
+        <div class="workshop-facts__shot">
+          {{ picture.render(image, 'large', '', 'workshop-facts__img') }}
+        </div>
+      {% endif %}
+
+      <div class="workshop-facts__copy">
+        <h2 class="brass-face">{{ heading|esc_html }}</h2>
+        {% if lede %}<p class="workshop-facts__lede">{{ lede|esc_html }}</p>{% endif %}
+
+        <dl class="workshop-facts__list">
+          {% for fact in facts %}
+            <div class="workshop-facts__row">
+              <dt class="workshop-facts__mark" aria-hidden="true">{{ fact.kanji|esc_html }}</dt>
+              <dd class="workshop-facts__body">
+                <span class="workshop-facts__title">{{ fact.title|esc_html }}</span>
+                <span class="workshop-facts__text">{{ fact.body|esc_html }}</span>
+              </dd>
+            </div>
+          {% endfor %}
+        </dl>
+      </div>
+    </div>
+  </div>
+</section>

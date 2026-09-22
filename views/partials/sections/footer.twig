@@ -1,50 +1,108 @@
-<footer class="footer">
-    <div class="container">
+{#
+  footer.twig
+  ---------------------------------------------------------------------
+  Columns come from the Footer menu, two levels deep: each top-level
+  item is a column heading, its children are the links. A flat Footer
+  menu (no children anywhere) renders as a single unheaded column.
 
-        <div class="footer__logo">
-            <img src="{{ site.footer_logo }}" class="footer-logo" alt="{{ site.name }}">
-        </div><!-- .footer__logo -->
+  The legal row reads the Legal menu. Everything else is Site Settings.
+#}
 
-        <div class="footer__contact">
+<footer class="site-footer">
+  <div class="site-footer__inner">
 
-            <div class="footer__contact-group">
-                <p class="footer__contact-label">Administrative office:</p>
-                <p><a href="{{ site.address_url }}">{{ site.address }}</a></p>
-            </div>
+    <div class="site-footer__brand">
+      <a class="brand" href="{{ site.url|esc_url }}" rel="home"
+         aria-label="{{ site.name|esc_attr }}, home">
+        {% if site.footer_logo %}
+          <img class="brand__logo" src="{{ site.footer_logo|esc_url }}" alt="">
+        {% else %}
+          {% include 'views/partials/components/brand-mon.twig' %}
+          <span class="brand__words">
+            <span class="brand__word brass-face">{{ site.wordmark|esc_html }}</span>
+            {% if site.wordmark_sub %}
+              <span class="brand__sub">{{ site.wordmark_sub|esc_html }}</span>
+            {% endif %}
+          </span>
+        {% endif %}
+      </a>
 
-            <div class="footer__contact-group">
-                <p class="footer__contact-label">Phone:</p>
-                <p><a href="tel:{{ site.phone }}">{{ site.phone }}</a></p>
-            </div>
+      {% if site.footer_tagline %}
+        <p class="site-footer__tagline">{{ site.footer_tagline|esc_html }}</p>
+      {% endif %}
 
-        </div><!-- .footer__contact -->
+      {% if site.socials %}
+        <ul class="site-footer__socials">
+          {% for social in site.socials %}
+            <li>
+              <a href="{{ social.url|esc_url }}" target="_blank" rel="noopener"
+                 aria-label="{{ social.network|capitalize|esc_attr }}">
+                {% include 'views/partials/components/social-icon.twig' with { network: social.network } only %}
+              </a>
+            </li>
+          {% endfor %}
+        </ul>
+      {% endif %}
 
-        <div class="footer__hours">
-            <p class="footer__hours-label">Office Hours:</p>
-            <ul>
-                {% for line in site.office_hours_lines %}
-                    <li>{{ line }}</li>
-                {% endfor %}
-            </ul>
-        </div><!-- .footer__hours -->
-
-        <div class="footer__navigation">
-            <nav class="footer__nav">
-                <ul>
-                    {% for link in footer_links %}
-                        <li><a href="{{ link.url }}">{{ link.title }}</a></li>
-                    {% endfor %}
-                </ul>
-            </nav>
-        </div><!-- .footer__navigation -->
-
-    </div><!-- .container -->
-
-    <div class="footer__reserved">
-        <div class="container">
-            <p>&copy; {{ "now"|date("Y") }} {{ site.name }}. All rights reserved.</p>
-            <p>Powered by <a href="https://mcguinnessmedia.com/" target="_blank" rel="noopener">McGuinness Media &amp; Marketing</a></p>
+      {% if site.locale_label %}
+        <div class="site-footer__locale">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+            <circle cx="12" cy="12" r="9"/>
+            <path d="M3 12h18M12 3c2.5 2.7 2.5 15.3 0 18M12 3c-2.5 2.7-2.5 15.3 0 18"/>
+          </svg>
+          {{ site.locale_label|esc_html }}
         </div>
-    </div><!-- .footer__content -->
+      {% endif %}
+    </div>
 
-</footer><!-- .footer -->
+    {% if footer_menu and footer_menu.items %}
+      {% set nested = footer_menu.items|filter(i => i.children|length > 0) %}
+
+      {% if nested %}
+        {% for col in footer_menu.items %}
+          {% set col_kanji = menu_item_field(col.id, 'kanji') %}
+          <div class="site-footer__col">
+            <h5 class="site-footer__heading">
+              {{ col.title|esc_html }}
+              {% if col_kanji %}<span class="jp">{{ col_kanji|esc_html }}</span>{% endif %}
+            </h5>
+            <ul>
+              {% for link in col.children %}
+                <li><a href="{{ link.url|esc_url }}"
+                       target="{{ link.target|default('_self')|esc_attr }}">{{ link.title|esc_html }}</a></li>
+              {% endfor %}
+            </ul>
+          </div>
+        {% endfor %}
+      {% else %}
+        <div class="site-footer__col">
+          <ul>
+            {% for link in footer_menu.items %}
+              <li><a href="{{ link.url|esc_url }}"
+                     target="{{ link.target|default('_self')|esc_attr }}">{{ link.title|esc_html }}</a></li>
+            {% endfor %}
+          </ul>
+        </div>
+      {% endif %}
+    {% endif %}
+
+  </div>
+
+  <div class="site-footer__legal">
+    <div class="site-footer__legal-inner">
+      <p class="site-footer__disclaimer">
+        {% if site.disclaimer %}{{ site.disclaimer|esc_html }} {% endif %}
+        &copy; {{ "now"|date("Y") }} {{ site.name|esc_html }}.
+      </p>
+
+      <nav class="site-footer__legal-nav" aria-label="Legal">
+        {% if legal_menu and legal_menu.items %}
+          {% for link in legal_menu.items %}
+            <a href="{{ link.url|esc_url }}">{{ link.title|esc_html }}</a>
+          {% endfor %}
+        {% endif %}
+        <a href="https://mcguinnessmedia.com/" target="_blank" rel="noopener">Site by McGuinness Media</a>
+      </nav>
+    </div>
+  </div>
+</footer>

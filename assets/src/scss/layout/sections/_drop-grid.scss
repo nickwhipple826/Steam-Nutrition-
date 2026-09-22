@@ -1,0 +1,77 @@
+@use '@css/utils/variables/colors' as *;
+@use '@css/utils/mixins/industrial' as *;
+
+.drop-grid__list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(14.375rem, 1fr));
+  gap: 1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.drop-tile {
+  @include plate(14px);
+  @include rivets;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 15.625rem;
+  padding: 1.5rem;
+  overflow: hidden;
+  text-decoration: none;
+}
+
+.drop-tile__tex {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.08;
+  transition: opacity 180ms ease;
+  @include asanoha($color-gold);
+
+  .drop-tile:hover & { opacity: 0.15; }
+}
+
+.drop-tile__top {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.drop-tile__status {
+  font-size: 0.75rem;
+  letter-spacing: 0.14em;
+  color: $color-smoke;
+}
+
+.drop-tile__bottom {
+  position: relative;
+  z-index: 2;
+}
+
+.drop-tile__title {
+  display: block;
+  font-family: var(--ff-mincho);
+  margin-bottom: 0.1875rem;
+  font-size: 1.3125rem;
+  font-weight: 700;
+  color: var(--heading-text-color);
+}
+
+.drop-tile__subtitle {
+  display: block;
+  font-size: 0.78125rem;
+  color: $color-smoke;
+}
+
+.drop-tile__price {
+  display: block;
+  margin-top: 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--heading-text-color);
+}

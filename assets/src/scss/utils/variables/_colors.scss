@@ -1,19 +1,78 @@
-$color-navy: hsl(201 100% 12%);
-$color-navy-lite: hsl(201, 97%, 23%);
-$color-red: hsl(351 66% 38%);
-$color-sky: hsl(205 52% 65%);
-$color-gold: hsl(36 100% 50%);
-$color-white: hsl(0 0% 100%);
-$color-grey: hsl(0, 0%, 83%);
+// =====================================================================
+// assets/src/scss/utils/variables/_colors.scss
+// ---------------------------------------------------------------------
+// Steam Nutrition palette.
+//
+// Fixes a live bug: $color-gold was declared twice in the old file —
+// hsl(36 100% 50%) and then #DB9843. Sass takes the last, so the 'gold'
+// scheme has been rendering brass this whole time. Single declaration
+// now, and brass is what we actually want.
+// =====================================================================
 
+// ---------------------------------------------------------------------
+// Metals + darks — sampled off the product photography
+// ---------------------------------------------------------------------
+$color-black:      #080504; // page floor
+$color-soot:       #151109; // raised panel
+$color-soot-raised:#211A10; // a plate sitting on a soot section
+$color-charcoal:   #2F251F; // lifted panel / card sitting on a panel
+$color-pitch:      #060504; // recessed well (inputs, gauge faces)
 
-$color-black:      #080504;
-$color-charcoal:   #2F251F;
 $color-copper:     #763D10;
 $color-brass:      #AB6723;
-$color-gold:       #DB9843;
-$color-gold-light: #F8CE79;
-$color-parchment:  #E7DEC3;
-$color-smoke:      #938C86;
+$color-gold:       #DB9843; // primary accent
+$color-gold-light: #F8CE79; // specular highlight, foil
+$color-gold-deep:  #7E5220; // shadow side of a brass gradient
 
+// ---------------------------------------------------------------------
+// Paper + seal
+// ---------------------------------------------------------------------
+$color-parchment:  #E7DEC3; // body text on dark
+$color-smoke:      #938C86; // muted labels
+$color-vermilion:  #C5432C; // 朱 — hanko seals and live markers ONLY
 
+// ---------------------------------------------------------------------
+// Hairlines
+// ---------------------------------------------------------------------
+$color-rule-dark:  rgba(219, 152, 67, 0.22); // brass rule on a dark bg
+$color-rule-light: rgba(8, 5, 4, 0.18);      // dark rule on light bg
+
+// ---------------------------------------------------------------------
+// Brass foil gradient.
+//
+// The obvious version runs bright -> near-black -> bright to fake the
+// specular band. At display sizes that reads fine; at h2/h3 it drops a
+// near-black band through the middle of the word and eats whatever
+// letters land there. This one bottoms out at $color-gold-deep instead
+// of black, so it survives small sizes.
+// ---------------------------------------------------------------------
+$gradient-brass: linear-gradient(
+    174deg,
+    #FAEBC4 0%,
+    #DFBA74 22%,
+    #A87C36 46%,
+    #F6DCA4 57%,
+    #D2A755 76%,
+    #A9803A 100%
+);
+
+// =====================================================================
+// LEGACY — NWBRV palette. Do not use in new code.
+//
+// Still load-bearing: the section partials inherited from Woonsocket
+// reference these ($color-navy x112, $color-white x62, $color-red x21,
+// $color-sky x15, $color-navy-lite x10, $color-grey x1) and main.scss
+// still forwards them. Delete this block once those @forward lines and
+// their partials are gone.
+// =====================================================================
+$color-navy:      hsl(201 100% 12%);
+$color-navy-lite: hsl(201 97% 23%);
+$color-red:       hsl(351 66% 38%);
+$color-sky:       hsl(205 52% 65%);
+$color-white:     hsl(0 0% 100%);
+$color-grey:      hsl(0 0% 83%);
+// ---------------------------------------------------------------------
+// Button face. Steeper and lighter than $gradient-brass — it has to read
+// as a raised plate at 44px tall, not as foil type.
+// ---------------------------------------------------------------------
+$gradient-button: linear-gradient(178deg, #E9CD8E, #C79A4B 42%, #8E6021);
