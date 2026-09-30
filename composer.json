@@ -1,5 +1,5 @@
 {
-  "name": "mcguinnessmedia/boilerplate-theme",
+  "name": "mcguinnessmedia/steam",
   "type": "wordpress-theme",
   "require": {
     "timber/timber": "^2.3",

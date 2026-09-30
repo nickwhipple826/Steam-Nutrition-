@@ -1,3 +1,4 @@
+cat > views/layouts/base.twig << 'STEAM_EOF'
 <!doctype html>
 <!--suppress HtmlRequiredTitleElement, HtmlRequiredLangAttribute -->
 <html {{ site.language_attributes }}>
@@ -16,7 +17,9 @@
     {{ function('wp_body_open') }}
 
     {# One banner landmark. header.twig renders divs inside it. #}
-   
+    <header>
+      {% include 'partials/sections/header.twig' %}
+    </header>
 
     <main>
       {% block content %}{% endblock %}
@@ -28,3 +31,4 @@
     {{ function('wp_footer') }}
   </body>
 </html>
+STEAM_EOF
