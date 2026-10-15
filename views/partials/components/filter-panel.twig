@@ -1,49 +1,81 @@
-<div
-  role="dialog"
-  data-modal="shop-filters"
-  aria-modal="true"
-  aria-label="Filter products"
-  hidden
-  class="filter-panel"
->
+{#
+  components/filter-panel.twig
+  ---------------------------------------------------------------------
+  The filter drawer. Opened by ui/modal.ts via data-modal-open, which
+  also handles the focus trap, the scroll lock and Escape.
+
+  Every group here is built from the facets Shopify reports for the
+  products actually on the page — not from a hardcoded list per
+  collection. That is why one panel serves supplements, apparel and
+  merch, and why it keeps working the day the client adds an option
+  nobody wrote a template for.
+
+  Each checkbox carries Shopify's own `input` JSON as its value and
+  posts it straight back as f[]. The server passes it through to the
+  Storefront API untouched, so we never have to understand what a given
+  facet means in order to apply it.
+
+  It is a GET form: submitting navigates, and the resulting URL is the
+  filtered page.
+#}
+
+<div role="dialog"
+     data-modal="shop-filters"
+     aria-modal="true"
+     aria-label="Filter products"
+     hidden
+     class="filter-panel">
+
   <div class="filter-panel__backdrop" data-modal-close></div>
 
-  <div class="filter-panel__drawer">
+  <form class="filter-panel__drawer" method="get" action="{{ action|esc_url }}" data-filter-form>
+
     <div class="filter-panel__header">
       <h2 class="filter-panel__title">Filters</h2>
-      <button type="button" class="filter-panel__close" data-modal-close aria-label="Close filters">&times;</button>
+      <button type="button" class="filter-panel__close" data-modal-close aria-label="Close filters">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+          <path d="M6 6l12 12M18 6 6 18"/>
+        </svg>
+      </button>
     </div>
 
-    <form class="filter-panel__form" data-filter-form>
+    {# Keep the current sort when the filters change. #}
+    <input type="hidden" name="sort" value="{{ current_sort|esc_attr }}">
 
-      <details class="filter-panel__section" open>
-        <summary>Availability</summary>
-        <div class="filter-panel__options">
-          <label class="filter-option">
-            <input type="checkbox" name="filter[available]" value="1"> In stock only
-          </label>
-        </div>
-      </details>
+    <div class="filter-panel__body">
+      {% for facet in facets %}
+        <details class="filter-panel__section" {{ loop.first ? 'open' }}>
+          <summary>
+            {{ facet.label|esc_html }}
+            <span class="filter-panel__chev" aria-hidden="true"></span>
+          </summary>
 
-      <details class="filter-panel__section">
-        <summary>Price</summary>
-        <div class="filter-panel__options">
-          <label class="filter-option"><input type="radio" name="filter[Price]" value="0-25"> Under $25</label>
-          <label class="filter-option"><input type="radio" name="filter[Price]" value="25-50"> $25 – $50</label>
-          <label class="filter-option"><input type="radio" name="filter[Price]" value="50-"> $50+</label>
-        </div>
-      </details>
-
-      {% if filter_group == 'apparel' %}
-        {% include 'views/partials/components/filter-apparel.twig' with { filters: filters } %}
+          <div class="filter-panel__options">
+            {% for value in facet.values %}
+              <label class="filter-option">
+                <input type="checkbox"
+                       name="f[]"
+                       value="{{ value.input|esc_attr }}"
+                       {{ value.input in active_filters ? 'checked' }}>
+                <span class="filter-option__box" aria-hidden="true"></span>
+                <span class="filter-option__label">{{ value.label|esc_html }}</span>
+                <span class="filter-option__count">{{ value.count }}</span>
+              </label>
+            {% endfor %}
+          </div>
+        </details>
       {% else %}
-        {% include 'views/partials/components/filter-supplements.twig' with { filters: filters } %}
-      {% endif %}
+        <p class="filter-panel__empty">
+          No filters for this collection. Shopify builds these from the
+          products in it, so they appear once the collection has
+          products with options.
+        </p>
+      {% endfor %}
+    </div>
 
-      <div class="filter-panel__footer">
-        <button type="button" class="filter-panel__reset" data-filter-reset>Reset</button>
-        <button type="button" class="filter-panel__save" data-filter-save data-modal-close>Save</button>
-      </div>
-    </form>
-  </div>
+    <div class="filter-panel__footer">
+      <a class="filter-panel__reset" href="{{ action|esc_url }}?sort={{ current_sort|esc_attr }}">Clear all</a>
+      <button type="submit" class="button filter-panel__apply">Show products</button>
+    </div>
+  </form>
 </div>

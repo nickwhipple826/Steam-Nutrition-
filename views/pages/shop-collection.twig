@@ -1,50 +1,178 @@
 {% extends 'views/layouts/base.twig' %}
 
+{#
+  pages/shop-collection.twig
+  ---------------------------------------------------------------------
+  One collection: Supplements, Apparel, Merch. Same template for all
+  three — what differs is the Shopify handle and the copy, both set per
+  page under Shop Collection Settings.
+
+  Filters and sort are in the URL, not in component state, so a filtered
+  view can be linked and the back button works. ui/shop-filters.ts
+  upgrades that to a fetch-and-swap; with JavaScript off, every control
+  is still a plain link or a form and the server renders the same page.
+#}
+
 {% block content %}
 
-  <div class="shop-collection" data-filter-group="{{ filter_group }}">
-    <div class="shop-collection__layout">
+  {% set heading = post.acf.shop_heading ?: post.title %}
+  {% set intro = post.acf.shop_intro ?: collection.description %}
 
-      <aside class="shop-collection__sidebar">
-        {% include 'views/partials/components/filter-sidebar.twig' %}
-        {% include 'views/partials/components/filter-panel.twig' with {
-          filter_group: filter_group,
-          filters: collection.filters,
-        } %}
-      </aside>
+  <div class="shop" data-shop>
 
-      <div class="shop-collection__main">
+    {# ---------- header ---------- #}
+    <section class="section shop__head" data-scheme="iron">
+      <div class="section__inner">
+        {% include 'views/partials/components/rail-tag.twig' with { text: post.acf.shop_rail_text } only %}
 
-        <header class="shop-collection__header">
-          <h1 class="shop-collection__title">{{ post.title }}</h1>
+        {% if post.acf.shop_eyebrow %}
+          <span class="eyebrow"><span class="eyebrow__dot"></span>{{ post.acf.shop_eyebrow|esc_html }}</span>
+        {% endif %}
 
-          <div class="shop-collection__sort">
+        <h1 class="shop__title brass-face">{{ heading|esc_html }}</h1>
+
+        {% if intro %}
+          <p class="shop__intro">{{ intro|esc_html }}</p>
+        {% endif %}
+
+        {% if post.acf.category_nav %}
+          <nav class="shop__cats" aria-label="Product categories">
+            <ul>
+              <li><a class="shop__cat is-current" href="{{ post.link|esc_url }}" aria-current="page">All</a></li>
+              {% for row in post.acf.category_nav %}
+                <li>
+                  <a class="shop__cat" href="{{ row.link.url|esc_url }}"
+                     target="{{ row.link.target|default('_self')|esc_attr }}">{{ row.label|esc_html }}</a>
+                </li>
+              {% endfor %}
+            </ul>
+          </nav>
+        {% endif %}
+      </div>
+    </section>
+
+    <div class="seam"></div>
+
+    {# ---------- toolbar + grid ---------- #}
+    <section class="section shop__body" data-scheme="iron">
+      <div class="section__inner">
+
+        <div class="shop__toolbar">
+          <button type="button" class="shop__filter-btn" data-modal-open="shop-filters"
+                  {{ collection.facets is empty ? 'disabled' }}>
+            Filters
+            {% if has_filters %}<span class="shop__filter-count">{{ active_filters|length }}</span>{% endif %}
+          </button>
+
+          <p class="shop__count" data-shop-count>
+            {%- if collection.products -%}
+              Showing {{ collection.products|length }}{{ collection.has_next ? '+' }}
+              {{- ' ' }}{{ collection.products|length == 1 ? 'product' : 'products' }}
+            {%- endif -%}
+          </p>
+
+          <form class="shop__sort" method="get" data-shop-sort-form>
+            {# Carried through so changing sort does not silently drop the filters. #}
+            {% for filter in active_filters %}
+              <input type="hidden" name="f[]" value="{{ filter|esc_attr }}">
+            {% endfor %}
+
             <label for="shop-sort">Sort by</label>
-            <select id="shop-sort" data-shop-sort>
-              <option value="BEST_SELLING" {{ current_sort == 'BEST_SELLING' ? 'selected' }}>Best Selling</option>
-              <option value="PRICE_LOW_HIGH" {{ current_sort == 'PRICE_LOW_HIGH' ? 'selected' }}>Price: Low to High</option>
-              <option value="PRICE_HIGH_LOW" {{ current_sort == 'PRICE_HIGH_LOW' ? 'selected' }}>Price: High to Low</option>
-              <option value="TITLE" {{ current_sort == 'TITLE' ? 'selected' }}>Alphabetical</option>
-              <option value="CREATED" {{ current_sort == 'CREATED' ? 'selected' }}>Newest</option>
+            <select id="shop-sort" name="sort" data-shop-sort>
+              {% for key, option in sort_options %}
+                <option value="{{ key }}" {{ key == current_sort ? 'selected' }}>{{ option.label|esc_html }}</option>
+              {% endfor %}
             </select>
-          </div>
-        </header>
+            <button type="submit" class="shop__sort-go">Apply</button>
+          </form>
+        </div>
 
+        {% if has_filters %}
+          <div class="shop__active">
+            <span class="shop__active-label">Filtered</span>
+            <a class="shop__clear" href="{{ post.link|esc_url }}?sort={{ current_sort|esc_attr }}">Clear all</a>
+          </div>
+        {% endif %}
+
+        {# ---------- the grid, or an honest reason it is empty ---------- #}
+        {% if collection.products %}
+
+          <ul class="shop__grid" data-product-grid>
+            {% for product in collection.products %}
+              <li>{% include 'views/partials/components/product-card.twig' with { product: product } only %}</li>
+            {% endfor %}
+          </ul>
+
+          {% if collection.has_next %}
+            <div class="shop__more">
+              <a class="button outline" data-shop-more
+                 href="{{ post.link|esc_url }}?{{ base_query }}&amp;after={{ collection.cursor|esc_attr }}">
+                Load more
+              </a>
+            </div>
+          {% endif %}
+
+        {% elseif not collection.configured %}
+
+          <div class="shop__blank">
+            <p class="shop__blank-lead">This collection is not connected yet.</p>
+            {% if function('current_user_can', 'manage_options') %}
+              <p class="shop__blank-note">
+                Add both of these to <code>wp-config.php</code>, then reload:
+              </p>
+              <pre class="shop__blank-code">define( 'SHOPIFY_STORE_DOMAIN', 'your-store.myshopify.com' );
+define( 'SHOPIFY_STOREFRONT_TOKEN', 'your-storefront-api-token' );</pre>
+              <p class="shop__blank-note">
+                The Storefront token comes from the Shopify admin, under
+                Apps and sales channels → Develop apps → your app →
+                Storefront API. It needs <code>unauthenticated_read_product_listings</code>.
+              </p>
+            {% endif %}
+          </div>
+
+        {% elseif not collection.found %}
+
+          <div class="shop__blank">
+            <p class="shop__blank-lead">Nothing here yet.</p>
+            {% if function('current_user_can', 'edit_posts') %}
+              <p class="shop__blank-note">
+                Shopify is connected, but it has no collection with the handle
+                <code>{{ handle|default('(none set)')|esc_html }}</code>.
+                Check the Shopify Collection field on this page against the
+                handle in the Shopify admin.
+              </p>
+            {% endif %}
+          </div>
+
+        {% else %}
+
+          <div class="shop__blank">
+            <p class="shop__blank-lead">
+              {{ has_filters ? 'No products match these filters.' : 'This collection is empty.' }}
+            </p>
+            {% if has_filters %}
+              <a class="button outline" href="{{ post.link|esc_url }}?sort={{ current_sort|esc_attr }}">Clear filters</a>
+            {% endif %}
+          </div>
+
+        {% endif %}
+
+        {# Page-level flexible content still renders, under the grid. #}
         {% for component in post.components %}
           {% if not component.section_hidden %}
             {% include component.view with component %}
           {% endif %}
         {% endfor %}
 
-        <div class="shop-collection__grid" data-product-grid>
-          {% for product in collection.products %}
-            {% include 'views/partials/components/product-card.twig' with { product: product } %}
-          {% else %}
-            <p class="shop-collection__empty">No products found in this collection yet.</p>
-          {% endfor %}
-        </div>
-
       </div>
-    </div>
+    </section>
+
+    {% include 'views/partials/components/filter-panel.twig' with {
+      facets: collection.facets,
+      active_filters: active_filters,
+      current_sort: current_sort,
+      action: post.link,
+    } only %}
+
   </div>
 {% endblock %}
