@@ -17,53 +17,53 @@ class ComposerStaticInit73505fb08cb154188afd253eeb741b21
     );
 
     public static $prefixLengthsPsr4 = array (
-        'T' => 
+        'T' =>
         array (
             'Twig\\' => 5,
             'Timber\\' => 7,
         ),
-        'S' => 
+        'S' =>
         array (
             'Symfony\\Polyfill\\Mbstring\\' => 26,
             'Symfony\\Polyfill\\Ctype\\' => 23,
             'StoutLogic\\AcfBuilder\\' => 22,
         ),
-        'M' => 
+        'M' =>
         array (
             'MMM\\' => 4,
         ),
-        'D' => 
+        'D' =>
         array (
             'Doctrine\\Inflector\\' => 19,
         ),
     );
 
     public static $prefixDirsPsr4 = array (
-        'Twig\\' => 
+        'Twig\\' =>
         array (
             0 => __DIR__ . '/..' . '/twig/twig/src',
         ),
-        'Timber\\' => 
+        'Timber\\' =>
         array (
             0 => __DIR__ . '/..' . '/timber/timber/src',
         ),
-        'Symfony\\Polyfill\\Mbstring\\' => 
+        'Symfony\\Polyfill\\Mbstring\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-mbstring',
         ),
-        'Symfony\\Polyfill\\Ctype\\' => 
+        'Symfony\\Polyfill\\Ctype\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-ctype',
         ),
-        'StoutLogic\\AcfBuilder\\' => 
+        'StoutLogic\\AcfBuilder\\' =>
         array (
             0 => __DIR__ . '/..' . '/stoutlogic/acf-builder/src',
         ),
-        'MMM\\' => 
+        'MMM\\' =>
         array (
             0 => __DIR__ . '/../..' . '/src',
         ),
-        'Doctrine\\Inflector\\' => 
+        'Doctrine\\Inflector\\' =>
         array (
             0 => __DIR__ . '/..' . '/doctrine/inflector/src',
         ),
