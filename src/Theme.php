@@ -6,9 +6,7 @@ use MMM\FieldGroups\{MenuItemFields,
   PageContent,
   SeoFields,
   SiteSettingsFieldGroup,
-  PropertyFields,
   ShopCollectionFields};
-use MMM\PostTypes\{DocumentPostType, NoticePostType, OpenPositionPostType, PropertyPostType};
 use MMM\Models\Post;
 use MMM\Models\Site;
 use MMM\Services\{FieldGroupRegistryService,
@@ -72,7 +70,6 @@ class Theme
   {
     $classmap['post'] = Post::class;
     $classmap['page'] = Post::class;
-    $classmap['properties'] = Post::class;
 
     return $classmap;
   }
@@ -90,9 +87,6 @@ class Theme
     $context['menu'] = Timber::get_menu( 'primary' );
     $context['footer_menu'] = $footerMenu;
     $context['legal_menu'] = Timber::get_menu( 'legal' );
-
-    // Still read by anything inherited that expects the flat list.
-    $context['footer_links'] = $footerMenu?->items ?? [];
 
     return $context;
   }
@@ -218,7 +212,6 @@ class Theme
     $fieldsRegistry->register( PageContent::class );
     $fieldsRegistry->register( SiteSettingsFieldGroup::class );
     $fieldsRegistry->register( MenuItemFields::class );
-    $fieldsRegistry->register( PropertyFields::class );
     $fieldsRegistry->register( ShopCollectionFields::class );
 
     $fieldsRegistry->init();
@@ -232,9 +225,7 @@ class Theme
   {
     $postTypeRegistry = PostTypeRegistryService::getInstance();
 
-    $postTypeRegistry->register(PropertyPostType::class);
-    $postTypeRegistry->register(NoticePostType::class);
-    $postTypeRegistry->register(DocumentPostType::class);
-    $postTypeRegistry->register(OpenPositionPostType::class);
+    // Register custom post types here, e.g.
+    // $postTypeRegistry->register( ExamplePostType::class );
   }
 }

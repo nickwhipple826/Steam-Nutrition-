@@ -12,7 +12,7 @@
 @forward "layout/footer";
 @forward "layout/section-chrome";
 
-// Sections — Steam
+// Sections
 @forward 'layout/sections/hero-lineup';
 @forward 'layout/sections/quick-tiles';
 @forward 'layout/sections/product-rail';
@@ -23,27 +23,6 @@
 @forward 'layout/sections/workshop-facts';
 @forward 'layout/sections/newsletter-band';
 
-// Sections — inherited from Woonsocket. Drop a line here and its
-// PageContent registration together, once the layout is off every page.
-@forward 'layout/sections/content-media';
-@forward 'layout/sections/cta-links';
-@forward 'layout/sections/mission-vision';
-@forward 'layout/sections/notice-highlights';
-@forward 'layout/sections/call-out';
-@forward 'layout/sections/accordion';
-@forward 'layout/sections/step-cards';
-@forward 'layout/sections/hightlight-box';
-@forward 'layout/sections/property-listing';
-@forward 'layout/sections/single-property';
-@forward 'layout/sections/notice-listing';
-@forward 'layout/sections/single-notice';
-@forward 'layout/sections/form';
-@forward 'layout/sections/staff-directory';
-@forward 'layout/sections/team-list';
-@forward 'layout/sections/open-position-listing';
-@forward 'layout/sections/single-open-position';
-@forward 'layout/sections/plans-reports-policies';
-@forward 'layout/sections/bordered-callout';
 @forward 'layout/sections/shop-collection';
 
 // Pages

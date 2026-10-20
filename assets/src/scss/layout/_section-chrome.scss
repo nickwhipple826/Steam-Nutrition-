@@ -5,8 +5,7 @@
 // left gutter rail that carries the vertical Japanese marker, the
 // heading row, rail arrows, the seam divider, the eyebrow and the seal.
 //
-// Everything here is class-scoped rather than element-scoped, so it
-// cannot collide with the inherited Woonsocket section partials.
+// Everything here is class-scoped rather than element-scoped.
 // =====================================================================
 
 @use '@css/utils/variables/colors' as *;

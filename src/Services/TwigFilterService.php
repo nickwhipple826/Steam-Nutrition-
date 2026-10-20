@@ -4,7 +4,6 @@ namespace MMM\Services;
 
 use MMM\Shopify\ShopifyCollectionQuery;
 use MMM\Traits\Singleton;
-use Timber\Timber;
 use Twig\{Environment, TwigFilter, TwigFunction};
 
 class TwigFilterService
@@ -19,8 +18,7 @@ class TwigFilterService
   public function registerFunctions(Environment $twig): Environment
   {
     // Lets a section partial pull a Shopify collection without a
-    // controller in front of it, the same way recent_notices() works
-    // for the post types. Responses are transient-cached in
+    // controller in front of it. Responses are transient-cached in
     // ShopifyCollectionQuery, so calling this from two sections on one
     // page costs one request.
     $twig->addFunction(new TwigFunction('shopify_collection', function (
@@ -46,50 +44,6 @@ class TwigFilterService
       return get_field($field, (int) $itemId);
     }));
 
-    $twig->addFunction(new TwigFunction('recent_notices', function (int $count = 2): array {
-      return Timber::get_posts([
-        'post_type' => 'notices',
-        'posts_per_page' => $count,
-        'orderby' => 'date',
-        'order' => 'DESC',
-      ])->to_array();
-    }));
-
-    $twig->addFunction(new TwigFunction('all_notices', function (): array {
-      return Timber::get_posts([
-        'post_type' => 'notices',
-        'posts_per_page' => -1,
-        'orderby' => 'date',
-        'order' => 'DESC',
-      ])->to_array();
-    }));
-
-    $twig->addFunction(new TwigFunction('recent_open_positions', function (int $count = 2): array {
-      return Timber::get_posts([
-        'post_type' => 'open-positions',
-        'posts_per_page' => $count,
-        'orderby' => 'date',
-        'order' => 'DESC',
-      ])->to_array();
-    }));
-
-    $twig->addFunction(new TwigFunction('all_open_positions', function (): array {
-      return Timber::get_posts([
-        'post_type' => 'open-positions',
-        'posts_per_page' => -1,
-        'orderby' => 'date',
-        'order' => 'DESC',
-      ])->to_array();
-    }));
-
-    $twig->addFunction(new TwigFunction('recent_properties', function (int $count = 3): array {
-      return Timber::get_posts([
-        'post_type' => 'properties',
-        'posts_per_page' => $count,
-        'orderby' => 'date',
-        'order' => 'DESC',
-      ])->to_array();
-    }));
 
     return $twig;
   }

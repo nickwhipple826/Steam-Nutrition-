@@ -59,11 +59,8 @@ $gradient-brass: linear-gradient(
 // =====================================================================
 // LEGACY — NWBRV palette. Do not use in new code.
 //
-// Still load-bearing: the section partials inherited from Woonsocket
-// reference these ($color-navy x112, $color-white x62, $color-red x21,
-// $color-sky x15, $color-navy-lite x10, $color-grey x1) and main.scss
-// still forwards them. Delete this block once those @forward lines and
-// their partials are gone.
+// Only pages/archive.scss still reads these. Delete this block once the
+// archive page is restyled onto the Steam tokens.
 // =====================================================================
 $color-navy:      hsl(201 100% 12%);
 $color-navy-lite: hsl(201 97% 23%);
