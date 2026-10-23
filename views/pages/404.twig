@@ -1,0 +1,29 @@
+{% extends 'views/layouts/base.twig' %}
+
+{#
+  pages/404.twig
+  ---------------------------------------------------------------------
+  Also what /products/{handle} renders when Shopify has no product with
+  that handle, so the copy covers both a bad link and a retired product.
+#}
+
+{% block title %}Page not found | {{ site.name|esc_html }}{% endblock %}
+
+{% block content %}
+  <section class="section not-found" data-scheme="iron">
+    <div class="section__inner">
+      <span class="eyebrow"><span class="eyebrow__dot"></span>Error 404</span>
+
+      <h1 class="not-found__title brass-face">Off the rails.</h1>
+
+      <p class="not-found__lead">
+        That page is not here. It may have moved, or the product may have
+        been retired.
+      </p>
+
+      <div class="not-found__actions">
+        <a class="button" href="{{ site.url|esc_url }}">Back to home</a>
+      </div>
+    </div>
+  </section>
+{% endblock %}

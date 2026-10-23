@@ -1,0 +1,362 @@
+// =====================================================================
+// pages/_product.scss
+// ---------------------------------------------------------------------
+// /products/{handle}, plus the 404 that a missing product falls back
+// to. Gallery left, a sticky buy column right; one column on phones.
+// =====================================================================
+
+@use '@css/utils/variables/colors' as *;
+@use '@css/utils/mixins/industrial' as *;
+
+$product-split: 900px;
+
+// The gallery's ceiling for a tall photo (a tub). Wide enough to read
+// the label, small enough that the buy column stays the focus.
+$product-gallery-max: 500px;
+
+// The ceiling for a wide photo (a box shot). Wider, because a landscape
+// image at 500px is only ~330px tall and the label gets lost.
+$product-gallery-wide-max: 760px;
+
+.product__main {
+  padding-top: var(--space-l, 2.5rem);
+}
+
+// ---------------------------------------------------------------------
+// Breadcrumb
+// ---------------------------------------------------------------------
+.product__crumbs {
+  margin-bottom: var(--space-m, 1.75rem);
+
+  ol {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: $color-smoke;
+  }
+
+  li + li::before {
+    content: '/';
+    margin-right: 0.5rem;
+    color: var(--rule-color);
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+
+    &:hover { color: var(--accent-color); }
+  }
+
+  [aria-current] { color: var(--body-text-color); }
+}
+
+// ---------------------------------------------------------------------
+// Layout
+// ---------------------------------------------------------------------
+.product__layout {
+  display: grid;
+  gap: var(--space-l, 2.5rem);
+
+  @media (min-width: $product-split) {
+    grid-template-columns: minmax(0, $product-gallery-max) minmax(0, 1fr);
+    gap: var(--space-xl, 4rem);
+    align-items: start;
+  }
+}
+
+.product__layout--wide {
+  @media (min-width: $product-split) {
+    grid-template-columns: minmax(0, $product-gallery-wide-max) minmax(320px, 1fr);
+  }
+
+  .product__gallery { max-width: $product-gallery-wide-max; }
+}
+
+// ---------------------------------------------------------------------
+// Gallery
+// ---------------------------------------------------------------------
+.product__gallery {
+  width: 100%;
+  max-width: $product-gallery-max;
+}
+
+.product__stage {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--rule-color);
+  background-color: $color-pitch;
+  @include chamfer(18px);
+
+  // No fixed frame: the box takes the photo's own shape, so a wide box
+  // shot and a tall tub both show whole with no bars and no cropping.
+  // The height cap keeps a very tall image from pushing Buy now below
+  // the fold; past it the photo scales down inside the box instead.
+  img {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-height: 75vh;
+    object-fit: contain;
+  }
+}
+
+.product__flag {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 0.375rem 0.75rem;
+  background-color: var(--seal-color);
+  color: #FFF;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+
+  &[hidden] { display: none; }
+}
+
+.product__flag--out {
+  background-color: $color-charcoal;
+  color: $color-smoke;
+}
+
+.product__thumbs {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(72px, 1fr));
+  gap: 0.625rem;
+  margin: 0.75rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.product__thumb {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid var(--rule-color);
+  background-color: $color-pitch;
+  cursor: pointer;
+  opacity: 0.6;
+  transition: opacity 150ms ease, border-color 150ms ease;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  &:hover,
+  &.is-current {
+    opacity: 1;
+    border-color: var(--accent-color);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--accent-color);
+    outline-offset: 2px;
+  }
+}
+
+// ---------------------------------------------------------------------
+// Info column
+// ---------------------------------------------------------------------
+.product__info {
+  @media (min-width: $product-split) {
+    position: sticky;
+    top: calc(var(--ticker-h, 0px) + var(--header-h, 80px) + 1.5rem);
+  }
+}
+
+.product__title {
+  margin: 0;
+  font-size: clamp(2rem, 4.5vw, 3.5rem);
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+}
+
+.product__price {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  margin: var(--space-s, 1rem) 0 var(--space-m, 1.75rem);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--heading-text-color);
+
+  s {
+    font-size: 1rem;
+    font-weight: 400;
+    color: $color-smoke;
+
+    &[hidden] { display: none; }
+  }
+}
+
+.product__error {
+  margin: 0 0 var(--space-s, 1rem);
+  padding: 0.75rem 1rem;
+  border-left: 3px solid var(--seal-color);
+  background-color: rgba(197, 67, 44, 0.12);
+  font-size: 0.875rem;
+}
+
+// ---------------------------------------------------------------------
+// Options
+// ---------------------------------------------------------------------
+.product__option {
+  margin: 0 0 var(--space-m, 1.5rem);
+  padding: 0;
+  border: 0;
+}
+
+.product__option-name {
+  margin-bottom: 0.625rem;
+  padding: 0;
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: $color-smoke;
+}
+
+.product__option-value {
+  color: var(--body-text-color);
+}
+
+.product__values {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.product__value {
+  position: relative;
+
+  input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  span {
+    display: block;
+    padding: 0.625rem 1rem;
+    border: 1px solid var(--rule-color);
+    font-size: 0.875rem;
+    color: var(--body-text-color);
+    cursor: pointer;
+    transition: border-color 150ms ease, background-color 150ms ease;
+    @include chamfer(8px);
+  }
+
+  &:hover span { border-color: var(--accent-color); }
+
+  input:checked + span {
+    border-color: var(--accent-color);
+    background-color: rgba(219, 152, 67, 0.14);
+    color: var(--heading-text-color);
+  }
+
+  input:focus-visible + span {
+    outline: 2px solid var(--accent-color);
+    outline-offset: 2px;
+  }
+}
+
+// ---------------------------------------------------------------------
+// Quantity + Buy
+// ---------------------------------------------------------------------
+.product__buy {
+  display: flex;
+  gap: 0.75rem;
+  align-items: stretch;
+}
+
+.product__qty {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0.25rem 0.75rem;
+  border: 1px solid var(--rule-color);
+  background-color: $color-pitch;
+
+  input {
+    width: 3.5rem;
+    border: 0;
+    background: none;
+    color: var(--heading-text-color);
+    font: inherit;
+    font-size: 1rem;
+    font-weight: 700;
+
+    &:focus-visible { outline: none; }
+  }
+
+  &:focus-within { border-color: var(--accent-color); }
+}
+
+.product__qty-label {
+  font-size: 0.625rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: $color-smoke;
+}
+
+.button.product__submit {
+  flex: 1;
+  max-width: none;
+  padding-block: 1.125rem;
+  font-size: 1rem;
+
+  &[disabled] {
+    filter: grayscale(1) brightness(0.6);
+    cursor: not-allowed;
+  }
+}
+
+.product__note {
+  margin: 0.75rem 0 0;
+  font-size: 0.75rem;
+  color: $color-smoke;
+}
+
+// ---------------------------------------------------------------------
+// Description — Shopify's rich text, so element-scoped on purpose.
+// ---------------------------------------------------------------------
+.product__desc {
+  margin-top: var(--space-l, 2.5rem);
+  padding-top: var(--space-m, 1.75rem);
+  border-top: 1px solid var(--rule-color);
+  color: var(--body-text-color);
+
+  > :first-child { margin-top: 0; }
+
+  p, ul, ol { margin: 0 0 1rem; }
+
+  ul, ol { padding-left: 1.25rem; }
+
+  img { max-width: 100%; height: auto; }
+}
+
+// ---------------------------------------------------------------------
+// 404
+// ---------------------------------------------------------------------
+.not-found__title {
+  margin: 0;
+  font-size: clamp(2.5rem, 7vw, 5rem);
+  line-height: 0.92;
+}
+
+.not-found__lead {
+  max-width: 48ch;
+  margin: var(--space-s, 1rem) 0 var(--space-m, 1.75rem);
+  color: $color-smoke;
+}

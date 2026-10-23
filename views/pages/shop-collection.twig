@@ -160,7 +160,15 @@ define( 'SHOPIFY_STOREFRONT_TOKEN', 'your-storefront-api-token' );</pre>
         {# Page-level flexible content still renders, under the grid. #}
         {% for component in post.components %}
           {% if not component.section_hidden %}
-            {% include component.view with component %}
+            {% set motion = component.motion ?? {} %}
+            <div data-block
+              {%- if motion.enable_animation %}
+                data-animate="{{ motion.animation_type|default('fade-up')|esc_attr }}"
+                data-delay="{{ motion.delay|default(0) }}"
+                data-duration="{{ motion.duration|default(800) }}"
+              {%- endif %}>
+              {% include component.view with component %}
+            </div>
           {% endif %}
         {% endfor %}
 

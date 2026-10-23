@@ -17,7 +17,7 @@ namespace MMM\Shopify;
 class ShopifyCollectionQuery
 {
   private const CACHE_TTL = HOUR_IN_SECONDS;
-  private const API_VERSION = '2024-10';
+  private const API_VERSION = '2026-07';
 
   /**
    * Editor-facing sort labels mapped onto Shopify's sortKey/reverse
@@ -109,7 +109,7 @@ class ShopifyCollectionQuery
       $reverse: Boolean!
       $filters: [ProductFilter!]
     ) {
-      collectionByHandle(handle: $handle) {
+      collection(handle: $handle) {
         title
         description
         products(first: $first, after: $after, sortKey: $sortKey, reverse: $reverse, filters: $filters) {
@@ -140,7 +140,7 @@ class ShopifyCollectionQuery
     GRAPHQL;
 
     $response = self::execute( $query, $variables );
-    $collection = $response['data']['collectionByHandle'] ?? null;
+    $collection = $response['data']['collection'] ?? null;
 
     if ( ! $collection ) {
       // Distinguish "no such handle" from "not configured" — the first
@@ -357,7 +357,11 @@ class ShopifyCollectionQuery
     return self::getCollection( $handle, [ 'sort' => $sort, 'first' => $first ] );
   }
 
-  private static function execute( string $query, array $variables ): array
+  /**
+   * Run one Storefront API request. Public so ShopifyProductQuery
+   * shares this rather than growing a second HTTP client.
+   */
+  public static function execute( string $query, array $variables ): array
   {
     if ( ! self::isConfigured() ) {
       return [];
@@ -391,13 +395,21 @@ class ShopifyCollectionQuery
   }
 
   /**
-   * Clear every cached collection response and the collection index.
+   * Clear every cached collection response, the collection index and
+   * every cached product page.
    */
   public static function bustCache(): void
   {
     global $wpdb;
 
-    foreach ( [ '_transient_shopify_collection_', '_transient_timeout_shopify_collection_' ] as $prefix ) {
+    $prefixes = [
+      '_transient_shopify_collection_',
+      '_transient_timeout_shopify_collection_',
+      '_transient_shopify_product_',
+      '_transient_timeout_shopify_product_',
+    ];
+
+    foreach ( $prefixes as $prefix ) {
       $like = $wpdb->esc_like( $prefix ) . '%';
       $wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->options} WHERE option_name LIKE %s", $like ) ); // phpcs:ignore
     }

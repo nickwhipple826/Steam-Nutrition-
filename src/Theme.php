@@ -17,6 +17,7 @@ use MMM\Services\{FieldGroupRegistryService,
   ViteService};
 use MMM\Setup\OptionsPage;
 use MMM\Setup\Security;
+use MMM\Shopify\ProductRoute;
 use MMM\Traits\Singleton;
 use Timber\Timber;
 
@@ -167,6 +168,9 @@ class Theme
 
     // Handle image optimization
     ImageOptimizationService::getInstance();
+
+    // /products/{handle} pages, rendered from Shopify
+    ProductRoute::getInstance();
 
     // Register hooks
     add_action( 'after_setup_theme', [ $this, 'setup' ] );

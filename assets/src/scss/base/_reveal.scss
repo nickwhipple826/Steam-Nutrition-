@@ -1,0 +1,119 @@
+// =====================================================================
+// base/_reveal.scss
+// ---------------------------------------------------------------------
+// Site-wide scroll reveal. Drives assets/src/js/ui/reveal.ts.
+//
+// Only active while <html> carries .js-reveal, which an inline script
+// in base.twig adds before first paint and removes again if the bundle
+// never loads. Nothing here can leave content permanently invisible.
+// =====================================================================
+
+// The side slides start 56px off their resting position. Without this
+// that overhang becomes horizontal page scroll for the length of the
+// animation.
+//
+// clip, not hidden: `overflow-x: hidden` forces the other axis to
+// `auto`, which turns <main> into a scroll container and breaks sticky
+// positioning inside it. `clip` is the one value that lets overflow-y
+// stay visible.
+main {
+  overflow-x: clip;
+}
+
+// ---------------------------------------------------------------------
+// Pre-hide.
+//
+// data-reveal is written by JavaScript, so without this the page paints
+// fully visible, then blinks to opacity 0 the moment reveal.ts runs,
+// then fades back in — a flicker, not a fade. This holds the same set
+// of blocks at zero until reveal.ts has claimed them and added
+// .reveal-ready, at which point the [data-reveal] rules below take over.
+//
+// It deliberately does not pre-hide [data-block] or the shop wrapper:
+// a wrapper that reveal.ts descends into never gets data-reveal, so a
+// rule keyed on anything but the real targets would leave it at zero
+// for good.
+//
+// Both exits are covered. reveal.ts adds .reveal-ready; if the bundle
+// never loads at all, the inline script in base.twig drops .js-reveal
+// after 2.5s and everything here stops applying.
+// ---------------------------------------------------------------------
+.js-reveal:not(.reveal-ready) {
+  main > *,
+  .site-footer {
+    opacity: 0;
+  }
+}
+
+.js-reveal [data-reveal] {
+  --reveal-ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+
+  opacity: 0;
+  transform: var(--reveal-from, translateY(24px));
+  transition:
+    opacity var(--reveal-duration, 800ms) var(--reveal-ease) var(--reveal-delay, 0ms),
+    transform var(--reveal-duration, 800ms) var(--reveal-ease) var(--reveal-delay, 0ms);
+
+  // transform: none rather than translateY(0), so the plate stops being
+  // a containing block once it has landed. A section holding a
+  // position:fixed descendant — the filter drawer, the staff modal —
+  // then measures against the viewport again.
+  &.is-revealed {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+// ---------------------------------------------------------------------
+// Effects — the Motion tab writes one of these into data-animate
+// ---------------------------------------------------------------------
+[data-reveal='fade']        { --reveal-from: none; }
+[data-reveal='fade-up']     { --reveal-from: translateY(24px); }
+[data-reveal='slide-up']    { --reveal-from: translateY(56px); }
+[data-reveal='slide-left']  { --reveal-from: translateX(56px); }
+[data-reveal='slide-right'] { --reveal-from: translateX(-56px); }
+[data-reveal='scale']       { --reveal-from: scale(0.96); }
+
+// "None" — present in the DOM, never hidden, never transitioned.
+.js-reveal [data-reveal='none'] {
+  opacity: 1;
+  transform: none;
+  transition: none;
+}
+
+// ---------------------------------------------------------------------
+// Stagger — the plate stays put, its cards arrive one by one.
+// Suits the product rail, the drop grid and the shop grid, all of
+// which are <ul>s of cards.
+// ---------------------------------------------------------------------
+.js-reveal [data-reveal='stagger'] {
+  opacity: 1;
+  transform: none;
+
+  [data-reveal-child] {
+    opacity: 0;
+    transform: translateY(24px);
+    transition:
+      opacity 600ms var(--reveal-ease) calc(var(--reveal-delay, 0ms) + var(--i, 0) * 90ms),
+      transform 600ms var(--reveal-ease) calc(var(--reveal-delay, 0ms) + var(--i, 0) * 90ms);
+  }
+
+  &.is-revealed [data-reveal-child] {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+// ---------------------------------------------------------------------
+// Reduced motion: keep the fade, drop every translation. A quick
+// opacity change still signals that the page is alive without moving
+// anything across the screen.
+// ---------------------------------------------------------------------
+@media (prefers-reduced-motion: reduce) {
+  .js-reveal [data-reveal],
+  .js-reveal [data-reveal] [data-reveal-child] {
+    transform: none !important;
+    transition-property: opacity;
+    transition-duration: 300ms;
+  }
+}
