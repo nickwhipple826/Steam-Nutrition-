@@ -1,10 +1,29 @@
 {% extends 'views/layouts/base.twig' %}
 
+{#
+  pages/page.twig
+  ---------------------------------------------------------------------
+  Every component is wrapped in a [data-block] div. That wrapper is
+  what ui/reveal.ts animates, which is why the Motion tab works on all
+  28 layouts without a single section partial knowing it exists.
+
+  The wrapper is inert: a bare block div around a full-width section
+  adds no layout of its own.
+#}
+
 {% block content %}
 
   {% for component in post.components %}
     {% if not component.section_hidden %}
-      {% include component.view with component %}
+      {% set motion = component.motion ?? {} %}
+      <div data-block
+        {%- if motion.enable_animation %}
+          data-animate="{{ motion.animation_type|default('fade-up')|esc_attr }}"
+          data-delay="{{ motion.delay|default(0) }}"
+          data-duration="{{ motion.duration|default(800) }}"
+        {%- endif %}>
+        {% include component.view with component %}
+      </div>
     {% endif %}
   {% endfor %}
 {% endblock %}

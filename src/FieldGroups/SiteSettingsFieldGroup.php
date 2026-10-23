@@ -102,27 +102,6 @@ class SiteSettingsFieldGroup extends BaseFieldGroup
         'rows' => 3,
         'default_value' => 'These statements have not been evaluated by the Food and Drug Administration. These products are not intended to diagnose, treat, cure or prevent any disease.',
         'instructions' => 'The FDA DSHEA disclaimer. Required on any page that makes a structure/function claim about a supplement, so it lives in the footer where it covers every page.',
-      ] )
-
-      // ---------------------------------------------------------------
-      // Inherited from Woonsocket. Nothing on the Steam templates reads
-      // these any more; kept so the stored values are not orphaned.
-      ->addTab( 'contact' )
-      ->addText( 'address', [ 'label' => 'Address' ] )
-      ->addUrl( 'address_url', [
-        'label' => 'Address URL',
-        'instructions' => 'Link for the address (e.g. a Google Maps link).',
-      ] )
-      ->addText( 'phone', [ 'label' => 'Phone' ] )
-      ->addRepeater( 'office_hours', [
-        'label' => 'Office Hours',
-        'button_label' => 'Add Line',
-        'layout' => 'table',
-      ] )
-        ->addText( 'line', [
-          'label' => 'Line',
-          'instructions' => 'e.g. "Mon–Fri: 9am–5pm"',
-        ] )
-      ->endRepeater();
+      ] );
   }
 }

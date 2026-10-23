@@ -1,4 +1,3 @@
-cat > views/layouts/base.twig << 'STEAM_EOF'
 <!doctype html>
 <!--suppress HtmlRequiredTitleElement, HtmlRequiredLangAttribute -->
 <html {{ site.language_attributes }}>
@@ -10,16 +9,38 @@ cat > views/layouts/base.twig << 'STEAM_EOF'
       stopped the Android users who needed zoom from getting it.
     #}
     <meta name='viewport' content='width=device-width, initial-scale=1'>
+
+    {#
+      Scroll reveal. This has to be inline and in the head so the class
+      is on <html> before the first paint — base/_reveal.scss keys the
+      pre-hide off it, and a deferred script would be too late.
+
+      The timeout is the safety net: if the bundle 404s or throws before
+      ui/reveal.ts runs, nothing ever sets __revealReady, the class comes
+      back off and the page shows normally. A broken build costs the
+      animation, not the content.
+    #}
+    <script>
+      document.documentElement.classList.add('js-reveal');
+      setTimeout(function () {
+        if (!window.__revealReady) {
+          document.documentElement.classList.remove('js-reveal');
+        }
+      }, 2500);
+    </script>
+
     <title>{{ post.acf.seo_metadata.title }}</title>
     {{ function('wp_head') }}
   </head>
   <body {{ function('body_class') }}>
     {{ function('wp_body_open') }}
 
-    {# One banner landmark. header.twig renders divs inside it. #}
-    <header>
-      {% include 'partials/sections/header.twig' %}
-    </header>
+    {#
+      header.twig renders its own .header-wrapper and <header
+      class="site-header"> inside it, so there is no wrapper element
+      here. Check line 1 of header.twig before trusting this.
+    #}
+    {% include 'partials/sections/header.twig' %}
 
     <main>
       {% block content %}{% endblock %}
@@ -31,4 +52,3 @@ cat > views/layouts/base.twig << 'STEAM_EOF'
     {{ function('wp_footer') }}
   </body>
 </html>
-STEAM_EOF

@@ -1,12 +1,65 @@
-<article class="product-card {{ not product.available ? 'product-card--sold-out' }}">
-  <a href="/product/{{ product.handle }}" class="product-card__link">
-    <div class="product-card__image">
-      <img src="{{ product.image }}" alt="{{ product.alt }}" loading="lazy">
+{#
+  components/product-card.twig
+  ---------------------------------------------------------------------
+  A product in the collection grid. Shares the .product-card styling
+  with the Product Rail layout and adds the two things a grid card
+  carries that a rail card does not: the variant swatches and the price
+  comparison.
+
+  There is deliberately no Add to bag button. Nothing here can add to a
+  cart yet — the cart lives in Shopify — and a button that silently
+  does nothing is worse than no button. The whole card is a link to the
+  product page; when the cart exists, the footer is where that button
+  goes.
+#}
+
+<article class="product-card{{ not product.available ? ' product-card--sold-out' }}">
+  <a class="product-card__link" href="/products/{{ product.handle|esc_attr }}">
+
+    <div class="product-card__shot">
+      {% if product.image %}
+        <img src="{{ product.image|esc_url }}"
+             alt="{{ product.alt|esc_attr }}"
+             {% if product.width %}width="{{ product.width }}" height="{{ product.height }}"{% endif %}
+             loading="lazy">
+      {% endif %}
+
       {% if not product.available %}
-        <span class="product-card__badge">Sold Out</span>
+        <span class="product-card__flag product-card__flag--out">Sold out</span>
+      {% elseif product.on_sale %}
+        <span class="product-card__flag">On sale</span>
       {% endif %}
     </div>
-    <h3 class="product-card__title">{{ product.title }}</h3>
-    <p class="product-card__price">{{ product.price|number_format(2) }} {{ product.currency }}</p>
+
+    <div class="product-card__meta">
+      <h3 class="product-card__title">{{ product.title|esc_html }}</h3>
+
+      {% if product.type %}
+        <p class="product-card__type">{{ product.type|esc_html }}</p>
+      {% endif %}
+
+      <p class="product-card__price">
+        {{ product.price|money(product.currency) }}
+        {% if product.compare_at %}
+          <s>{{ product.compare_at|money(product.currency) }}</s>
+        {% endif %}
+      </p>
+
+      {% if product.swatches.values %}
+        {% set shown = product.swatches.values|slice(0, 4) %}
+        {% set extra = product.swatches.values|length - shown|length %}
+
+        <p class="product-card__swatches">
+          <span class="screen-reader-text">{{ product.swatches.name|esc_html }}:</span>
+          {% for value in shown %}
+            <span class="product-card__swatch">{{ value|esc_html }}</span>
+          {% endfor %}
+          {% if extra > 0 %}
+            <span class="product-card__swatch product-card__swatch--more">+{{ extra }}</span>
+          {% endif %}
+        </p>
+      {% endif %}
+    </div>
+
   </a>
 </article>

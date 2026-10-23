@@ -107,36 +107,4 @@ class Site extends TimberSite
   {
     return $this->acfOption( 'disclaimer' ) ?: '';
   }
-
-  // ---- Inherited from Woonsocket -------------------------------------
-
-  public function address(): string
-  {
-    return $this->acfOption( 'address' ) ?: '';
-  }
-
-  public function address_url(): string
-  {
-    return $this->acfOption( 'address_url' ) ?: '';
-  }
-
-  public function phone(): string
-  {
-    return $this->acfOption( 'phone' ) ?: '';
-  }
-
-  /**
-   * Flatten the `office_hours` repeater into a plain array of strings,
-   * so templates can do `{% for line in site.office_hours_lines %}`.
-   * @return array
-   */
-  public function office_hours_lines(): array
-  {
-    $rows = $this->acfOption( 'office_hours' ) ?: [];
-
-    return array_map(
-      fn( array $row ) => $row['line'] ?? '',
-      $rows
-    );
-  }
 }

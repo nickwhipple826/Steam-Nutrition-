@@ -21,10 +21,6 @@
 
             <h2 class="archive-listing__title">{{ item.title|esc_html }}</h2>
 
-            {% if item.post_type == 'properties' and item.acf.address %}
-              <p class="archive-listing__address">{{ item.acf.address }}</p>
-            {% endif %}
-
             <div class="archive-listing__excerpt">
               {{ item.preview.length(20).read_more(false) }}
             </div>

@@ -1,0 +1,154 @@
+{% extends 'views/layouts/base.twig' %}
+
+{#
+  pages/product.twig
+  ---------------------------------------------------------------------
+  One Shopify product at /products/{handle}. Rendered by
+  ProductController; there is no WordPress post behind it.
+
+  Everything works server-side first. The option radios and the form
+  post back to this URL, the controller works out the variant and sends
+  the shopper to Shopify checkout. ui/product.ts only keeps the price,
+  image and button in step with the radios as they change.
+#}
+
+{% block content %}
+
+  {% set stage = variant.image ?: product.images|first %}
+
+  {#
+    Wide photos (a box shot) get a wider gallery column than tall ones
+    (a tub), so neither ends up a thumbnail-sized strip. ui/product.ts
+    re-checks this whenever the image changes.
+  #}
+  {% set is_wide = stage and stage.width and stage.height and stage.width > stage.height %}
+
+  <div class="product" data-product>
+    <section class="section product__main" data-scheme="iron">
+      <div class="section__inner">
+
+        <nav class="product__crumbs" aria-label="Breadcrumb">
+          <ol>
+            <li><a href="{{ site.url|esc_url }}">Home</a></li>
+            {% if collection_page %}
+              <li><a href="{{ collection_page.url|esc_url }}">{{ collection_page.title|esc_html }}</a></li>
+            {% endif %}
+            <li><span aria-current="page">{{ product.title|esc_html }}</span></li>
+          </ol>
+        </nav>
+
+        <div class="product__layout{{ is_wide ? ' product__layout--wide' }}" data-product-layout>
+
+          {# ---------- gallery ---------- #}
+          <div class="product__gallery">
+            <div class="product__stage">
+              {% if stage %}
+                <img src="{{ stage.url|esc_url }}"
+                     alt="{{ stage.alt|default(product.title)|esc_attr }}"
+                     {% if stage.width %}width="{{ stage.width }}" height="{{ stage.height }}"{% endif %}
+                     data-product-stage>
+              {% endif %}
+
+              {% if not product.available %}
+                <span class="product__flag product__flag--out">Sold out</span>
+              {% else %}
+                <span class="product__flag" data-product-flag {{ not variant.compare_at ? 'hidden' }}>On sale</span>
+              {% endif %}
+            </div>
+
+            {% if product.images|length > 1 %}
+              <ul class="product__thumbs">
+                {% for image in product.images %}
+                  <li>
+                    <button type="button" class="product__thumb{{ image.url == stage.url ? ' is-current' }}"
+                            data-product-thumb
+                            data-src="{{ image.url|esc_attr }}"
+                            data-alt="{{ image.alt|default(product.title)|esc_attr }}"
+                            aria-label="Show image {{ loop.index }} of {{ product.images|length }}"
+                            {{ image.url == stage.url ? 'aria-current="true"' }}>
+                      <img src="{{ image.url|esc_url }}" alt="" loading="lazy">
+                    </button>
+                  </li>
+                {% endfor %}
+              </ul>
+            {% endif %}
+          </div>
+
+          {# ---------- details + buy ---------- #}
+          <div class="product__info">
+
+            {% if product.type %}
+              <span class="eyebrow"><span class="eyebrow__dot"></span>{{ product.type|esc_html }}</span>
+            {% endif %}
+
+            <h1 class="product__title brass-face">{{ product.title|esc_html }}</h1>
+
+            <p class="product__price">
+              <span data-product-price>{{ variant.price|money(variant.currency) }}</span>
+              <s data-product-compare {{ not variant.compare_at ? 'hidden' }}>
+                {{- variant.compare_at ? variant.compare_at|money(variant.currency) -}}
+              </s>
+            </p>
+
+            {% if error %}
+              <p class="product__error" role="alert">{{ error|esc_html }}</p>
+            {% endif %}
+
+            <form class="product__form" method="post" action="{{ product_url|esc_url }}" data-product-form>
+              <input type="hidden" name="steam_buy" value="1">
+              <input type="hidden" name="variant" value="{{ variant.id|esc_attr }}" data-product-variant>
+
+              {% for option in product.options %}
+                <fieldset class="product__option">
+                  <legend class="product__option-name">
+                    {{ option.name|esc_html }}:
+                    <span class="product__option-value" data-product-option-label="{{ option.name|esc_attr }}">
+                      {{- variant.options[option.name]|default('')|esc_html -}}
+                    </span>
+                  </legend>
+
+                  <div class="product__values">
+                    {% for value in option.values %}
+                      <label class="product__value">
+                        <input type="radio"
+                               name="options[{{ option.name|esc_attr }}]"
+                               value="{{ value|esc_attr }}"
+                               data-product-option="{{ option.name|esc_attr }}"
+                               {{ variant.options[option.name]|default('') == value ? 'checked' }}>
+                        <span>{{ value|esc_html }}</span>
+                      </label>
+                    {% endfor %}
+                  </div>
+                </fieldset>
+              {% endfor %}
+
+              <div class="product__buy">
+                <label class="product__qty">
+                  <span class="product__qty-label">Qty</span>
+                  <input type="number" name="quantity" value="1" min="1" max="{{ max_quantity }}" inputmode="numeric">
+                </label>
+
+                <button type="submit" class="button product__submit" data-product-submit
+                        {{ not variant.available ? 'disabled' }}>
+                  {{ variant.available ? 'Buy now' : 'Sold out' }}
+                </button>
+              </div>
+
+              <p class="product__note">Secure checkout by Shopify.</p>
+            </form>
+
+            {% if product.description_html %}
+              <div class="product__desc">
+                {{ product.description_html|raw }}
+              </div>
+            {% endif %}
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <script type="application/json" data-product-json>{{ variants_json|raw }}</script>
+  </div>
+
+{% endblock %}

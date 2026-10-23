@@ -6,9 +6,7 @@ use MMM\FieldGroups\{MenuItemFields,
   PageContent,
   SeoFields,
   SiteSettingsFieldGroup,
-  PropertyFields,
   ShopCollectionFields};
-use MMM\PostTypes\{DocumentPostType, NoticePostType, OpenPositionPostType, PropertyPostType};
 use MMM\Models\Post;
 use MMM\Models\Site;
 use MMM\Services\{FieldGroupRegistryService,
@@ -19,6 +17,7 @@ use MMM\Services\{FieldGroupRegistryService,
   ViteService};
 use MMM\Setup\OptionsPage;
 use MMM\Setup\Security;
+use MMM\Shopify\ProductRoute;
 use MMM\Traits\Singleton;
 use Timber\Timber;
 
@@ -72,7 +71,6 @@ class Theme
   {
     $classmap['post'] = Post::class;
     $classmap['page'] = Post::class;
-    $classmap['properties'] = Post::class;
 
     return $classmap;
   }
@@ -90,9 +88,6 @@ class Theme
     $context['menu'] = Timber::get_menu( 'primary' );
     $context['footer_menu'] = $footerMenu;
     $context['legal_menu'] = Timber::get_menu( 'legal' );
-
-    // Still read by anything inherited that expects the flat list.
-    $context['footer_links'] = $footerMenu?->items ?? [];
 
     return $context;
   }
@@ -174,6 +169,9 @@ class Theme
     // Handle image optimization
     ImageOptimizationService::getInstance();
 
+    // /products/{handle} pages, rendered from Shopify
+    ProductRoute::getInstance();
+
     // Register hooks
     add_action( 'after_setup_theme', [ $this, 'setup' ] );
     add_action( 'wp_enqueue_scripts', [ $this, 'enqueueFonts' ] );
@@ -218,7 +216,6 @@ class Theme
     $fieldsRegistry->register( PageContent::class );
     $fieldsRegistry->register( SiteSettingsFieldGroup::class );
     $fieldsRegistry->register( MenuItemFields::class );
-    $fieldsRegistry->register( PropertyFields::class );
     $fieldsRegistry->register( ShopCollectionFields::class );
 
     $fieldsRegistry->init();
@@ -232,9 +229,7 @@ class Theme
   {
     $postTypeRegistry = PostTypeRegistryService::getInstance();
 
-    $postTypeRegistry->register(PropertyPostType::class);
-    $postTypeRegistry->register(NoticePostType::class);
-    $postTypeRegistry->register(DocumentPostType::class);
-    $postTypeRegistry->register(OpenPositionPostType::class);
+    // Register custom post types here, e.g.
+    // $postTypeRegistry->register( ExamplePostType::class );
   }
 }

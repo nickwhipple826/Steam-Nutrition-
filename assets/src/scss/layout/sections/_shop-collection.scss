@@ -1,252 +1,452 @@
-@use '../../utils/variables/colors' as *;
+// =====================================================================
+// layout/sections/_shop-collection.scss
+// ---------------------------------------------------------------------
+// The three collection pages. Leans on the section chrome (gutter rail,
+// foil headings, seam) and on .product-card from _product-rail.scss, so
+// a product looks the same whether it is in a rail on the homepage or
+// in the grid here. Only what a grid card adds — swatches, the sale
+// comparison — lives in this file.
+// =====================================================================
 
-.shop-collection {
-  &__layout {
-    display: grid;
-    grid-template-columns: 220px 1fr;
-    gap: var(--space-l);
-    max-width: 1450px;
-    margin-inline: auto;
-    padding: var(--space-l);
-  }
+@use '@css/utils/variables/colors' as *;
+@use '@css/utils/mixins/industrial' as *;
 
-  &__header {
+.shop__head {
+  padding-bottom: var(--space-m, 2rem);
+}
+
+.shop__title {
+  margin: 0;
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  line-height: 0.92;
+  letter-spacing: -0.03em;
+}
+
+.shop__intro {
+  max-width: 58ch;
+  margin: var(--space-s, 1rem) 0 0;
+  color: $color-smoke;
+}
+
+// ---------------------------------------------------------------------
+// Category row
+// ---------------------------------------------------------------------
+.shop__cats {
+  margin-top: var(--space-m, 1.75rem);
+
+  ul {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--space-m);
-    margin-bottom: var(--space-m);
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+}
+
+.shop__cat {
+  display: block;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--rule-color);
+  font-size: 0.8125rem;
+  letter-spacing: 0.08em;
+  text-decoration: none;
+  text-transform: uppercase;
+  color: $color-smoke;
+  transition: border-color 150ms ease, color 150ms ease, background-color 150ms ease;
+  @include chamfer(8px);
+
+  &:hover {
+    border-color: var(--accent-color);
+    color: var(--heading-text-color);
   }
 
-  &__title {
-    color: $color-black;
+  &.is-current {
+    border-color: var(--accent-color);
+    background-color: rgba(219, 152, 67, 0.14);
+    color: var(--heading-text-color);
+  }
+}
+
+// ---------------------------------------------------------------------
+// Toolbar
+// ---------------------------------------------------------------------
+.shop__body {
+  padding-top: var(--space-m, 2rem);
+}
+
+.shop__toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-s, 1rem);
+  padding-bottom: var(--space-s, 1.125rem);
+  margin-bottom: var(--space-m, 1.75rem);
+  border-bottom: 1px solid var(--rule-color);
+}
+
+.shop__filter-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1.125rem;
+  border: 1px solid var(--rule-color);
+  background: none;
+  color: var(--body-text-color);
+  font: inherit;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  @include chamfer(8px);
+
+  &:hover:not([disabled]) {
+    border-color: var(--accent-color);
+    color: var(--heading-text-color);
   }
 
-  &__sort select {
-    border: 1px solid $color-smoke;
-    background: $color-white;
-    padding: 0.4em 0.75em;
-    font-weight: 600;
+  &[disabled] {
+    opacity: 0.4;
+    cursor: default;
   }
+}
 
-  &__grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-    gap: var(--space-m);
-  }
+.shop__filter-count {
+  display: grid;
+  place-items: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 9px;
+  background-color: var(--seal-color);
+  color: #fff;
+  font-size: 0.625rem;
+  line-height: 1;
+}
 
-  &__empty {
+.shop__count {
+  margin: 0;
+  font-size: 0.8125rem;
+  color: $color-smoke;
+}
+
+// Pushed right, so the toolbar reads: controls | count ......... sort
+.shop__sort {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-left: auto;
+
+  label {
+    font-size: 0.8125rem;
     color: $color-smoke;
   }
 
-  @media (max-width: 900px) {
-    &__layout {
-      grid-template-columns: 1fr;
+  select {
+    padding: 0.5rem 0.75rem;
+    border: 1px solid var(--rule-color);
+    background-color: $color-pitch;
+    color: var(--body-text-color);
+    font: inherit;
+    font-size: 0.8125rem;
+
+    &:focus {
+      outline: none;
+      border-color: var(--accent-color);
     }
   }
 }
 
-.shop-sidebar {
-  &__nav-list {
-    list-style: none;
-    padding: 0;
-    margin: 0 0 var(--space-m);
-    border-top: 1px solid $color-parchment;
-  }
+// Only reachable without JavaScript — ui/shop-filters.ts hides it and
+// submits on change instead. Hidden by the script rather than by a .js
+// class on <html>, because this theme never sets one.
+.shop__sort-go {
+  padding: 0.5rem 0.875rem;
+  border: 1px solid var(--rule-color);
+  background: none;
+  color: var(--body-text-color);
+  font: inherit;
+  font-size: 0.8125rem;
+  cursor: pointer;
+}
 
-  &__nav-item {
-    border-bottom: 1px solid $color-parchment;
-  }
+.shop__active {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: -0.5rem 0 var(--space-m, 1.5rem);
+  font-size: 0.8125rem;
+}
 
-  &__nav-link {
-    display: block;
-    padding: 0.6em 0;
-    font-weight: 600;
-    letter-spacing: 0.03em;
-    text-transform: uppercase;
-    font-size: 0.85rem;
-    color: $color-charcoal;
+.shop__active-label {
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent-color);
+}
 
-    &.is-active,
-    &:hover {
-      color: $color-brass;
-    }
-  }
+.shop__clear {
+  color: $color-smoke;
 
-  &__filters-trigger {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-    padding: 0.6em 0.9em;
-    border: 1px solid $color-black;
-    background: transparent;
-    font-weight: 700;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    font-size: 0.8rem;
-    cursor: pointer;
+  &:hover { color: var(--heading-text-color); }
+}
 
-    &:hover {
-      background: $color-black;
-      color: $color-white;
-    }
+// ---------------------------------------------------------------------
+// Grid
+// ---------------------------------------------------------------------
+.shop__grid {
+  display: grid;
+  // 16rem lands on four columns at 1440 rather than five. At five the
+  // tub labels stop being readable, which is the whole point of the
+  // photograph.
+  grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+  gap: clamp(1rem, 2vw, 1.75rem);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.shop__more {
+  display: flex;
+  justify-content: center;
+  margin-top: var(--space-l, 2.5rem);
+}
+
+// ---------------------------------------------------------------------
+// Grid-only additions to .product-card (the rest is in _product-rail)
+// ---------------------------------------------------------------------
+.product-card__swatches {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  margin: 0.5rem 0 0;
+}
+
+.product-card__swatch {
+  padding: 0.125rem 0.4375rem;
+  border: 1px solid var(--rule-color);
+  font-size: 0.6875rem;
+  letter-spacing: 0.04em;
+  color: $color-smoke;
+}
+
+.product-card__swatch--more {
+  border-color: transparent;
+}
+
+// ---------------------------------------------------------------------
+// Empty states
+// ---------------------------------------------------------------------
+.shop__blank {
+  @include plate(14px);
+  @include rivets;
+  padding: clamp(1.5rem, 4vw, 2.75rem);
+  max-width: 54rem;
+}
+
+.shop__blank-lead {
+  margin: 0;
+  font-family: var(--ff-mincho);
+  font-size: 1.25rem;
+  color: var(--heading-text-color);
+}
+
+.shop__blank-note {
+  max-width: 64ch;
+  margin: 0.875rem 0 0;
+  font-size: 0.875rem;
+  color: $color-smoke;
+
+  code {
+    color: var(--accent-color);
   }
 }
 
+.shop__blank-code {
+  overflow-x: auto;
+  margin: 0.875rem 0 0;
+  padding: 0.875rem 1rem;
+  border: 1px solid var(--rule-color);
+  background-color: $color-pitch;
+  font-size: 0.78125rem;
+  line-height: 1.6;
+  color: $color-parchment;
+}
+
+.shop__blank .button {
+  margin-top: 1.25rem;
+}
+
+// ---------------------------------------------------------------------
+// Filter drawer — same slide-in geometry as the mobile nav, so the site
+// has one drawer, not two that behave slightly differently.
+// ---------------------------------------------------------------------
 .filter-panel {
   position: fixed;
   inset: 0;
-  z-index: 100;
+  z-index: 300;
+}
 
-  &[hidden] {
-    display: none;
-  }
+.filter-panel__backdrop {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+}
 
-  &__backdrop {
-    position: absolute;
-    inset: 0;
-    background: rgb(8 5 4 / 55%);
-  }
+.filter-panel__drawer {
+  position: absolute;
+  inset: 0 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  width: min(26.25rem, 92vw);
+  border-left: 1px solid $color-rule-dark;
+  background-color: #0b0906;
+}
 
-  &__drawer {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    width: min(360px, 100%);
-    height: 100%;
-    background: $color-white;
-    overflow-y: auto;
-  }
+.filter-panel__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem var(--space-m, 1.5rem);
+  border-bottom: 1px solid $color-rule-dark;
+}
 
-  &__header {
+.filter-panel__title {
+  margin: 0;
+  font-size: 1.125rem;
+  color: $color-gold-light;
+}
+
+.filter-panel__close {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border: 0;
+  background: none;
+  color: #cfc4ad;
+  cursor: pointer;
+
+  &:hover { color: $color-gold-light; }
+}
+
+// The body scrolls; the header and footer stay put, so Show products is
+// always reachable however many flavours the client adds.
+.filter-panel__body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0 var(--space-m, 1.5rem);
+}
+
+.filter-panel__section {
+  border-bottom: 1px solid $color-rule-dark;
+
+  summary {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: var(--space-m);
-    border-bottom: 1px solid $color-parchment;
-  }
-
-  &__title {
-    margin: 0;
-    color: $color-black;
-  }
-
-  &__close {
-    background: none;
-    border: none;
-    font-size: 1.5rem;
-    line-height: 1;
-    cursor: pointer;
-    color: $color-black;
-  }
-
-  &__form {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-  }
-
-  &__section {
-    border-bottom: 1px solid $color-parchment;
-    padding: 0 var(--space-m);
-
-    summary {
-      position: relative;
-      display: flex;
-      align-items: center;
-      padding-block: var(--space-s);
-      padding-right: 2em;
-      cursor: pointer;
-      list-style: none;
-      font-weight: 700;
-      text-transform: uppercase;
-      font-size: 0.8rem;
-      letter-spacing: 0.04em;
-      color: $color-black;
-
-      &::-webkit-details-marker {
-        display: none;
-      }
-
-      &::before {
-        content: '';
-        position: absolute;
-        right: 0;
-        top: 50%;
-        width: 0.75em;
-        height: 2px;
-        background-color: $color-black;
-        transform: translateY(-50%);
-      }
-
-      &::after {
-        content: '';
-        position: absolute;
-        right: 0;
-        top: 50%;
-        width: 0.75em;
-        height: 2px;
-        background-color: $color-black;
-        transform: translateY(-50%) rotate(90deg);
-        transition: transform 0.2s ease;
-      }
-    }
-
-    &[open] summary::after {
-      transform: translateY(-50%) rotate(0deg);
-    }
-  }
-
-  &__options {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-xs);
-    padding-bottom: var(--space-s);
-  }
-
-  &__footer {
-    display: flex;
-    gap: var(--space-s);
-    padding: var(--space-m);
-    margin-top: auto;
-    border-top: 1px solid $color-parchment;
-    position: sticky;
-    bottom: 0;
-    background: $color-white;
-  }
-
-  &__reset,
-  &__save {
-    flex: 1;
-    padding: 0.75em;
+    padding: 1rem 0;
+    font-size: 0.875rem;
     font-weight: 700;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
-    font-size: 0.8rem;
+    color: $color-parchment;
     cursor: pointer;
+    list-style: none;
+
+    &::-webkit-details-marker { display: none; }
   }
 
-  &__reset {
-    background: transparent;
-    border: 1px solid $color-smoke;
-  }
+  &[open] summary { color: $color-gold-light; }
+}
 
-  &__save {
-    background: $color-black;
-    color: $color-white;
-    border: 1px solid $color-black;
+.filter-panel__chev {
+  width: 8px;
+  height: 8px;
+  border-right: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  transform: rotate(45deg);
+  transition: transform 200ms ease;
 
-    &:hover {
-      background: $color-brass;
-      border-color: $color-brass;
-    }
-  }
+  [open] > summary & { transform: rotate(-135deg); }
+}
+
+.filter-panel__options {
+  padding-bottom: 0.875rem;
+}
+
+.filter-panel__empty {
+  padding: 1.5rem 0;
+  font-size: 0.875rem;
+  color: $color-smoke;
 }
 
 .filter-option {
+  position: relative;
   display: flex;
   align-items: center;
-  gap: 0.5em;
-  font-size: 0.9rem;
-  color: $color-charcoal;
+  gap: 0.625rem;
+  padding: 0.4375rem 0;
+  font-size: 0.875rem;
+  color: #b6ab94;
+  cursor: pointer;
+
+  input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+  }
+
+  &:hover { color: $color-parchment; }
+}
+
+.filter-option__box {
+  flex: none;
+  width: 16px;
+  height: 16px;
+  border: 1px solid $color-rule-dark;
+  transition: background-color 150ms ease, border-color 150ms ease;
+
+  input:checked + & {
+    border-color: $color-gold;
+    background-color: $color-gold;
+    // The tick is drawn rather than typed, so it cannot inherit a font
+    // the drawer does not load.
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3.5 8.5l3 3 6-7' fill='none' stroke='%23080504' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  }
+
+  input:focus-visible + & {
+    outline: 2px solid $color-gold-light;
+    outline-offset: 2px;
+  }
+}
+
+.filter-option__label { flex: 1; }
+
+.filter-option__count {
+  font-size: 0.75rem;
+  color: #6f6653;
+}
+
+.filter-panel__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.125rem var(--space-m, 1.5rem);
+  border-top: 1px solid $color-rule-dark;
+}
+
+.filter-panel__reset {
+  font-size: 0.8125rem;
+  color: $color-smoke;
+
+  &:hover { color: $color-gold-light; }
+}
+
+.filter-panel__apply {
+  flex: 1;
+  max-width: none;
+  justify-content: center;
 }
