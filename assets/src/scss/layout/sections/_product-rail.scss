@@ -1,15 +1,39 @@
+// =====================================================================
+// layout/sections/_product-rail.scss
+// ---------------------------------------------------------------------
+// .product-card — shared by the Product Rail and the collection grid.
+// Concept A: a soot plate with a hairline, a recessed image well, then
+// a mono label, Oswald caps title and mono brass price.
+// =====================================================================
+
 @use '@css/utils/variables/colors' as *;
 
+.product-card {
+  height: 100%;
+  border: 1px solid var(--rule-color);
+  border-radius: 2px;
+  background-color: var(--panel-color);
+  transition: border-color 160ms ease;
+
+  &:hover,
+  &:focus-within {
+    border-color: var(--frame-color);
+  }
+}
+
 .product-card__link {
-  display: block;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
   text-decoration: none;
+  color: inherit;
 }
 
 .product-card__shot {
   position: relative;
   aspect-ratio: 4 / 5;
   overflow: hidden;
-  border: 1px solid var(--rule-color);
+  border-bottom: 1px solid var(--rule-color);
   background-color: $color-pitch;
 
   img {
@@ -19,19 +43,24 @@
     transition: transform 500ms cubic-bezier(0.2, 0.7, 0.3, 1);
   }
 
-  .product-card:hover & img { transform: scale(1.05); }
+  .product-card:hover & img { transform: scale(1.04); }
 }
 
+// Sits top-left as a stamped label; a kanji .seal-tile, if a template
+// adds one, goes top-right.
 .product-card__flag {
   position: absolute;
-  top: 0;
-  left: 0;
-  padding: 0.3125rem 0.6875rem;
+  top: 0.875rem;
+  left: 0.875rem;
+  padding: 0.375rem 0.625rem;
+  border-radius: 2px;
   background-color: var(--seal-color);
-  color: #FFF;
-  font-size: 0.625rem;
-  font-weight: 700;
+  color: $color-ivory;
+  font-family: var(--ff-mono);
+  font-size: 0.6875rem;
+  font-weight: 500;
   letter-spacing: 0.14em;
+  text-transform: uppercase;
 }
 
 .product-card__flag--out {
@@ -39,37 +68,61 @@
   color: $color-smoke;
 }
 
+.product-card .seal-tile {
+  position: absolute;
+  top: 0.875rem;
+  right: 0.875rem;
+}
+
 .product-card--sold-out .product-card__shot img {
   opacity: 0.45;
 }
 
+// Flex `order` puts the type label above the title without touching the
+// markup (title is first in the DOM, so it is still read first).
 .product-card__meta {
-  padding: 0.875rem 0.125rem 0;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  padding: 1.25rem 1.25rem 1.375rem;
 }
 
 .product-card__title {
-  margin: 0 0 0.125rem;
-  font-size: 1.1875rem;
-  font-weight: 700;
+  order: 2;
+  margin: 0.375rem 0 0;
+  font-size: clamp(1.5rem, 2vw, 2.125rem);
+  letter-spacing: 0.04em;
+  line-height: 1.05;
+  color: var(--heading-text-color);
 }
 
 .product-card__type {
+  order: 1;
   margin: 0;
-  font-size: 0.78125rem;
-  color: $color-smoke;
+  font-family: var(--ff-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent-color);
 }
 
 .product-card__price {
+  order: 4;
   display: flex;
   align-items: center;
   gap: 0.625rem;
-  margin: 0.5625rem 0 0;
-  font-size: 0.875rem;
-  font-weight: 700;
-  color: var(--heading-text-color);
+  margin: auto 0 0;
+  padding-top: 1rem;
+  font-family: var(--ff-mono);
+  font-size: 1rem;
+  font-weight: 400;
+  color: var(--accent-text-color);
 
   s {
-    font-weight: 400;
     color: $color-smoke;
   }
+}
+
+.product-card__swatches {
+  order: 3;
 }

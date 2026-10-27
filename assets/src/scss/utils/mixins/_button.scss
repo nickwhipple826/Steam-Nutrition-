@@ -10,17 +10,24 @@
   }
 }
 
-// Ghost button. A hairline plate that fills with a brass tint on hover
-// rather than swapping colours, so it cannot land on the page colour.
+// Ghost button. 1px brass border, brass type, fills with a faint brass
+// tint on hover. Weight drops to 500 so it sits behind the primary.
 @mixin button-outline {
-  background-color: rgba(8, 5, 4, 0.5);
-  background-image: none;
-  box-shadow: inset 0 0 0 1px var(--rule-color);
-  color: var(--body-text-color);
+  background-color: transparent;
+  box-shadow: inset 0 0 0 1px var(--accent-color);
+  color: var(--accent-text-color);
+  font-weight: 500;
 
   &:hover {
     filter: none;
-    background-color: rgba(219, 152, 67, 0.1);
-    box-shadow: inset 0 0 0 1px var(--accent-color);
+    background-color: color-mix(in srgb, var(--accent-color) 12%, transparent);
   }
+}
+
+// Small button for cards (Add to cart). 44px tall to keep the touch
+// target, smaller type.
+@mixin button-small {
+  min-height: 2.75rem;
+  padding: 0 1.125rem;
+  font-size: 0.875rem;
 }

@@ -26,12 +26,13 @@ class Theme
   use Singleton;
 
   /**
-   * Google Fonts request for the three brand faces. Weights are trimmed
+   * Google Fonts request for the four brand faces. Weights are trimmed
    * to what the stylesheet actually uses — every extra weight is another
    * file the first paint waits on.
    */
   private const FONTS_URL = 'https://fonts.googleapis.com/css2'
-    . '?family=Rye'
+    . '?family=Oswald:wght@500;700'
+    . '&family=IBM+Plex+Mono:wght@400;500'
     . '&family=Shippori+Mincho+B1:wght@600;700;800'
     . '&family=Zen+Kaku+Gothic+New:wght@400;500;700'
     . '&display=swap';

@@ -17,15 +17,15 @@
 
 .shop__title {
   margin: 0;
-  font-size: clamp(2.5rem, 6vw, 4.5rem);
-  line-height: 0.92;
-  letter-spacing: -0.03em;
+  font-size: clamp(2.75rem, 6vw, 4.75rem);
+  line-height: 0.98;
+  letter-spacing: 0.01em;
 }
 
 .shop__intro {
   max-width: 58ch;
   margin: var(--space-s, 1rem) 0 0;
-  color: $color-smoke;
+  color: var(--muted-text-color);
 }
 
 // ---------------------------------------------------------------------
@@ -48,8 +48,10 @@
   display: block;
   padding: 0.5rem 1rem;
   border: 1px solid var(--rule-color);
-  font-size: 0.8125rem;
-  letter-spacing: 0.08em;
+  font-family: var(--ff-display);
+  font-size: 0.875rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
   text-decoration: none;
   text-transform: uppercase;
   color: $color-smoke;
@@ -63,7 +65,7 @@
 
   &.is-current {
     border-color: var(--accent-color);
-    background-color: rgba(219, 152, 67, 0.14);
+    background-color: color-mix(in srgb, var(--accent-color) 14%, transparent);
     color: var(--heading-text-color);
   }
 }
@@ -94,9 +96,10 @@
   background: none;
   color: var(--body-text-color);
   font: inherit;
-  font-size: 0.8125rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
+  font-family: var(--ff-display);
+  font-size: 0.875rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   cursor: pointer;
   @include chamfer(8px);
@@ -118,15 +121,17 @@
   min-width: 18px;
   height: 18px;
   padding: 0 5px;
-  border-radius: 9px;
+  border-radius: 2px;
   background-color: var(--seal-color);
-  color: #fff;
-  font-size: 0.625rem;
+  color: $color-ivory;
+  font-family: var(--ff-mono);
+  font-size: 0.6875rem;
   line-height: 1;
 }
 
 .shop__count {
   margin: 0;
+  font-family: var(--ff-mono);
   font-size: 0.8125rem;
   color: $color-smoke;
 }
@@ -180,7 +185,8 @@
 }
 
 .shop__active-label {
-  letter-spacing: 0.1em;
+  font-family: var(--ff-mono);
+  letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--accent-color);
 }
@@ -223,8 +229,10 @@
 }
 
 .product-card__swatch {
-  padding: 0.125rem 0.4375rem;
+  padding: 0.1875rem 0.5rem;
   border: 1px solid var(--rule-color);
+  border-radius: 2px;
+  font-family: var(--ff-mono);
   font-size: 0.6875rem;
   letter-spacing: 0.04em;
   color: $color-smoke;
@@ -246,8 +254,10 @@
 
 .shop__blank-lead {
   margin: 0;
-  font-family: var(--ff-mincho);
-  font-size: 1.25rem;
+  font-family: var(--ff-display);
+  font-size: 1.5rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
   color: var(--heading-text-color);
 }
 
@@ -300,7 +310,7 @@
   flex-direction: column;
   width: min(26.25rem, 92vw);
   border-left: 1px solid $color-rule-dark;
-  background-color: #0b0906;
+  background-color: $color-pitch;
 }
 
 .filter-panel__header {
@@ -313,18 +323,18 @@
 
 .filter-panel__title {
   margin: 0;
-  font-size: 1.125rem;
-  color: $color-gold-light;
+  font-size: 1.5rem;
+  color: $color-parchment;
 }
 
 .filter-panel__close {
   display: grid;
   place-items: center;
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
   border: 0;
   background: none;
-  color: #cfc4ad;
+  color: $color-parchment;
   cursor: pointer;
 
   &:hover { color: $color-gold-light; }
@@ -346,9 +356,10 @@
     align-items: center;
     justify-content: space-between;
     padding: 1rem 0;
-    font-size: 0.875rem;
-    font-weight: 700;
-    letter-spacing: 0.08em;
+    font-family: var(--ff-display);
+    font-size: 1.0625rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
     color: $color-parchment;
     cursor: pointer;
@@ -388,7 +399,7 @@
   gap: 0.625rem;
   padding: 0.4375rem 0;
   font-size: 0.875rem;
-  color: #b6ab94;
+  color: $color-body-muted;
   cursor: pointer;
 
   input {
@@ -405,7 +416,8 @@
   flex: none;
   width: 16px;
   height: 16px;
-  border: 1px solid $color-rule-dark;
+  border: 1px solid #5A4630;
+  border-radius: 2px;
   transition: background-color 150ms ease, border-color 150ms ease;
 
   input:checked + & {
@@ -413,7 +425,7 @@
     background-color: $color-gold;
     // The tick is drawn rather than typed, so it cannot inherit a font
     // the drawer does not load.
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3.5 8.5l3 3 6-7' fill='none' stroke='%23080504' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3.5 8.5l3 3 6-7' fill='none' stroke='%230E0C0A' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
   }
 
   input:focus-visible + & {
@@ -425,8 +437,9 @@
 .filter-option__label { flex: 1; }
 
 .filter-option__count {
+  font-family: var(--ff-mono);
   font-size: 0.75rem;
-  color: #6f6653;
+  color: $color-smoke;
 }
 
 .filter-panel__footer {
@@ -439,6 +452,7 @@
 }
 
 .filter-panel__reset {
+  font-family: var(--ff-mono);
   font-size: 0.8125rem;
   color: $color-smoke;
 

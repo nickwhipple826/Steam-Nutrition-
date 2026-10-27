@@ -1,7 +1,6 @@
 @use '@css/utils/variables/colors' as *;
 
 .newsletter-band {
-  border-top: 1px solid var(--rule-color);
   text-align: center;
 }
 
@@ -16,19 +15,22 @@
 
 .newsletter-band__form {
   display: flex;
-  max-width: 32.5rem;
-  margin: 1.375rem auto 0.625rem;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  max-width: 36rem;
+  margin: 1.625rem auto 0.625rem;
 
   input {
-    flex: 1;
+    flex: 1 1 15rem;
     min-width: 0;
-    padding: 0.875rem 1rem;
-    border: 1px solid var(--rule-color);
-    border-right: 0;
-    background-color: $color-pitch;
+    min-height: 3.375rem;
+    padding: 0 1.125rem;
+    border: 1px solid #5A4630;
+    border-radius: 2px;
+    background-color: var(--panel-color);
     color: var(--body-text-color);
     font: inherit;
-    font-size: 0.875rem;
+    font-size: 1rem;
 
     &::placeholder { color: $color-smoke; }
 
@@ -38,10 +40,11 @@
     }
   }
 
-  // The field and the button meet, so the button drops the chamfer it
-  // carries elsewhere.
+  // Brass rather than vermilion here, as in the concept — the band is
+  // secondary to whatever CTA sits above it.
   .button {
-    clip-path: none;
+    --button-background-color: #{$color-gold};
+    --button-text-color: #{$color-black};
     white-space: nowrap;
   }
 }
@@ -57,6 +60,8 @@
 
 .newsletter-band__fine {
   margin: 0;
+  font-family: var(--ff-mono);
+  letter-spacing: 0.06em;
   font-size: 0.71875rem;
   color: $color-smoke;
 }

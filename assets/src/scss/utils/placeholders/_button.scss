@@ -1,37 +1,43 @@
 @use '../variables/colors' as *;
-@use '../mixins/industrial' as *;
 
-// A chamfered brass plate on dark schemes, a flat dark plate on light
-// ones. Which one is decided by --button-gradient in the scheme map, so
-// nothing here branches on scheme names.
+// Concept A button: a flat plate, 2px corners, condensed tracked caps.
+// Vermilion on dark schemes, dark on brass — decided by the scheme map,
+// so nothing here branches on scheme names.
 %button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.625rem;
+  gap: 0.75rem;
 
-  padding: 0.8125rem 1.625rem;
+  min-height: 3.375rem; // 54px
+  padding: 0 1.75rem;
   border: 0;
+  border-radius: 2px;
 
   background-color: var(--button-background-color);
-  background-image: var(--button-gradient, none);
-  box-shadow: inset 0 1px 0 rgba(255, 248, 230, 0.55);
+  background-image: none;
 
   color: var(--button-text-color);
-  font-family: var(--ff-body);
-  font-size: 0.875rem;
+  font-family: var(--ff-display);
+  font-size: 1rem;
   font-weight: 700;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.14em;
   line-height: 1;
   text-align: center;
+  text-transform: uppercase;
   text-decoration: none;
 
   min-width: 100px;
   max-width: max-content;
   cursor: pointer;
 
-  @include chamfer(10px);
-  transition: filter 140ms ease, transform 140ms ease;
+  transition: filter 140ms ease, transform 140ms ease, background-color 140ms ease;
+
+  svg {
+    width: 18px;
+    height: 18px;
+    flex: none;
+  }
 
   &:hover {
     filter: brightness(1.12);
@@ -42,7 +48,7 @@
   }
 
   &:focus-visible {
-    outline: 2px solid var(--heading-text-color);
+    outline: 2px solid var(--accent-text-color);
     outline-offset: 3px;
   }
 }

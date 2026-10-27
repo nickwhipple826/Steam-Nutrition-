@@ -1,11 +1,11 @@
 // =====================================================================
 // base/_colors.scss
 // ---------------------------------------------------------------------
-// Four schemes:
+// Four schemes (Concept A, "Boiler Room"):
 //
-//   iron       near-black page floor. The default for most sections.
-//   soot       raised panel. Alternate it against iron so the page
-//              reads as stacked plates rather than one dark field.
+//   iron       warm near-black page floor. The default for most sections.
+//   soot       the recessed band (#0A0806) — alternate it against iron so
+//              the page reads as stacked plates rather than one field.
 //   brass      inverted — brass ground, dark type. Campaign bands.
 //   parchment  light. Long-form copy, legal, anything text-heavy.
 // =====================================================================
@@ -18,28 +18,32 @@ $schemes: (
         bg: $color-black,
         panel: $color-soot,
         accent: $color-gold,
-        heading: $color-gold-light,
-        accent-text: $color-gold,
+        heading: $color-parchment,
+        accent-text: $color-gold-light,
         body: $color-parchment,
-        btn-bg: $color-gold,
-        btn-text: $color-black,
-        btn-gradient: $gradient-button,
-        link: $color-gold,
+        muted: $color-body-muted,
+        btn-bg: $color-vermilion,
+        btn-text: $color-ivory,
+        btn-gradient: none,
+        link: $color-gold-light,
         rule: $color-rule-dark,
+        frame: $color-gold-deep,
         seal: $color-vermilion
     ),
     'soot': (
-        bg: $color-soot,
-        panel: $color-soot-raised,
+        bg: $color-pitch,
+        panel: $color-soot,
         accent: $color-gold,
-        heading: $color-gold-light,
-        accent-text: $color-gold,
+        heading: $color-parchment,
+        accent-text: $color-gold-light,
         body: $color-parchment,
-        btn-bg: $color-gold,
-        btn-text: $color-black,
-        btn-gradient: $gradient-button,
-        link: $color-gold,
+        muted: $color-body-muted,
+        btn-bg: $color-vermilion,
+        btn-text: $color-ivory,
+        btn-gradient: none,
+        link: $color-gold-light,
         rule: $color-rule-dark,
+        frame: $color-gold-deep,
         seal: $color-vermilion
     ),
     'brass': (
@@ -47,27 +51,31 @@ $schemes: (
         panel: $color-gold-light,
         accent: $color-black,
         heading: $color-black,
-        accent-text: $color-copper,
-        body: $color-charcoal,
+        accent-text: $color-black,
+        body: $color-black,
+        muted: $color-charcoal,
         btn-bg: $color-black,
-        btn-text: $color-gold-light,
+        btn-text: $color-parchment,
         btn-gradient: none,
-        link: $color-copper,
+        link: $color-black,
         rule: $color-rule-light,
+        frame: $color-black,
         seal: $color-vermilion
     ),
     'parchment': (
         bg: $color-parchment,
-        panel: $color-white,
+        panel: $color-ivory,
         accent: $color-copper,
         heading: $color-black,
         accent-text: $color-copper,
         body: $color-charcoal,
-        btn-bg: $color-black,
-        btn-text: $color-gold-light,
+        muted: #5A4E3E,
+        btn-bg: $color-vermilion,
+        btn-text: $color-ivory,
         btn-gradient: none,
         link: $color-copper,
         rule: $color-rule-light,
+        frame: $color-gold-deep,
         seal: $color-vermilion
     ),
 );
@@ -79,11 +87,13 @@ $schemes: (
   --heading-text-color: #{map.get($scheme, heading)};
   --accent-text-color: #{map.get($scheme, accent-text)};
   --body-text-color: #{map.get($scheme, body)};
+  --muted-text-color: #{map.get($scheme, muted)};
   --button-background-color: #{map.get($scheme, btn-bg)};
   --button-text-color: #{map.get($scheme, btn-text)};
   --button-gradient: #{map.get($scheme, btn-gradient)};
   --link-color: #{map.get($scheme, link)};
   --rule-color: #{map.get($scheme, rule)};
+  --frame-color: #{map.get($scheme, frame)};
   --seal-color: #{map.get($scheme, seal)};
 }
 

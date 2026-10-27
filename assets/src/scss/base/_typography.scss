@@ -28,8 +28,13 @@
   //                Victorian roman share vertical stress and bracketed
   //                serifs, which is what lets one face carry both halves
   //                of the brand.
-  //   --ff-wood    Rye — spurred woodtype. Wordmark and gauge numerals
-  //                only; it gets loud fast.
+  //   --ff-display Oswald — condensed caps for headings, product names,
+  //                nav and buttons. The packaging's TRAIN / DRIVE / POWER
+  //                lockups are a condensed slab; this is the web cut.
+  //   --ff-mono    IBM Plex Mono — eyebrows, prices, labels: the
+  //                stamped-plate / gauge-readout voice.
+  //   --ff-wood    Retired (was Rye). Aliased to --ff-display so any
+  //                stray reference still lands on a loaded face.
   //   --ff-jp      Any element rendering Japanese. See the note below.
   //
   // Every stack names a CJK-capable fallback. When the first family in
@@ -42,7 +47,11 @@
       "Noto Sans JP", "Noto Sans CJK JP", system-ui, sans-serif;
   --ff-mincho: "Shippori Mincho B1", "Hiragino Mincho ProN", "Yu Mincho",
       "Noto Serif JP", "Noto Serif CJK JP", Georgia, serif;
-  --ff-wood: "Rye", "Shippori Mincho B1", Georgia, serif;
+  --ff-display: "Oswald", "Zen Kaku Gothic New", "Hiragino Sans",
+      "Noto Sans JP", "Arial Narrow", sans-serif;
+  --ff-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo,
+      "Noto Sans JP", monospace;
+  --ff-wood: var(--ff-display);
   --ff-jp: var(--ff-mincho);
 }
 
@@ -52,31 +61,34 @@ body {
   line-height: 1.62;
 }
 
+// Headings are Oswald caps. Kanji inside a heading should be wrapped in
+// .jp so it drops back to the mincho rather than a condensed fallback.
 h1, h2, h3, h4 {
-  font-family: var(--ff-mincho);
-  line-height: 1.04;
-  letter-spacing: -0.01em;
+  font-family: var(--ff-display);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
 }
 
 h1 {
   font-size: var(--step-5);
-  font-weight: 800;
+  line-height: 0.98;
 }
 
 h2 {
-  font-size: clamp(1.875rem, 4.4vw, 3.25rem);
-  font-weight: 800;
+  font-size: clamp(2.125rem, 4.4vw, 3.5rem);
 }
 
 h3 {
-  font-size: clamp(1.1875rem, 2vw, 1.5rem);
-  font-weight: 700;
-  line-height: 1.2;
+  font-size: clamp(1.375rem, 2vw, 1.75rem);
+  letter-spacing: 0.04em;
+  line-height: 1.1;
 }
 
 h4 {
   font-size: var(--step-1);
-  font-weight: 700;
+  letter-spacing: 0.06em;
 }
 
 h5 {
@@ -90,4 +102,11 @@ h6 {
 
 .jp {
   font-family: var(--ff-jp);
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+// Price / readout text.
+.mono {
+  font-family: var(--ff-mono);
 }

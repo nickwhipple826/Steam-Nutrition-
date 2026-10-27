@@ -48,18 +48,18 @@
     top: 0;
     z-index: 2;
     height: 5px;
-    background: linear-gradient(180deg, $color-gold-light, $color-copper);
+    background: $color-gold-deep;
   }
 }
 
 .campaign-banner__panel {
   flex: 1;
-  border-top: 1px solid rgba(248, 206, 121, 0.45);
+  border-top: 1px solid $color-rule-dark;
   background: linear-gradient(180deg,
-      #171008 0%,
-      #120D07 52%,
-      rgba(18, 13, 7, 0.55) 84%,
-      rgba(18, 13, 7, 0) 100%);
+      $color-soot 0%,
+      $color-soot 52%,
+      rgba(23, 18, 13, 0.55) 84%,
+      rgba(23, 18, 13, 0) 100%);
 }
 
 .campaign-banner__inner {
@@ -76,21 +76,23 @@
   // which side they land depends on the face that ends up loading.
   text-wrap: balance;
   margin-bottom: 0.5rem;
-  font-size: clamp(2.625rem, 8vw, 6rem);
-  line-height: 1;
-  letter-spacing: -0.03em;
+  font-size: clamp(2.75rem, 7vw, 5.75rem);
+  line-height: 0.98;
+  letter-spacing: 0.01em;
 }
 
 .campaign-banner__kanji {
   font-family: var(--ff-jp);
   margin-bottom: var(--space-s, 1.25rem);
   font-size: clamp(0.9375rem, 1.8vw, 1.25rem);
+  font-weight: 800;
   letter-spacing: 0.5em;
-  color: var(--accent-color);
+  color: var(--seal-color);
 }
 
 .campaign-banner__copy {
   max-width: 46ch;
   margin: 0 auto var(--space-m, 1.625rem);
-  color: $color-parchment;
+  line-height: 1.7;
+  color: $color-body-muted;
 }

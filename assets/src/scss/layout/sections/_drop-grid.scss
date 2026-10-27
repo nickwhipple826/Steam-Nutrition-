@@ -20,6 +20,9 @@
   padding: 1.5rem;
   overflow: hidden;
   text-decoration: none;
+  transition: border-color 160ms ease;
+
+  &:hover { border-color: var(--frame-color); }
 }
 
 .drop-tile__tex {
@@ -27,11 +30,11 @@
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  opacity: 0.08;
+  opacity: 0.045;
   transition: opacity 180ms ease;
   @include asanoha($color-gold);
 
-  .drop-tile:hover & { opacity: 0.15; }
+  .drop-tile:hover & { opacity: 0.09; }
 }
 
 .drop-tile__top {
@@ -43,9 +46,11 @@
 }
 
 .drop-tile__status {
+  font-family: var(--ff-mono);
   font-size: 0.75rem;
-  letter-spacing: 0.14em;
-  color: $color-smoke;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent-color);
 }
 
 .drop-tile__bottom {
@@ -55,23 +60,27 @@
 
 .drop-tile__title {
   display: block;
-  font-family: var(--ff-mincho);
-  margin-bottom: 0.1875rem;
-  font-size: 1.3125rem;
+  font-family: var(--ff-display);
+  margin-bottom: 0.25rem;
+  font-size: 1.875rem;
   font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
   color: var(--heading-text-color);
 }
 
 .drop-tile__subtitle {
   display: block;
-  font-size: 0.78125rem;
-  color: $color-smoke;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: var(--muted-text-color);
 }
 
 .drop-tile__price {
   display: block;
-  margin-top: 0.75rem;
-  font-size: 0.875rem;
-  font-weight: 700;
-  color: var(--heading-text-color);
+  margin-top: 0.875rem;
+  font-family: var(--ff-mono);
+  font-size: 1rem;
+  color: var(--accent-text-color);
 }

@@ -12,7 +12,7 @@
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  opacity: 0.055;
+  opacity: 0.035;
   @include asanoha($color-gold);
 }
 
@@ -26,7 +26,7 @@
 .gauge {
   @include plate;
   @include rivets;
-  padding: 1.625rem 1.375rem 1.5rem;
+  padding: 2rem 1.5rem 1.75rem;
   text-align: center;
 }
 
@@ -37,12 +37,12 @@
   margin: 0 auto 0.875rem;
 }
 
-.gauge__bezel { fill: $color-pitch; stroke: $color-gold; stroke-width: 2; }
-.gauge__inner { fill: none; stroke: #3A2A12; stroke-width: 1; }
+.gauge__bezel { fill: $color-pitch; stroke: $color-gold-deep; stroke-width: 2; }
+.gauge__inner { fill: none; stroke: $color-rule-dark; stroke-width: 1; }
 
 .gauge__ticks {
   fill: none;
-  stroke: #6F5A33;
+  stroke: $color-rule-dark;
   stroke-width: 7;
   stroke-linecap: round;
   stroke-dasharray: 1.6 8.6;
@@ -66,7 +66,7 @@
   transform: rotate(calc(135deg + var(--v) * 270deg));
 
   path {
-    stroke: $color-gold-light;
+    stroke: $color-parchment;
     stroke-width: 3;
     stroke-linecap: round;
   }
@@ -86,28 +86,35 @@
 }
 
 .gauge__value {
-  font-family: var(--ff-wood);
-  font-size: 1.625rem;
-  font-weight: 400;
+  font-family: var(--ff-display);
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
   line-height: 1;
+  text-transform: uppercase;
   color: var(--heading-text-color);
 }
 
 .gauge__label {
-  margin-top: 0.5rem;
+  margin-top: 0.625rem;
+  font-family: var(--ff-mono);
   font-size: 0.75rem;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
   color: $color-smoke;
 }
 
 .gauge__product {
   font-family: var(--ff-jp);
-  margin-top: 0.125rem;
-  font-size: 0.8125rem;
+  margin-top: 0.75rem;
+  font-size: 0.9375rem;
+  font-weight: 700;
   letter-spacing: 0.14em;
-  color: var(--accent-color);
+  color: var(--accent-text-color);
 }
 
 .gauge__kanji {
-  margin-right: 0.25rem;
+  margin-right: 0.375rem;
+  color: var(--seal-color);
+  font-weight: 800;
 }

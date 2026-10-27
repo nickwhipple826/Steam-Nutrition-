@@ -12,6 +12,7 @@ use MMM\FieldGroups\FlexibleContent\{
   SubscribeSaveLayout,
   WorkshopFactsLayout,
   NewsletterBandLayout,
+  ProductSpotlightLayout,
 };
 use MMM\Traits\HasFlexibleContent;
 
@@ -26,6 +27,7 @@ class PageContent extends BaseFieldGroup {
     $this->registerLayout( new QuickTilesLayout() );
     $this->registerLayout( new ProductRailLayout() );
     $this->registerLayout( new GaugeClusterLayout() );
+    $this->registerLayout( new ProductSpotlightLayout() );
     $this->registerLayout( new CampaignBannerLayout() );
     $this->registerLayout( new DropGridLayout() );
     $this->registerLayout( new SubscribeSaveLayout() );

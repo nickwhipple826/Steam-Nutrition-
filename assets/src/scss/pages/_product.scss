@@ -35,8 +35,9 @@ $product-gallery-wide-max: 760px;
     margin: 0;
     padding: 0;
     list-style: none;
+    font-family: var(--ff-mono);
     font-size: 0.75rem;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
     color: $color-smoke;
   }
@@ -113,9 +114,10 @@ $product-gallery-wide-max: 760px;
   right: 0;
   padding: 0.375rem 0.75rem;
   background-color: var(--seal-color);
-  color: #FFF;
+  color: $color-ivory;
+  font-family: var(--ff-mono);
   font-size: 0.6875rem;
-  font-weight: 700;
+  font-weight: 500;
   letter-spacing: 0.14em;
   text-transform: uppercase;
 
@@ -178,9 +180,9 @@ $product-gallery-wide-max: 760px;
 
 .product__title {
   margin: 0;
-  font-size: clamp(2rem, 4.5vw, 3.5rem);
-  line-height: 0.95;
-  letter-spacing: -0.02em;
+  font-size: clamp(2.5rem, 5vw, 4.25rem);
+  line-height: 0.98;
+  letter-spacing: 0.03em;
 }
 
 .product__price {
@@ -188,9 +190,10 @@ $product-gallery-wide-max: 760px;
   align-items: baseline;
   gap: 0.75rem;
   margin: var(--space-s, 1rem) 0 var(--space-m, 1.75rem);
+  font-family: var(--ff-mono);
   font-size: 1.5rem;
-  font-weight: 700;
-  color: var(--heading-text-color);
+  font-weight: 500;
+  color: var(--accent-text-color);
 
   s {
     font-size: 1rem;
@@ -205,7 +208,7 @@ $product-gallery-wide-max: 760px;
   margin: 0 0 var(--space-s, 1rem);
   padding: 0.75rem 1rem;
   border-left: 3px solid var(--seal-color);
-  background-color: rgba(197, 67, 44, 0.12);
+  background-color: color-mix(in srgb, var(--seal-color) 14%, transparent);
   font-size: 0.875rem;
 }
 
@@ -221,10 +224,11 @@ $product-gallery-wide-max: 760px;
 .product__option-name {
   margin-bottom: 0.625rem;
   padding: 0;
+  font-family: var(--ff-mono);
   font-size: 0.75rem;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: $color-smoke;
+  color: var(--accent-color);
 }
 
 .product__option-value {
@@ -261,7 +265,7 @@ $product-gallery-wide-max: 760px;
 
   input:checked + span {
     border-color: var(--accent-color);
-    background-color: rgba(219, 152, 67, 0.14);
+    background-color: color-mix(in srgb, var(--accent-color) 14%, transparent);
     color: var(--heading-text-color);
   }
 
@@ -294,8 +298,9 @@ $product-gallery-wide-max: 760px;
     background: none;
     color: var(--heading-text-color);
     font: inherit;
+    font-family: var(--ff-mono);
     font-size: 1rem;
-    font-weight: 700;
+    font-weight: 500;
 
     &:focus-visible { outline: none; }
   }
@@ -304,7 +309,8 @@ $product-gallery-wide-max: 760px;
 }
 
 .product__qty-label {
-  font-size: 0.625rem;
+  font-family: var(--ff-mono);
+  font-size: 0.6875rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: $color-smoke;
@@ -351,8 +357,8 @@ $product-gallery-wide-max: 760px;
 // ---------------------------------------------------------------------
 .not-found__title {
   margin: 0;
-  font-size: clamp(2.5rem, 7vw, 5rem);
-  line-height: 0.92;
+  font-size: clamp(2.75rem, 7vw, 5.25rem);
+  line-height: 0.98;
 }
 
 .not-found__lead {

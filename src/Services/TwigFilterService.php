@@ -3,6 +3,7 @@
 namespace MMM\Services;
 
 use MMM\Shopify\ShopifyCollectionQuery;
+use MMM\Shopify\ShopifyProductQuery;
 use MMM\Traits\Singleton;
 use Twig\{Environment, TwigFilter, TwigFunction};
 
@@ -31,6 +32,27 @@ class TwigFilterService
       }
 
       return ShopifyCollectionQuery::getCollectionSorted($handle, $sort, $first);
+    }));
+
+    // One product by handle, for sections that spotlight a single
+    // product. Adds `variant` — the first buyable variant — so a
+    // template can read price and currency without picking one itself.
+    // Null when the handle is empty, unknown, or Shopify is not set up.
+    // Cached by ShopifyProductQuery like the product page.
+    $twig->addFunction(new TwigFunction('shopify_product', function (?string $handle): ?array {
+      if (!$handle) {
+        return null;
+      }
+
+      $product = ShopifyProductQuery::getProduct($handle);
+
+      if (!$product) {
+        return null;
+      }
+
+      $product['variant'] = ShopifyProductQuery::initialVariant($product);
+
+      return $product;
     }));
 
     // ACF fields on a nav menu item. Timber's MenuItem::meta() reads raw

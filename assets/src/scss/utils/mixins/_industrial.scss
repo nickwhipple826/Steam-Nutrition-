@@ -20,19 +20,12 @@
 }
 
 // ---------------------------------------------------------------------
-// chamfer — cuts the top-left and bottom-right corners off a box so it
-// reads as a machined plate rather than a rounded card. Square corners
-// everywhere else; this is the only corner treatment on the site.
+// chamfer — retired in Concept A. Plates now have square-ish 2px
+// corners and a hairline instead of clipped corners. The mixin keeps its
+// signature so existing call sites compile; $size is ignored.
 // ---------------------------------------------------------------------
 @mixin chamfer($size: 16px) {
-  clip-path: polygon(
-      #{$size} 0,
-      100% 0,
-      100% calc(100% - #{$size}),
-      calc(100% - #{$size}) 100%,
-      0 100%,
-      0 #{$size}
-  );
+  border-radius: 2px;
 }
 
 // ---------------------------------------------------------------------
@@ -42,7 +35,7 @@
 //
 // Needs position: relative on the host. Occupies ::after.
 // ---------------------------------------------------------------------
-@mixin rivets($inset: 11px, $size: 3.2px, $color: $color-gold-light) {
+@mixin rivets($inset: 6px, $size: 4px, $color: $color-gold) {
   position: relative;
 
   &::after {
@@ -61,16 +54,26 @@
 }
 
 // ---------------------------------------------------------------------
-// plate — the standard raised panel: panel fill, chamfered corners, a
-// lit top edge and a dark bottom edge. Compose with rivets().
+// plate — the standard raised panel: flat panel fill, 1px hairline,
+// 2px corners. No lit edge or bevel — Concept A reads as printed plate,
+// not cast metal. Compose with rivets() for the brass corner dots.
 // ---------------------------------------------------------------------
 @mixin plate($chamfer: 16px) {
   position: relative;
   background-color: var(--panel-color, #{$color-soot});
-  @include chamfer($chamfer);
-  box-shadow:
-      inset 0 1px 0 rgba(248, 206, 121, 0.13),
-      inset 0 -1px 0 rgba(0, 0, 0, 0.7);
+  border: 1px solid var(--rule-color, #{$color-rule-dark});
+  border-radius: 2px;
+}
+
+// ---------------------------------------------------------------------
+// frame — the bolted brass picture frame from the hero: deep-brass
+// border, a dark mat, and rivets at the corners.
+// ---------------------------------------------------------------------
+@mixin frame($pad: 14px) {
+  @include rivets(5px, 4px);
+  padding: $pad;
+  border: 2px solid var(--frame-color, #{$color-gold-deep});
+  background-color: var(--panel-color, #{$color-soot});
 }
 
 // ---------------------------------------------------------------------
@@ -89,38 +92,22 @@
 }
 
 // ---------------------------------------------------------------------
-// brass-face — foil type. Gradient clipped to the glyphs, with a solid
-// fallback for anything that cannot clip a background to text.
+// brass-face — formerly gradient foil type. Concept A sets headings in
+// solid colour, so this now just paints the heading colour. Kept as a
+// mixin (and .brass-face as a class) so templates need no changes.
 // ---------------------------------------------------------------------
 @mixin brass-face {
-  background: $gradient-brass;
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-
-  @supports not (background-clip: text) {
-    background: none;
-    color: $color-gold;
-  }
+  background: none;
+  color: var(--heading-text-color, #{$color-parchment});
 }
 
 // ---------------------------------------------------------------------
-// seam — the divider between stacked sections. A rivet strip rather
-// than a hairline, so section joins read as two plates bolted together.
+// seam — the divider between stacked sections. A single hairline now;
+// the rivet strip was too busy next to the flat plates.
 // ---------------------------------------------------------------------
-@mixin seam($height: 14px, $pitch: 52px) {
-  height: $height;
+@mixin seam($height: 0, $pitch: 52px) {
+  height: 0;
   border-top: 1px solid var(--rule-color, #{$color-rule-dark});
-  border-bottom: 1px solid rgba(0, 0, 0, 0.8);
-  background-image: radial-gradient(
-      circle 2.6px,
-      #{$color-gold-light} 0 44%,
-      rgba(0, 0, 0, 0.65) 55%,
-      transparent 62%
-  );
-  background-size: $pitch 100%;
-  background-position: center;
-  opacity: 0.45;
 }
 
 // ---------------------------------------------------------------------
@@ -148,8 +135,9 @@
 }
 
 // ---------------------------------------------------------------------
-// seal — 印, the hanko stamp. The only vermilion on the page. Use it
-// for drop markers and section stamps, never as a generic badge.
+// seal — 印, the hanko stamp. Outlined vermilion square, slightly
+// rotated so it reads as pressed by hand. seal-tile() is the filled
+// version used on product cards.
 // ---------------------------------------------------------------------
 @mixin seal($size: 58px, $font-size: 20px, $border: 2px) {
   display: grid;
@@ -159,8 +147,24 @@
   padding: 3px;
   border: $border solid var(--seal-color, #{$color-vermilion});
   color: var(--seal-color, #{$color-vermilion});
+  border-radius: 6px;
   font-size: $font-size;
-  font-weight: 700;
+  font-weight: 800;
   line-height: 1.04;
   text-align: center;
+  transform: rotate(-4deg);
+}
+
+@mixin seal-tile($size: 48px, $font-size: 26px) {
+  display: grid;
+  place-items: center;
+  width: $size;
+  height: $size;
+  border-radius: 4px;
+  background-color: var(--seal-color, #{$color-vermilion});
+  color: $color-ivory;
+  font-family: var(--ff-jp);
+  font-size: $font-size;
+  font-weight: 800;
+  line-height: 1;
 }

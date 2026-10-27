@@ -10,32 +10,36 @@
 // =====================================================================
 
 // ---------------------------------------------------------------------
-// Metals + darks — sampled off the product photography
+// Metals + darks — Concept A "Boiler Room". Warmer and a touch lifted
+// from the old near-black so the 1px hairlines between plates read.
 // ---------------------------------------------------------------------
-$color-black:      #080504; // page floor
-$color-soot:       #151109; // raised panel
-$color-soot-raised:#211A10; // a plate sitting on a soot section
-$color-charcoal:   #2F251F; // lifted panel / card sitting on a panel
-$color-pitch:      #060504; // recessed well (inputs, gauge faces)
+$color-black:      #0E0C0A; // page floor
+$color-soot:       #17120D; // raised panel / card
+$color-soot-raised:#1E1812; // a plate sitting on a soot section
+$color-charcoal:   #2A2119; // lifted panel / sold-out flag
+$color-pitch:      #0A0806; // recessed well (inputs, image wells, gauge faces)
 
 $color-copper:     #763D10;
 $color-brass:      #AB6723;
-$color-gold:       #DB9843; // primary accent
-$color-gold-light: #F8CE79; // specular highlight, foil
-$color-gold-deep:  #7E5220; // shadow side of a brass gradient
+$color-gold:       #C8964F; // primary accent — rules, outline buttons, eyebrows
+$color-gold-light: #D6A85C; // links, prices, highlighted words
+$color-gold-deep:  #8C6631; // frames and bezels
 
 // ---------------------------------------------------------------------
 // Paper + seal
 // ---------------------------------------------------------------------
-$color-parchment:  #E7DEC3; // body text on dark
-$color-smoke:      #938C86; // muted labels
-$color-vermilion:  #C5432C; // 朱 — hanko seals and live markers ONLY
+$color-parchment:  #F1E6D0; // headings + body text on dark
+$color-ivory:      #FBF4E6; // text on vermilion
+$color-body-muted: #CDBFA5; // secondary copy
+$color-smoke:      #B3A68E; // labels, captions
+$color-vermilion:  #A8301C; // 朱 — primary CTA, ticker, seals, kanji tiles
 
 // ---------------------------------------------------------------------
-// Hairlines
+// Hairlines. Solid rather than translucent so they read the same on
+// iron and soot.
 // ---------------------------------------------------------------------
-$color-rule-dark:  rgba(219, 152, 67, 0.22); // brass rule on a dark bg
-$color-rule-light: rgba(8, 5, 4, 0.18);      // dark rule on light bg
+$color-rule-dark:  #33291F; // rule on a dark bg
+$color-rule-light: rgba(8, 5, 4, 0.18); // dark rule on light bg
 
 // ---------------------------------------------------------------------
 // Brass foil gradient.

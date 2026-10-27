@@ -1,0 +1,80 @@
+{% import 'macros/picture.twig' as picture %}
+
+{#
+  sections/product-spotlight.twig
+  ---------------------------------------------------------------------
+  One product, two columns. Price and sold-out state come from Shopify
+  when a handle is set; with no handle (or no Storefront token) the
+  price line is simply left out rather than guessed.
+#}
+
+{% set product = product_handle ? shopify_product(product_handle) : null %}
+{% set variant = product ? product.variant : null %}
+
+{% set btn_url = button.url ?: (product ? '/products/' ~ product.handle : '') %}
+{% set btn_label = button.title ?: 'Shop now' %}
+
+<section class="section product-spotlight" data-scheme="{{ color|default('iron') }}">
+  <div class="section__inner">
+    {% include 'views/partials/components/rail-tag.twig' with { text: rail_text } %}
+
+    <div class="product-spotlight__grid product-spotlight__grid--{{ image_side|default('left') }}">
+
+      <div class="product-spotlight__shot frame">
+        {{ picture.render(image, 'large', '', 'product-spotlight__img') }}
+      </div>
+
+      <div class="product-spotlight__copy">
+        {% if eyebrow %}
+          <span class="eyebrow">{{ eyebrow|esc_html }}</span>
+        {% endif %}
+
+        <h2 class="product-spotlight__heading brass-face">
+          {{ heading|esc_html }}
+          {% if heading_accent %}<em>{{ heading_accent|esc_html }}</em>{% endif %}
+        </h2>
+
+        {% if body %}
+          <p class="product-spotlight__body">{{ body|esc_html }}</p>
+        {% endif %}
+
+        {% if features %}
+          <ul class="product-spotlight__features">
+            {% for row in features %}
+              <li class="product-spotlight__feature">{{ row.label|esc_html }}</li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+
+        {% if btn_url or variant %}
+          <div class="product-spotlight__buy">
+            {% if product and not product.available %}
+              <span class="product-spotlight__soldout">Sold out</span>
+            {% elseif btn_url %}
+              <a class="button"
+                 href="{{ btn_url|esc_url }}"
+                 target="{{ button.target|default('_self')|esc_attr }}">{{ btn_label|esc_html }}</a>
+            {% endif %}
+
+            {% if variant and variant.price %}
+              <p class="product-spotlight__price">
+                {{ variant.price|money(variant.currency) }}
+                {% if variant.compare_at %}<s>{{ variant.compare_at|money(variant.currency) }}</s>{% endif %}
+                {% if price_note %}<span class="product-spotlight__note">{{ price_note|esc_html }}</span>{% endif %}
+              </p>
+            {% endif %}
+          </div>
+        {% endif %}
+
+        {% if product_handle and not product and function('current_user_can', 'edit_posts') %}
+          <p class="section__empty">
+            No product came back for the handle
+            <code>{{ product_handle|esc_html }}</code>. Check the handle, and that
+            SHOPIFY_STORE_DOMAIN and SHOPIFY_STOREFRONT_TOKEN are defined in wp-config.php.
+          </p>
+        {% endif %}
+      </div>
+
+    </div>
+  </div>
+</section>

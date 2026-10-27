@@ -20,6 +20,12 @@ $rail-breakpoint: 1180px;
   padding-block: var(--space-2xl, clamp(3.5rem, 7vw, 6.25rem));
 }
 
+// Concept A joins every stacked band with a single hairline, so the
+// page reads as plates bolted edge to edge.
+main > [data-scheme] + [data-scheme] {
+  border-top: 1px solid $color-rule-dark;
+}
+
 .section__inner {
   position: relative;
   max-width: $section-max;
@@ -54,8 +60,8 @@ $rail-breakpoint: 1180px;
   @include tategaki(2);
   font-family: var(--ff-jp);
   font-size: 1.1875rem;
-  color: var(--accent-color);
-  opacity: 0.85;
+  font-weight: 800;
+  color: var(--seal-color);
 }
 
 .section__rail-line {
@@ -89,10 +95,11 @@ $rail-breakpoint: 1180px;
 }
 
 .section__note {
-  max-width: 44ch;
-  margin: 0.5rem 0 0;
-  font-size: 0.875rem;
-  color: $color-smoke;
+  max-width: 48ch;
+  margin: 0.75rem 0 0;
+  font-size: 1.0625rem;
+  line-height: 1.7;
+  color: var(--muted-text-color);
 }
 
 .section__empty {
@@ -107,31 +114,41 @@ $rail-breakpoint: 1180px;
 }
 
 // ---------------------------------------------------------------------
-// Brass foil headings
+// Headings — solid, Oswald caps (see base/_typography). .brass-face is
+// kept as a hook. An <em> inside one lights brass (the concept's
+// "Crafted power.") — templates escape headings today, so that needs a
+// field that allows it before it shows up.
 // ---------------------------------------------------------------------
 .brass-face {
   @include brass-face;
+
+  em {
+    font-style: normal;
+    color: var(--accent-text-color);
+  }
 }
 
 // ---------------------------------------------------------------------
-// Eyebrow — a seal dot, then one line. Sentence case, not tracked caps.
+// Eyebrow — stamped-plate label: mono, tracked caps, brass.
+// "壱 · THE LINEUP". The dot becomes a small vermilion square.
 // ---------------------------------------------------------------------
 .eyebrow {
   display: inline-flex;
   align-items: center;
-  gap: 0.625rem;
+  gap: 0.75rem;
   margin-bottom: var(--space-s, 1.125rem);
-  font-size: 0.75rem;
-  letter-spacing: 0.16em;
-  color: $color-parchment;
+  font-family: var(--ff-mono);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--accent-color);
 }
 
 .eyebrow__dot {
   width: 7px;
   height: 7px;
-  border-radius: 50%;
   background: var(--seal-color);
-  box-shadow: 0 0 10px rgba(197, 67, 44, 0.9);
 }
 
 // ---------------------------------------------------------------------
@@ -148,6 +165,16 @@ $rail-breakpoint: 1180px;
 
 .seal__char {
   display: block;
+}
+
+// Filled kanji tile — product cards, collection markers.
+.seal-tile {
+  @include seal-tile;
+}
+
+// Bolted brass picture frame.
+.frame {
+  @include frame;
 }
 
 // ---------------------------------------------------------------------
@@ -189,8 +216,9 @@ $rail-breakpoint: 1180px;
   width: 44px;
   height: 44px;
   border: 1px solid var(--rule-color);
+  border-radius: 2px;
   background: none;
-  color: var(--accent-color);
+  color: var(--accent-text-color);
   cursor: pointer;
   transition: background-color 150ms ease, border-color 150ms ease;
 
@@ -198,7 +226,7 @@ $rail-breakpoint: 1180px;
 
   &:hover {
     border-color: var(--accent-color);
-    background-color: rgba(219, 152, 67, 0.12);
+    background-color: color-mix(in srgb, var(--accent-color) 12%, transparent);
   }
 
   &[disabled] {
