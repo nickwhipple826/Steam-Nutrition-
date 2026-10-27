@@ -358,10 +358,13 @@ class ShopifyCollectionQuery
   }
 
   /**
-   * Run one Storefront API request. Public so ShopifyProductQuery
-   * shares this rather than growing a second HTTP client.
+   * Run one Storefront API request. Public so ShopifyProductQuery and
+   * ShopifyCart share this rather than growing a second HTTP client.
+   *
+   * @param array $headers Extra request headers, e.g. the buyer IP the
+   *                       cart sends.
    */
-  public static function execute( string $query, array $variables ): array
+  public static function execute( string $query, array $variables, array $headers = [] ): array
   {
     if ( ! self::isConfigured() ) {
       return [];
@@ -370,10 +373,10 @@ class ShopifyCollectionQuery
     $url = sprintf( 'https://%s/api/%s/graphql.json', SHOPIFY_STORE_DOMAIN, self::API_VERSION );
 
     $response = wp_remote_post( $url, [
-      'headers' => [
+      'headers' => array_merge( [
         'Content-Type' => 'application/json',
         'X-Shopify-Storefront-Access-Token' => SHOPIFY_STOREFRONT_TOKEN,
-      ],
+      ], $headers ),
       'body' => wp_json_encode( [ 'query' => $query, 'variables' => $variables ] ),
       'timeout' => 15,
     ] );

@@ -29,7 +29,11 @@
       }, 2500);
     </script>
 
-    <title>{{ post.acf.seo_metadata.title }}</title>
+    {#
+      Routed pages with no post behind them (products, cart, account)
+      pass page_title; everything else reads the SEO field.
+    #}
+    <title>{{ page_title|default(post.acf.seo_metadata.title|default(site.name)) }}</title>
     {{ function('wp_head') }}
   </head>
   <body {{ function('body_class') }}>
@@ -48,6 +52,8 @@
 
     {# footer.twig renders its own <footer>, so no wrapper here. #}
     {% include 'partials/sections/footer.twig' %}
+
+    {% include 'views/partials/components/cart-drawer.twig' %}
 
     {{ function('wp_footer') }}
   </body>

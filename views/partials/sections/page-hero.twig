@@ -1,0 +1,140 @@
+{% import 'macros/picture.twig' as picture %}
+
+{#
+  sections/page-hero.twig
+  ---------------------------------------------------------------------
+  Opens every subpage. Listed in Theme::HERO_LAYOUTS, so when it is the
+  first component the header sits transparent over it and turns solid
+  on scroll — the same treatment the homepage hero gets. The section
+  pads its own top by the header height, so the title never ends up
+  under the bar.
+
+  The member card is an illustration of the programme, not a live
+  balance: the page is cached, so real points live in the loyalty
+  app's own widget and on /account.
+#}
+
+{% set crumbs = show_breadcrumbs ? breadcrumbs() : [] %}
+{% set has_aside = aside == 'image' and aside_image or aside == 'card' %}
+
+<section class="page-hero page-hero--{{ height|default('standard') }}{{ background ? ' page-hero--photo' }}{{ has_aside ? ' page-hero--aside' }}"
+         data-scheme="{{ color|default('iron') }}">
+
+  {% if background %}
+    <div class="page-hero__bg" style="--scrim: {{ (scrim|default(80)) / 100 }}">
+      {{ picture.responsive(
+        background,
+        ['medium', 'large', 'full'],
+        '100vw',
+        '',
+        'page-hero__img',
+        { loading: 'eager', fetchpriority: 'high' }
+      ) }}
+    </div>
+  {% endif %}
+
+  <div class="page-hero__inner">
+    <div class="page-hero__grid">
+
+      {% if rail_text %}
+        <div class="page-hero__gutter" aria-hidden="true">
+          <span class="page-hero__tate">{{ rail_text|esc_html }}</span>
+          <span class="page-hero__gutter-line"></span>
+        </div>
+      {% endif %}
+
+      <div class="page-hero__copy">
+        {% if crumbs|length > 1 %}
+          <nav class="crumbs" aria-label="Breadcrumb">
+            <ol>
+              {% for crumb in crumbs %}
+                <li>
+                  {% if loop.last %}
+                    <span aria-current="page">{{ crumb.title|esc_html }}</span>
+                  {% else %}
+                    <a href="{{ crumb.url|esc_url }}">{{ crumb.title|esc_html }}</a>
+                  {% endif %}
+                </li>
+              {% endfor %}
+            </ol>
+          </nav>
+        {% endif %}
+
+        {% if eyebrow %}
+          <span class="eyebrow">{{ eyebrow|esc_html }}</span>
+        {% endif %}
+
+        <h1 class="page-hero__heading brass-face">
+          {{ heading|esc_html }}
+          {% if heading_accent %}<em>{{ heading_accent|esc_html }}</em>{% endif %}
+        </h1>
+
+        {% if lede %}
+          <p class="page-hero__lede">{{ lede|esc_html }}</p>
+        {% endif %}
+
+        {% if buttons %}
+          <div class="page-hero__cta">
+            {% for row in buttons %}
+              {% if row.button.url %}
+                {% include 'views/partials/components/button.twig' with {
+                  label: row.button.title,
+                  url: row.button.url,
+                  target: row.button.target,
+                  variant: loop.first ? 'primary' : 'outline',
+                } only %}
+              {% endif %}
+            {% endfor %}
+          </div>
+        {% endif %}
+      </div>
+
+      {% if aside == 'image' and aside_image %}
+        <div class="page-hero__aside">
+          <div class="page-hero__frame frame">
+            {{ picture.render(aside_image, 'large', null, 'page-hero__aside-img', { loading: 'eager' }) }}
+          </div>
+        </div>
+      {% elseif aside == 'card' %}
+        <div class="page-hero__aside">
+          <div class="member-card" role="img" aria-label="Example member card">
+            <div class="member-card__head">
+              <div>
+                <span class="member-card__label">{{ card.label|esc_html }}</span>
+                <span class="member-card__title">{{ card.title|esc_html }}</span>
+              </div>
+              {% include 'views/partials/components/seal.twig' with { text: card.seal, size: 'sm' } only %}
+            </div>
+
+            <div class="member-card__body">
+              {% include 'views/partials/components/dial.twig' with { level: (card.level|default(60)) / 100 } only %}
+              <div>
+                <span class="member-card__value">{{ card.value|esc_html }}</span>
+                {% if card.meta %}<span class="member-card__meta">{{ card.meta|esc_html }}</span>{% endif %}
+                {% if card.caption %}<span class="member-card__caption">{{ card.caption|esc_html }}</span>{% endif %}
+              </div>
+            </div>
+
+            {% if card.foot_left or card.foot_right %}
+              <div class="member-card__foot">
+                <span>{{ card.foot_left|esc_html }}</span>
+                <span>{{ card.foot_right|esc_html }}</span>
+              </div>
+            {% endif %}
+          </div>
+        </div>
+      {% endif %}
+
+    </div>
+  </div>
+</section>
+
+{% if crumbs|length > 1 %}
+  {% set items = [] %}
+  {% for crumb in crumbs %}
+    {% set items = items|merge([{ '@type': 'ListItem', position: loop.index, name: crumb.title, item: crumb.url }]) %}
+  {% endfor %}
+  <script type="application/ld+json">
+    {{- { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: items }|json_encode(constant('JSON_HEX_TAG') b-or constant('JSON_UNESCAPED_SLASHES') b-or constant('JSON_UNESCAPED_UNICODE'))|raw -}}
+  </script>
+{% endif %}

@@ -1,0 +1,73 @@
+// =====================================================================
+// layout/sections/_story.scss — framed portrait + long copy
+// =====================================================================
+
+@use '@css/utils/variables/colors' as *;
+
+.story__grid {
+  display: grid;
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: center;
+
+  @media (min-width: 900px) {
+    &--left { grid-template-columns: minmax(0, 0.85fr) minmax(0, 1fr); }
+    &--right { grid-template-columns: minmax(0, 1fr) minmax(0, 0.85fr); }
+    &--right .story__shot { order: 2; }
+  }
+
+  &--solo .story__copy { max-width: 46rem; }
+}
+
+.story__shot img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+}
+
+.story__heading {
+  margin: 0 0 var(--space-s, 1.25rem);
+  font-size: clamp(2.25rem, 4vw, 3.25rem);
+  line-height: 1;
+}
+
+.story__body {
+  max-width: 60ch;
+  font-size: 1.0625rem;
+  line-height: 1.75;
+  color: var(--muted-text-color);
+
+  > :first-child { margin-top: 0; }
+
+  p { margin: 0 0 1.125rem; }
+}
+
+.story__sign {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: var(--space-m, 1.75rem);
+  padding-top: var(--space-s, 1.25rem);
+  border-top: 1px solid var(--rule-color);
+}
+
+.story__name {
+  display: block;
+  font-family: var(--ff-display);
+  font-size: 1.125rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--heading-text-color);
+}
+
+.story__role {
+  display: block;
+  margin-top: 0.25rem;
+  font-family: var(--ff-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted-text-color);
+}

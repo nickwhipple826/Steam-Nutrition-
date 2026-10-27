@@ -1,0 +1,61 @@
+// =====================================================================
+// layout/sections/_gallery.scss
+// =====================================================================
+
+@use '@css/utils/variables/colors' as *;
+
+.gallery__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  @media (min-width: 900px) {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+// First two photos take half the row each on desktop.
+.gallery__grid--feature .gallery__item:nth-child(-n + 2) {
+  @media (min-width: 900px) {
+    grid-column: span 2;
+
+    .gallery__shot img { aspect-ratio: 16 / 10; }
+  }
+}
+
+.gallery__item figure {
+  margin: 0;
+}
+
+.gallery__shot {
+  overflow: hidden;
+  border: 1px solid var(--rule-color);
+  background-color: $color-pitch;
+
+  img {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1;
+    object-fit: cover;
+    transition: transform 600ms cubic-bezier(0.22, 0.7, 0.3, 1);
+  }
+
+  .gallery__item:hover & img { transform: scale(1.03); }
+
+  @media (prefers-reduced-motion: reduce) {
+    img { transition: none; }
+  }
+}
+
+.gallery__caption {
+  margin-top: 0.625rem;
+  font-family: var(--ff-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted-text-color);
+}

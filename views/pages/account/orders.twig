@@ -1,0 +1,39 @@
+{% extends 'views/layouts/base.twig' %}
+
+{% block content %}
+  <section class="section account" data-scheme="iron">
+    <div class="section__inner">
+
+      <div class="account__head">
+        <div>
+          <span class="eyebrow">履歴 · Orders</span>
+          <h1 class="account__title brass-face">Order history</h1>
+        </div>
+        {% include 'views/partials/account/nav.twig' %}
+      </div>
+
+      {% if page.orders %}
+        <ul class="order-list order-list--full">
+          {% for order in page.orders %}
+            {% include 'views/partials/account/order-card.twig' with { order: order } only %}
+          {% endfor %}
+        </ul>
+
+        <div class="account__pager">
+          {% if not is_first_page %}
+            <a class="button outline" href="{{ site.url|esc_url }}/account/orders/">Newest orders</a>
+          {% endif %}
+          {% if next_url %}
+            <a class="button outline" href="{{ next_url|esc_url }}">Older orders</a>
+          {% endif %}
+        </div>
+      {% else %}
+        <div class="account-panel account-panel__empty">
+          <p>No orders yet.</p>
+          <a class="button" href="{{ site.url|esc_url }}">Build your stack</a>
+        </div>
+      {% endif %}
+
+    </div>
+  </section>
+{% endblock %}

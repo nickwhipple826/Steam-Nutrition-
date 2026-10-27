@@ -1,0 +1,75 @@
+{% extends 'views/layouts/base.twig' %}
+
+{% block content %}
+  <section class="section account" data-scheme="iron">
+    <div class="section__inner">
+
+      <div class="account__head">
+        <div>
+          <a class="account__back" href="{{ site.url|esc_url }}/account/orders/">← All orders</a>
+          <h1 class="account__title brass-face">Order {{ order.name|esc_html }}</h1>
+          <p class="account__sub">
+            Placed {{ order.date ? order.date|date('F j, Y') }}
+            <span class="status status--{{ order.status.tone|esc_attr }}">{{ order.status.label|esc_html }}</span>
+          </p>
+        </div>
+        {% include 'views/partials/account/nav.twig' %}
+      </div>
+
+      <div class="account__grid">
+
+        <div class="account__main">
+          <div class="account-panel">
+            <h2 class="account-panel__title">Items</h2>
+            <ul class="order-lines">
+              {% for line in order.lines %}
+                <li class="order-line">
+                  <span class="order-line__shot">
+                    {% if line.image %}<img src="{{ line.image.url|esc_url }}" alt="" loading="lazy">{% endif %}
+                  </span>
+                  <span class="order-line__info">
+                    <span class="order-line__name">{{ line.name|esc_html }}</span>
+                    {% if line.variant_title %}<span class="order-line__variant">{{ line.variant_title|esc_html }}</span>{% endif %}
+                    <span class="order-line__qty">Qty {{ line.quantity }} · {{ line.price|money(order.currency) }} each</span>
+                  </span>
+                  <span class="order-line__total">{{ line.total|money(order.currency) }}</span>
+                </li>
+              {% endfor %}
+            </ul>
+
+            <dl class="order-totals">
+              <div><dt>Subtotal</dt><dd>{{ order.subtotal|money(order.currency) }}</dd></div>
+              <div><dt>Shipping</dt><dd>{{ order.shipping|money(order.currency) }}</dd></div>
+              {% if order.tax %}
+                <div><dt>Tax</dt><dd>{{ order.tax|money(order.currency) }}</dd></div>
+              {% endif %}
+              <div class="order-totals__grand"><dt>Total</dt><dd>{{ order.total|money(order.currency) }}</dd></div>
+            </dl>
+          </div>
+        </div>
+
+        <aside class="account__side">
+          {% if order.status_url %}
+            <div class="account-panel">
+              <h2 class="account-panel__title">Tracking</h2>
+              <p class="account-panel__muted">Shipping updates, tracking numbers and returns live on the order status page.</p>
+              <a class="button outline" href="{{ order.status_url|esc_url }}" target="_blank" rel="noopener">
+                Order status<span class="screen-reader-text"> (opens in a new tab)</span>
+              </a>
+            </div>
+          {% endif %}
+
+          {% if order.shipping_address %}
+            <div class="account-panel">
+              <h2 class="account-panel__title">Shipping to</h2>
+              <address class="address">
+                {% for line in order.shipping_address %}{{ line|esc_html }}{% if not loop.last %}<br>{% endif %}{% endfor %}
+              </address>
+            </div>
+          {% endif %}
+        </aside>
+
+      </div>
+    </div>
+  </section>
+{% endblock %}

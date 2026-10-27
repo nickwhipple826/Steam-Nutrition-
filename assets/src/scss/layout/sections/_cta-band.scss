@@ -1,0 +1,45 @@
+// =====================================================================
+// layout/sections/_cta-band.scss
+// =====================================================================
+
+@use '@css/utils/variables/colors' as *;
+@use '@css/utils/mixins/industrial' as *;
+
+.cta-band {
+  padding-block: var(--space-xl, clamp(2.5rem, 5vw, 4rem));
+}
+
+.cta-band__plate {
+  @include plate;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem 2.5rem;
+  padding: clamp(1.5rem, 3vw, 2.25rem) clamp(1.5rem, 3.5vw, 2.75rem);
+}
+
+.cta-band__copy {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  flex: 1 1 26rem;
+}
+
+.cta-band__heading {
+  margin: 0;
+  font-size: clamp(1.75rem, 3vw, 2.5rem);
+  line-height: 1;
+}
+
+.cta-band__line {
+  margin: 0.5rem 0 0;
+  font-size: 0.9375rem;
+  color: var(--muted-text-color);
+}
+
+.cta-band__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}

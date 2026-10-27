@@ -1,0 +1,29 @@
+{# One order in a list: number, date, status, total, first few items. #}
+<li class="order-card">
+  <a class="order-card__link" href="{{ order.url|esc_url }}">
+    <span class="order-card__head">
+      <span class="order-card__name">{{ order.name|esc_html }}</span>
+      <span class="status status--{{ order.status.tone|esc_attr }}">{{ order.status.label|esc_html }}</span>
+    </span>
+
+    <span class="order-card__meta">
+      {{ order.date ? order.date|date('M j, Y') }} · {{ order.total|money(order.currency) }}
+    </span>
+
+    {% if order.items %}
+      <span class="order-card__items">
+        {% for item in order.items %}
+          <span class="order-card__thumb">
+            {% if item.image %}<img src="{{ item.image.url|esc_url }}" alt="" loading="lazy">{% endif %}
+            {% if item.quantity > 1 %}<span class="order-card__qty">×{{ item.quantity }}</span>{% endif %}
+          </span>
+        {% endfor %}
+        <span class="screen-reader-text">
+          {{ order.items|map(i => i.quantity ~ ' × ' ~ i.name)|join(', ')|esc_html }}
+        </span>
+      </span>
+    {% endif %}
+
+    <span class="order-card__go" aria-hidden="true">View →</span>
+  </a>
+</li>

@@ -1,0 +1,83 @@
+{% extends 'views/layouts/base.twig' %}
+
+{% block content %}
+  <section class="section account" data-scheme="iron">
+    <div class="section__inner">
+
+      <div class="account__head">
+        <div>
+          <span class="eyebrow">口座 · Account</span>
+          <h1 class="account__title brass-face">
+            {{ customer.first_name ? 'Welcome back,' : 'Welcome back.' }}
+            {% if customer.first_name %}<em>{{ customer.first_name|esc_html }}.</em>{% endif %}
+          </h1>
+        </div>
+        {% include 'views/partials/account/nav.twig' %}
+      </div>
+
+      <div class="account__grid">
+
+        <div class="account__main">
+          <div class="account-panel">
+            <div class="account-panel__head">
+              <h2 class="account-panel__title">Recent orders</h2>
+              {% if customer.orders %}
+                <a class="account-panel__link" href="{{ site.url|esc_url }}/account/orders/">All orders →</a>
+              {% endif %}
+            </div>
+
+            {% if customer.orders %}
+              <ul class="order-list">
+                {% for order in customer.orders %}
+                  {% include 'views/partials/account/order-card.twig' with { order: order } only %}
+                {% endfor %}
+              </ul>
+            {% else %}
+              <div class="account-panel__empty">
+                <p>No orders yet. Your first one shows up here the moment it's placed.</p>
+                <a class="button" href="{{ site.url|esc_url }}">Build your stack</a>
+              </div>
+            {% endif %}
+          </div>
+        </div>
+
+        <aside class="account__side">
+          <div class="account-panel">
+            <h2 class="account-panel__title">Profile</h2>
+            <dl class="account-facts">
+              {% if customer.name %}
+                <div><dt>Name</dt><dd>{{ customer.name|esc_html }}</dd></div>
+              {% endif %}
+              <div><dt>Email</dt><dd>{{ customer.email|esc_html }}</dd></div>
+              {% if customer.phone %}
+                <div><dt>Phone</dt><dd>{{ customer.phone|esc_html }}</dd></div>
+              {% endif %}
+              {% if customer.since %}
+                <div><dt>Member since</dt><dd>{{ customer.since|date('F Y') }}</dd></div>
+              {% endif %}
+            </dl>
+          </div>
+
+          <div class="account-panel">
+            <h2 class="account-panel__title">Addresses</h2>
+            {% if customer.addresses %}
+              <ul class="address-list">
+                {% for address in customer.addresses %}
+                  <li class="address{{ address.is_default ? ' address--default' }}">
+                    {% if address.is_default %}<span class="address__flag">Default</span>{% endif %}
+                    <address>
+                      {% for line in address.lines %}{{ line|esc_html }}{% if not loop.last %}<br>{% endif %}{% endfor %}
+                    </address>
+                  </li>
+                {% endfor %}
+              </ul>
+            {% else %}
+              <p class="account-panel__muted">Addresses you use at checkout are saved here.</p>
+            {% endif %}
+          </div>
+        </aside>
+
+      </div>
+    </div>
+  </section>
+{% endblock %}

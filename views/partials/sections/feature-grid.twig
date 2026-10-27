@@ -1,0 +1,43 @@
+{#
+  sections/feature-grid.twig
+  ---------------------------------------------------------------------
+  Row: kanji box | title + body | value. Card: kanji tile (or the value
+  as a stamp when there is no kanji), then title and body. A panel with
+  a link becomes one big <a>.
+#}
+{% set look = style|default('card') %}
+
+<section class="section feature-grid feature-grid--{{ look }}" data-scheme="{{ color|default('iron') }}">
+  <div class="section__inner">
+    {% include 'views/partials/components/rail-tag.twig' with { text: rail_text } %}
+    {% include 'views/partials/components/section-head.twig' %}
+
+    <ul class="feature-grid__list feature-grid__list--cols-{{ columns|default('4') }}">
+      {% for item in items %}
+        {% set tag = item.link.url ? 'a' : 'div' %}
+        <li class="feature-grid__cell">
+          <{{ tag }} class="feature{{ item.link.url ? ' feature--link' }}"
+            {%- if item.link.url %} href="{{ item.link.url|esc_url }}" target="{{ item.link.target|default('_self')|esc_attr }}"{% endif %}>
+
+            {% if look == 'row' %}
+              {% if item.kanji %}<span class="feature__box" aria-hidden="true">{{ item.kanji|esc_html }}</span>{% endif %}
+              <span class="feature__text">
+                <span class="feature__title">{{ item.title|esc_html }}</span>
+                {% if item.body %}<span class="feature__body">{{ item.body|esc_html }}</span>{% endif %}
+              </span>
+              {% if item.value %}<span class="feature__value">{{ item.value|esc_html }}</span>{% endif %}
+            {% else %}
+              {% if item.kanji %}
+                <span class="seal-tile feature__tile" aria-hidden="true">{{ item.kanji|esc_html }}</span>
+              {% endif %}
+              {% if item.value %}<span class="feature__value">{{ item.value|esc_html }}</span>{% endif %}
+              <span class="feature__title">{{ item.title|esc_html }}</span>
+              {% if item.body %}<span class="feature__body">{{ item.body|esc_html }}</span>{% endif %}
+            {% endif %}
+
+          </{{ tag }}>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+</section>

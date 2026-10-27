@@ -1,0 +1,40 @@
+{% import 'macros/picture.twig' as picture %}
+
+{#
+  sections/story.twig
+  ---------------------------------------------------------------------
+  Framed portrait beside long copy, signed off with a seal. With no
+  photo the copy takes the full width.
+#}
+<section class="section story" data-scheme="{{ color|default('iron') }}">
+  <div class="section__inner">
+    {% include 'views/partials/components/rail-tag.twig' with { text: rail_text } %}
+
+    <div class="story__grid{{ image ? ' story__grid--' ~ image_side|default('left') : ' story__grid--solo' }}">
+      {% if image %}
+        <div class="story__shot frame">
+          {{ picture.render(image, 'large', null, 'story__img') }}
+        </div>
+      {% endif %}
+
+      <div class="story__copy">
+        {% if eyebrow %}<span class="eyebrow">{{ eyebrow|esc_html }}</span>{% endif %}
+        <h2 class="story__heading brass-face">{{ heading|esc_html }}</h2>
+
+        {% if body %}
+          <div class="story__body">{{ body|wp_kses_post }}</div>
+        {% endif %}
+
+        {% if sign_name %}
+          <div class="story__sign">
+            {% include 'views/partials/components/seal.twig' with { text: sign_seal, size: 'sm' } only %}
+            <div>
+              <span class="story__name">{{ sign_name|esc_html }}</span>
+              {% if sign_role %}<span class="story__role">{{ sign_role|esc_html }}</span>{% endif %}
+            </div>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>

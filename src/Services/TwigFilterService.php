@@ -66,6 +66,27 @@ class TwigFilterService
       return get_field($field, (int) $itemId);
     }));
 
+    // Home → parent pages → this page, for the Page Hero. Built from
+    // the page tree, so nesting About under Company gives Home ›
+    // Company › About with nothing to configure.
+    $twig->addFunction(new TwigFunction('breadcrumbs', function (): array {
+      $id = get_queried_object_id();
+
+      if (!$id || !is_page()) {
+        return [];
+      }
+
+      $crumbs = [['title' => 'Home', 'url' => home_url('/')]];
+
+      foreach (array_reverse(get_post_ancestors($id)) as $ancestor) {
+        $crumbs[] = ['title' => get_the_title($ancestor), 'url' => get_permalink($ancestor)];
+      }
+
+      $crumbs[] = ['title' => get_the_title($id), 'url' => get_permalink($id)];
+
+      return $crumbs;
+    }));
+
 
     return $twig;
   }

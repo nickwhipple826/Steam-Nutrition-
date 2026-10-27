@@ -122,7 +122,7 @@ export function initProduct(): void {
 
     if ( submit ) {
       submit.disabled = !variant || !variant.available;
-      submit.textContent = !variant ? 'Unavailable' : variant.available ? 'Buy now' : 'Sold out';
+      submit.textContent = !variant ? 'Unavailable' : variant.available ? 'Add to bag' : 'Sold out';
     }
 
     if ( !variant ) return;

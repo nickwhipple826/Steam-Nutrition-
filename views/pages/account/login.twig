@@ -1,0 +1,42 @@
+{% extends 'views/layouts/base.twig' %}
+
+{#
+  pages/account/login.twig
+  ---------------------------------------------------------------------
+  The signed-out /account. Sign in goes to Shopify's own sign-in page
+  (email + one-time code — no passwords), which returns to
+  /account/callback. Signing in and creating an account are the same
+  step, so there is one button, not two.
+#}
+
+{% block content %}
+  <section class="section account-login" data-scheme="iron">
+    <div class="section__inner">
+      <div class="account-login__grid">
+
+        <div class="account-login__copy">
+          <span class="eyebrow">口座 · Account</span>
+          <h1 class="account-login__title brass-face">Sign in <em>to the engine room.</em></h1>
+          <p class="account-login__lede">
+            Track orders, reorder your stack and keep an eye on your rewards.
+            New here? Signing in creates your account — no password to remember,
+            we'll email you a code.
+          </p>
+
+          {% if message %}
+            <p class="product__error" role="alert">{{ message|esc_html }}</p>
+          {% endif %}
+
+          <a class="button" href="{{ login_url|esc_url }}">Sign in or create account</a>
+        </div>
+
+        <ul class="account-login__perks">
+          <li><span class="seal-tile" aria-hidden="true">履</span><span><strong>Order history</strong> Every order, its status and tracking.</span></li>
+          <li><span class="seal-tile" aria-hidden="true">速</span><span><strong>Faster checkout</strong> Your details are filled in for you.</span></li>
+          <li><span class="seal-tile" aria-hidden="true">報</span><span><strong>Rewards</strong> Points on every order, and perks as you rank up.</span></li>
+        </ul>
+
+      </div>
+    </div>
+  </section>
+{% endblock %}

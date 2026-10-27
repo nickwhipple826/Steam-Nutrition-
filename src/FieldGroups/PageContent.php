@@ -13,6 +13,14 @@ use MMM\FieldGroups\FlexibleContent\{
   WorkshopFactsLayout,
   NewsletterBandLayout,
   ProductSpotlightLayout,
+  PageHeroLayout,
+  StoryLayout,
+  StepsLayout,
+  FeatureGridLayout,
+  TiersLayout,
+  GalleryLayout,
+  FaqLayout,
+  CtaBandLayout,
 };
 use MMM\Traits\HasFlexibleContent;
 
@@ -33,6 +41,16 @@ class PageContent extends BaseFieldGroup {
     $this->registerLayout( new SubscribeSaveLayout() );
     $this->registerLayout( new WorkshopFactsLayout() );
     $this->registerLayout( new NewsletterBandLayout() );
+
+    // Subpage layouts — About, Rewards and anything after them.
+    $this->registerLayout( new PageHeroLayout() );
+    $this->registerLayout( new StoryLayout() );
+    $this->registerLayout( new StepsLayout() );
+    $this->registerLayout( new FeatureGridLayout() );
+    $this->registerLayout( new TiersLayout() );
+    $this->registerLayout( new GalleryLayout() );
+    $this->registerLayout( new FaqLayout() );
+    $this->registerLayout( new CtaBandLayout() );
   }
 
   public function getTitle(): string

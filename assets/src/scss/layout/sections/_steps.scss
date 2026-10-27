@@ -1,0 +1,141 @@
+// =====================================================================
+// layout/sections/_steps.scss — Cards and Timeline
+// =====================================================================
+
+@use '@css/utils/variables/colors' as *;
+@use '@css/utils/mixins/industrial' as *;
+
+.steps__list {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  @media (min-width: 760px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @media (min-width: 1100px) {
+    grid-template-columns: repeat(var(--count, 3), minmax(0, 1fr));
+  }
+}
+
+.steps__title {
+  margin: 0 0 0.625rem;
+  font-family: var(--ff-display);
+  font-size: clamp(1.25rem, 1.8vw, 1.625rem);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.steps__body {
+  max-width: 40ch;
+  margin: 0;
+  font-size: 0.9375rem;
+  line-height: 1.65;
+  color: var(--muted-text-color);
+}
+
+// ---------------------------------------------------------------------
+// Cards — panels joined edge to edge by shared hairlines
+// ---------------------------------------------------------------------
+.steps--cards {
+  .steps__list {
+    border: 1px solid var(--rule-color);
+    background-color: var(--panel-color);
+  }
+
+  .steps__item {
+    padding: clamp(1.5rem, 2.5vw, 2rem);
+    border-top: 1px solid var(--rule-color);
+
+    &:first-child { border-top: 0; }
+
+    @media (min-width: 760px) {
+      border-top: 0;
+      border-left: 1px solid var(--rule-color);
+
+      &:nth-child(odd) { border-left: 0; }
+      &:nth-child(n + 3) { border-top: 1px solid var(--rule-color); }
+    }
+
+    @media (min-width: 1100px) {
+      &:nth-child(odd) { border-left: 1px solid var(--rule-color); }
+      &:first-child { border-left: 0; }
+      &:nth-child(n + 3) { border-top: 0; }
+    }
+  }
+
+  .steps__tile {
+    @include seal-tile(40px, 20px);
+    margin-bottom: 1.25rem;
+  }
+
+  .steps__label {
+    display: block;
+    margin-bottom: 0.625rem;
+    font-family: var(--ff-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--muted-text-color);
+  }
+}
+
+// ---------------------------------------------------------------------
+// Timeline — brass line across the top with a node per station.
+// Stacks to a vertical line on phones.
+// ---------------------------------------------------------------------
+.steps--timeline {
+  .steps__list {
+    position: relative;
+    gap: 2rem clamp(1.25rem, 3vw, 2.5rem);
+    padding-left: 1.5rem;
+    border-left: 1px solid var(--accent-color);
+
+    @media (min-width: 760px) {
+      padding: 2rem 0 0;
+      border-left: 0;
+      border-top: 1px solid var(--accent-color);
+    }
+  }
+
+  .steps__item {
+    position: relative;
+  }
+
+  .steps__node {
+    position: absolute;
+    top: 0.5rem;
+    left: calc(-1.5rem - 5px);
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background-color: var(--accent-color);
+    box-shadow: 0 0 0 4px var(--bg-color);
+
+    @media (min-width: 760px) {
+      top: calc(-2rem - 5px);
+      left: 0;
+    }
+  }
+
+  .steps__num {
+    display: flex;
+    align-items: baseline;
+    gap: 0.625rem;
+    margin-bottom: 0.75rem;
+    font-family: var(--ff-display);
+    font-size: clamp(1.75rem, 2.5vw, 2.25rem);
+    font-weight: 700;
+    line-height: 1;
+    color: var(--seal-color);
+  }
+
+  .steps__kanji {
+    font-family: var(--ff-jp);
+    font-size: 0.6em;
+    font-weight: 800;
+  }
+}

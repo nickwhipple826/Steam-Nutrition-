@@ -1,0 +1,99 @@
+// =====================================================================
+// layout/sections/_tiers.scss — rank cards
+// =====================================================================
+
+@use '@css/utils/variables/colors' as *;
+@use '@css/utils/mixins/industrial' as *;
+
+.tiers__list {
+  display: grid;
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  @media (min-width: 900px) {
+    grid-template-columns: repeat(var(--count, 3), minmax(0, 1fr));
+  }
+}
+
+.tier {
+  @include plate;
+  padding: clamp(1.5rem, 2.5vw, 2rem);
+
+  .dial { margin-bottom: 1.5rem; }
+}
+
+.tier--flagged {
+  border-color: var(--frame-color);
+}
+
+.tier__flag {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  padding: 0.25rem 0.5rem;
+  background-color: var(--seal-color);
+  font-family: var(--ff-mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: $color-ivory;
+}
+
+.tier__name {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5rem;
+  margin: 0;
+  font-family: var(--ff-display);
+  font-size: clamp(1.375rem, 2vw, 1.75rem);
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.tier__kanji {
+  font-family: var(--ff-jp);
+  font-weight: 800;
+  color: var(--seal-color);
+  filter: brightness(1.3);
+}
+
+.tier__range {
+  margin: 0.625rem 0 0;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--rule-color);
+  font-family: var(--ff-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted-text-color);
+}
+
+.tier__perks {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  li {
+    display: flex;
+    gap: 0.75rem;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--rule-color);
+    font-size: 0.875rem;
+
+    &:last-child { border-bottom: 0; }
+
+    &::before {
+      content: '';
+      flex: none;
+      width: 7px;
+      height: 7px;
+      margin-top: 0.45em;
+      background-color: var(--seal-color);
+      transform: rotate(45deg);
+    }
+  }
+}

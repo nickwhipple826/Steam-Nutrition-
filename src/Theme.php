@@ -17,7 +17,7 @@ use MMM\Services\{FieldGroupRegistryService,
   ViteService};
 use MMM\Setup\OptionsPage;
 use MMM\Setup\Security;
-use MMM\Shopify\ProductRoute;
+use MMM\Shopify\{CartApi, ProductRoute, StoreRoutes};
 use MMM\Traits\Singleton;
 use Timber\Timber;
 
@@ -42,7 +42,7 @@ class Theme
    * A page whose first visible component is one of these gets the
    * has-hero body class and no top padding on <main>.
    */
-  private const HERO_LAYOUTS = [ 'hero-lineup' ];
+  private const HERO_LAYOUTS = [ 'hero-lineup', 'page-hero' ];
 
   private Security $security;
   private TwigFilterService $twigFilterService;
@@ -172,6 +172,10 @@ class Theme
 
     // /products/{handle} pages, rendered from Shopify
     ProductRoute::getInstance();
+
+    // /cart and /account/…, plus the cart REST API the drawer uses
+    StoreRoutes::getInstance();
+    CartApi::getInstance();
 
     // Register hooks
     add_action( 'after_setup_theme', [ $this, 'setup' ] );

@@ -2,16 +2,15 @@
 
 namespace MMM\Controllers;
 
-use MMM\Shopify\{ProductRoute, ShopifyProductQuery};
+use MMM\Shopify\{ProductRoute, ShopifyCart, ShopifyProductQuery};
 
 /**
  * A single Shopify product at /products/{handle}.
  *
- * "Buy now" is a plain POST back to this URL. The controller makes a
- * Shopify cart with that one line and redirects to Shopify's checkout,
- * so it works with JavaScript off and no card data ever touches
- * WordPress. A persistent cart drawer can replace this later without
- * the page changing shape.
+ * "Add to bag" is a plain POST back to this URL. The controller adds
+ * the line to the shopper's Shopify cart and redirects to /cart, so it
+ * works with JavaScript off. ui/cart.ts catches the same submit, adds
+ * over the REST API and opens the drawer instead.
  */
 class ProductController extends BaseController
 {
@@ -28,8 +27,8 @@ class ProductController extends BaseController
     $error = '';
     $selectedId = isset( $_GET['variant'] ) ? sanitize_text_field( wp_unslash( $_GET['variant'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
-    if ( 'POST' === ( $_SERVER['REQUEST_METHOD'] ?? '' ) && isset( $_POST['steam_buy'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
-      [ $error, $selectedId ] = $this->buy( $product );
+    if ( 'POST' === ( $_SERVER['REQUEST_METHOD'] ?? '' ) && isset( $_POST['steam_add'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
+      [ $error, $selectedId ] = $this->add( $product );
     }
 
     $variant = ShopifyProductQuery::initialVariant( $product, $selectedId );
@@ -63,18 +62,17 @@ class ProductController extends BaseController
   }
 
   /**
-   * Handle a Buy now submit. Redirects to Shopify on success; on
-   * failure returns the message to show and the variant to keep
-   * selected, so the shopper does not have to pick again.
+   * Handle an Add to bag submit (the no-JavaScript path). Redirects to
+   * /cart on success; on failure returns the message to show and the
+   * variant to keep selected, so the shopper does not have to pick again.
    *
    * @return array{0: string, 1: string}
    */
-  private function buy( array $product ): array
+  private function add( array $product ): array
   {
     // phpcs:disable WordPress.Security.NonceVerification.Missing
-    // No nonce: creating an empty Shopify cart is harmless, and a nonce
-    // would go stale behind WP Engine's page cache. POSTs skip that
-    // cache, so this always runs.
+    // No nonce: adding to your own bag is harmless, and a nonce would go
+    // stale behind WP Engine's page cache. POSTs skip that cache.
     $options = isset( $_POST['options'] ) && is_array( $_POST['options'] )
       ? array_map( 'sanitize_text_field', wp_unslash( $_POST['options'] ) )
       : [];
@@ -92,18 +90,16 @@ class ProductController extends BaseController
       return [ 'That option is sold out.', $variant['id'] ];
     }
 
-    $checkout = ShopifyProductQuery::createCheckout( $variant['id'], $quantity );
+    $result = ShopifyCart::add( $variant['id'], $quantity );
 
-    if ( $checkout['url'] ) {
-      // wp_redirect, not wp_safe_redirect: the destination is Shopify's
-      // checkout on another host, and it came from Shopify, not the URL.
-      wp_redirect( $checkout['url'], 303 );
+    if ( $result['cart'] && ! $result['error'] ) {
+      wp_safe_redirect( home_url( '/cart/' ), 303 );
       exit;
     }
 
-    $message = current_user_can( 'manage_options' )
-      ? 'Checkout failed: ' . $checkout['error']
-      : 'Checkout is not available right now. Please try again in a moment.';
+    $message = current_user_can( 'manage_options' ) && $result['error']
+      ? 'Could not add to bag: ' . $result['error']
+      : 'We could not add that to your bag. Please try again in a moment.';
 
     return [ $message, $variant['id'] ];
   }

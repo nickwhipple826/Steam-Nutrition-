@@ -1,0 +1,118 @@
+// =====================================================================
+// layout/sections/_feature-grid.scss — Row and Card panels
+// =====================================================================
+
+@use '@css/utils/variables/colors' as *;
+@use '@css/utils/mixins/industrial' as *;
+
+.feature-grid__list {
+  display: grid;
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  @media (min-width: 640px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @media (min-width: 1100px) {
+    &--cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    &--cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  }
+}
+
+.feature-grid__cell {
+  display: flex;
+}
+
+.feature {
+  @include plate;
+  display: flex;
+  width: 100%;
+  gap: 1rem;
+  padding: clamp(1.25rem, 2vw, 1.5rem);
+  color: inherit;
+  text-decoration: none;
+}
+
+.feature--link {
+  transition: border-color 160ms ease;
+
+  &:hover,
+  &:focus-visible { border-color: var(--frame-color); }
+}
+
+.feature__title {
+  display: block;
+  font-family: var(--ff-display);
+  font-size: 1.1875rem;
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--heading-text-color);
+}
+
+.feature__body {
+  display: block;
+  margin-top: 0.375rem;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: var(--muted-text-color);
+}
+
+.feature__value {
+  font-family: var(--ff-mono);
+  font-size: 0.8125rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent-text-color);
+  white-space: nowrap;
+}
+
+// ---------------------------------------------------------------------
+// Row — outlined kanji box | text | value
+// ---------------------------------------------------------------------
+.feature-grid--row {
+  .feature {
+    align-items: center;
+  }
+
+  .feature__text {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .feature__box {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 2.75rem;
+    height: 2.75rem;
+    border: 1px solid var(--frame-color);
+    border-radius: 2px;
+    font-family: var(--ff-jp);
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: var(--accent-text-color);
+  }
+}
+
+// ---------------------------------------------------------------------
+// Card — tile (or value stamp) on top
+// ---------------------------------------------------------------------
+.feature-grid--card {
+  .feature {
+    flex-direction: column;
+    gap: 0.75rem;
+    min-height: 11rem;
+  }
+
+  .feature__tile {
+    @include seal-tile(40px, 20px);
+    margin-bottom: 0.5rem;
+  }
+
+  .feature__body { margin-top: 0; }
+}

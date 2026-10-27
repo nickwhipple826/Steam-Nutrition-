@@ -70,12 +70,12 @@ class Site extends TimberSite
 
   public function account_url(): string
   {
-    return $this->acfOption( 'account_url' ) ?: '#';
+    return $this->acfOption( 'account_url' ) ?: home_url( '/account/' );
   }
 
   public function cart_url(): string
   {
-    return $this->acfOption( 'cart_url' ) ?: '#';
+    return $this->acfOption( 'cart_url' ) ?: home_url( '/cart/' );
   }
 
   // ---- Footer ---------------------------------------------------------

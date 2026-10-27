@@ -1,0 +1,77 @@
+{#
+  components/cart-drawer.twig
+  ---------------------------------------------------------------------
+  The slide-out bag. Rendered empty on every page (so page caching is
+  unaffected) and filled by ui/cart.ts from /wp-json/steam/v1/cart.
+
+  Lines are built by cloning <template data-cart-line-template> and
+  setting textContent / attributes — never innerHTML — so a product
+  title can never inject markup.
+
+  With JavaScript off this never opens; the bag icon is a plain link to
+  /cart, which works on its own.
+#}
+<div class="cart-drawer" data-cart-drawer data-cart-api="{{ function('rest_url', 'steam/v1/cart')|esc_url }}" hidden>
+  <div class="cart-drawer__backdrop" data-cart-close></div>
+
+  <aside class="cart-drawer__panel" role="dialog" aria-modal="true" aria-labelledby="cart-drawer-title" tabindex="-1">
+    <header class="cart-drawer__head">
+      <h2 class="cart-drawer__title" id="cart-drawer-title">
+        Your bag <span class="cart-drawer__count" data-cart-count-label></span>
+      </h2>
+      <button type="button" class="cart-drawer__close" data-cart-close>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+          <path d="M6 6l12 12M18 6 6 18"/>
+        </svg>
+        <span class="screen-reader-text">Close bag</span>
+      </button>
+    </header>
+
+    <p class="cart-drawer__error" role="alert" data-cart-error hidden></p>
+
+    <div class="cart-drawer__body" data-cart-body aria-busy="false">
+      <ul class="cart-lines" data-cart-lines></ul>
+
+      <div class="cart-empty" data-cart-empty hidden>
+        <span class="seal" aria-hidden="true"><span class="seal__char">空</span></span>
+        <p class="cart-empty__title">Your bag is empty.</p>
+        <a class="button outline" href="{{ site.url|esc_url }}">Fuel up</a>
+      </div>
+    </div>
+
+    <footer class="cart-drawer__foot" data-cart-foot hidden>
+      <p class="cart-drawer__subtotal">
+        <span>Subtotal</span>
+        <span class="cart-drawer__amount" data-cart-subtotal></span>
+      </p>
+      <p class="cart-drawer__note">Shipping and taxes calculated at checkout.</p>
+      <a class="button cart-drawer__checkout" href="#" data-cart-checkout>Checkout</a>
+      <a class="cart-drawer__view" href="{{ site.cart_url|esc_url }}">View full bag</a>
+    </footer>
+  </aside>
+
+  <template data-cart-line-template>
+    <li class="cart-line">
+      <a class="cart-line__shot" data-line-link tabindex="-1" aria-hidden="true">
+        <img data-line-image alt="" loading="lazy">
+      </a>
+      <div class="cart-line__info">
+        <a class="cart-line__title" data-line-link data-line-title></a>
+        <span class="cart-line__variant" data-line-variant></span>
+        <div class="cart-line__controls">
+          <div class="qty" role="group" data-line-qty-group>
+            <button type="button" class="qty__btn" data-line-dec>
+              <span aria-hidden="true">−</span><span class="screen-reader-text">Decrease quantity</span>
+            </button>
+            <span class="qty__value" data-line-qty aria-live="polite"></span>
+            <button type="button" class="qty__btn" data-line-inc>
+              <span aria-hidden="true">+</span><span class="screen-reader-text">Increase quantity</span>
+            </button>
+          </div>
+          <button type="button" class="cart-line__remove" data-line-remove>Remove</button>
+        </div>
+      </div>
+      <span class="cart-line__total" data-line-total></span>
+    </li>
+  </template>
+</div>

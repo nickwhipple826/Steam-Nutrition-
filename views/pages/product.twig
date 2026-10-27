@@ -7,9 +7,10 @@
   ProductController; there is no WordPress post behind it.
 
   Everything works server-side first. The option radios and the form
-  post back to this URL, the controller works out the variant and sends
-  the shopper to Shopify checkout. ui/product.ts only keeps the price,
-  image and button in step with the radios as they change.
+  post back to this URL; the controller works out the variant, adds the
+  line to the Shopify cart and redirects to /cart. ui/cart.ts catches
+  the submit and opens the drawer instead; ui/product.ts keeps the
+  price, image and button in step with the radios.
 #}
 
 {% block content %}
@@ -94,8 +95,8 @@
               <p class="product__error" role="alert">{{ error|esc_html }}</p>
             {% endif %}
 
-            <form class="product__form" method="post" action="{{ product_url|esc_url }}" data-product-form>
-              <input type="hidden" name="steam_buy" value="1">
+            <form class="product__form" method="post" action="{{ product_url|esc_url }}" data-product-form data-cart-add-form>
+              <input type="hidden" name="steam_add" value="1">
               <input type="hidden" name="variant" value="{{ variant.id|esc_attr }}" data-product-variant>
 
               {% for option in product.options %}
@@ -130,7 +131,7 @@
 
                 <button type="submit" class="button product__submit" data-product-submit
                         {{ not variant.available ? 'disabled' }}>
-                  {{ variant.available ? 'Buy now' : 'Sold out' }}
+                  {{ variant.available ? 'Add to bag' : 'Sold out' }}
                 </button>
               </div>
 

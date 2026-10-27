@@ -1,0 +1,105 @@
+{% extends 'views/layouts/base.twig' %}
+
+{#
+  pages/cart.twig
+  ---------------------------------------------------------------------
+  /cart, rendered by CartController from the shopper's Shopify cart.
+  Every control is a real form that POSTs back here, so the page works
+  in full with JavaScript off.
+#}
+
+{% block content %}
+  <section class="section cart-page" data-scheme="iron">
+    <div class="section__inner">
+
+      <div class="section__head">
+        <div class="section__head-copy">
+          <span class="eyebrow">鞄 · Your bag</span>
+          <h1 class="cart-page__title brass-face">
+            {{ cart.count ? cart.count ~ (cart.count == 1 ? ' item' : ' items') : 'Your bag' }}
+          </h1>
+        </div>
+      </div>
+
+      {% if error %}
+        <p class="product__error" role="alert">{{ error|esc_html }}</p>
+      {% endif %}
+
+      {% if not configured and function('current_user_can', 'manage_options') %}
+        <p class="section__empty">
+          Shopify is not connected. Define SHOPIFY_STORE_DOMAIN and SHOPIFY_STOREFRONT_TOKEN in wp-config.php.
+        </p>
+      {% endif %}
+
+      {% if cart.lines %}
+        <div class="cart-page__layout">
+
+          <ul class="cart-page__lines">
+            {% for line in cart.lines %}
+              <li class="cart-row">
+                <a class="cart-row__shot" href="{{ line.url|esc_url }}" tabindex="-1" aria-hidden="true">
+                  {% if line.image %}
+                    <img src="{{ line.image.url|esc_url }}" alt="" loading="lazy">
+                  {% endif %}
+                </a>
+
+                <div class="cart-row__info">
+                  <a class="cart-row__title" href="{{ line.url|esc_url }}">{{ line.title|esc_html }}</a>
+                  {% if line.variant_title %}
+                    <span class="cart-row__variant">{{ line.variant_title|esc_html }}</span>
+                  {% endif %}
+                  <span class="cart-row__price">{{ line.price|money(line.currency) }} each</span>
+                  {% if not line.available %}
+                    <span class="cart-row__warn">No longer available — remove to check out.</span>
+                  {% endif %}
+                </div>
+
+                <div class="cart-row__controls">
+                  <form method="post" action="{{ site.cart_url|esc_url }}" class="cart-row__qty">
+                    <input type="hidden" name="cart_action" value="update">
+                    <input type="hidden" name="line" value="{{ line.id|esc_attr }}">
+                    <label>
+                      <span class="screen-reader-text">Quantity for {{ line.title|esc_attr }}</span>
+                      <input type="number" name="quantity" value="{{ line.quantity }}"
+                             min="0" max="{{ cart.max_quantity }}" inputmode="numeric">
+                    </label>
+                    <button type="submit" class="button outline small">Update</button>
+                  </form>
+
+                  <form method="post" action="{{ site.cart_url|esc_url }}">
+                    <input type="hidden" name="cart_action" value="remove">
+                    <input type="hidden" name="line" value="{{ line.id|esc_attr }}">
+                    <button type="submit" class="cart-line__remove">
+                      Remove<span class="screen-reader-text"> {{ line.title|esc_html }}</span>
+                    </button>
+                  </form>
+                </div>
+
+                <span class="cart-row__total">{{ line.line_total|money(line.currency) }}</span>
+              </li>
+            {% endfor %}
+          </ul>
+
+          <aside class="cart-summary" aria-label="Order summary">
+            <h2 class="cart-summary__title">Summary</h2>
+            <p class="cart-summary__row">
+              <span>Subtotal</span>
+              <span class="cart-summary__amount">{{ cart.subtotal|money(cart.currency) }}</span>
+            </p>
+            <p class="cart-summary__note">Shipping, taxes and discount codes are added at checkout.</p>
+            <a class="button cart-summary__checkout" href="{{ cart.checkout_url|esc_url }}">Checkout</a>
+            <p class="cart-summary__secure">Secure checkout by Shopify.</p>
+          </aside>
+
+        </div>
+      {% else %}
+        <div class="cart-empty cart-empty--page">
+          <span class="seal" aria-hidden="true"><span class="seal__char">空</span></span>
+          <p class="cart-empty__title">Your bag is empty.</p>
+          <a class="button" href="{{ site.url|esc_url }}">Fuel up</a>
+        </div>
+      {% endif %}
+
+    </div>
+  </section>
+{% endblock %}

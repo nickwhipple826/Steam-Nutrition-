@@ -1,0 +1,36 @@
+{#
+  sections/steps.twig
+  ---------------------------------------------------------------------
+  Cards: joined panels, kanji tile, STEP 01. Timeline: a brass line
+  with a node per station and a big number. Same markup underneath —
+  an <ol>, so the order is read out as an order.
+#}
+{% set look = style|default('cards') %}
+
+<section class="section steps steps--{{ look }}" data-scheme="{{ color|default('iron') }}">
+  <div class="section__inner">
+    {% include 'views/partials/components/rail-tag.twig' with { text: rail_text } %}
+    {% include 'views/partials/components/section-head.twig' %}
+
+    <ol class="steps__list" style="--count: {{ steps|length }}">
+      {% for step in steps %}
+        {% set num = '%02d'|format(loop.index) %}
+        <li class="steps__item">
+          {% if look == 'timeline' %}
+            <span class="steps__node" aria-hidden="true"></span>
+            <span class="steps__num">
+              {{ num }}
+              {% if step.kanji %}<span class="steps__kanji" aria-hidden="true">{{ step.kanji|esc_html }}</span>{% endif %}
+            </span>
+          {% else %}
+            {% if step.kanji %}<span class="seal-tile steps__tile" aria-hidden="true">{{ step.kanji|esc_html }}</span>{% endif %}
+            <span class="steps__label">{{ number_label|default('Step')|esc_html }} {{ num }}</span>
+          {% endif %}
+
+          <h3 class="steps__title">{{ step.title|esc_html }}</h3>
+          {% if step.body %}<p class="steps__body">{{ step.body|esc_html }}</p>{% endif %}
+        </li>
+      {% endfor %}
+    </ol>
+  </div>
+</section>

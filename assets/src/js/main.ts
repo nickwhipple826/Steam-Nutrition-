@@ -6,6 +6,7 @@ import { initRails } from './ui/rails.js';
 import { initSubscribe } from './ui/subscribe.js';
 import { initNewsletter } from './ui/newsletter.js';
 import { initProduct } from './ui/product.js';
+import { initCart } from './ui/cart.js';
 import { initReveal } from './ui/reveal.js';
 
 import '@css/main.scss';
@@ -20,6 +21,7 @@ document.addEventListener( 'DOMContentLoaded', () => {
     { name: 'subscribe', fn: initSubscribe },
     { name: 'newsletter', fn: initNewsletter },
     { name: 'product', fn: initProduct },
+    { name: 'cart', fn: initCart },
     { name: 'reveal', fn: initReveal },
   ];
 

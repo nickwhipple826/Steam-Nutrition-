@@ -25,9 +25,21 @@
 @forward 'layout/sections/workshop-facts';
 @forward 'layout/sections/newsletter-band';
 
+// Subpages (About, Rewards, …)
+@forward 'layout/sections/page-hero';
+@forward 'layout/sections/steps';
+@forward 'layout/sections/feature-grid';
+@forward 'layout/sections/tiers';
+@forward 'layout/sections/faq';
+@forward 'layout/sections/story';
+@forward 'layout/sections/gallery';
+@forward 'layout/sections/cta-band';
+
 @forward 'layout/sections/shop-collection';
+@forward 'layout/sections/cart';
 
 // Pages
 @forward "pages/home";
 @forward "pages/archive";
 @forward "pages/product";
+@forward "pages/account";

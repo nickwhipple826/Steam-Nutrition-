@@ -60,11 +60,11 @@ class SiteSettingsFieldGroup extends BaseFieldGroup
       ] )
       ->addUrl( 'account_url', [
         'label' => 'Account URL',
-        'instructions' => 'Usually the Shopify customer account page.',
+        'instructions' => 'Leave empty to use the theme\'s own /account pages.',
       ] )
       ->addUrl( 'cart_url', [
         'label' => 'Cart URL',
-        'instructions' => 'Usually the Shopify cart.',
+        'instructions' => 'Leave empty to use the theme\'s own /cart page and drawer.',
       ] )
 
       // ---------------------------------------------------------------

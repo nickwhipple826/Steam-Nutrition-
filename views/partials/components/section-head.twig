@@ -1,0 +1,27 @@
+{#
+  components/section-head.twig
+  ---------------------------------------------------------------
+  The heading row from SectionHeadPartial. Include it with the
+  section's own context:
+
+  {% include 'views/partials/components/section-head.twig' %}
+#}
+<div class="section__head">
+  <div class="section__head-copy">
+    {% if eyebrow %}
+      <span class="eyebrow">{{ eyebrow|esc_html }}</span>
+    {% endif %}
+    <h2 class="brass-face">{{ heading|esc_html }}</h2>
+    {% if note %}<p class="section__note">{{ note|esc_html }}</p>{% endif %}
+  </div>
+
+  {% if aside_link.url %}
+    <a class="section__aside-label" href="{{ aside_link.url|esc_url }}"
+       target="{{ aside_link.target|default('_self')|esc_attr }}"
+       {{ aside_link.target == '_blank' ? 'rel="noopener"' }}>
+      {{- (aside_link.title ?: aside_text)|esc_html -}}
+    </a>
+  {% elseif aside_text %}
+    <span class="section__aside-label">{{ aside_text|esc_html }}</span>
+  {% endif %}
+</div>

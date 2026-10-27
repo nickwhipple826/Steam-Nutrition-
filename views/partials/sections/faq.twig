@@ -1,0 +1,28 @@
+{#
+  sections/faq.twig
+  ---------------------------------------------------------------------
+  Heading on the left, questions on the right from 960px. Each is a
+  <details>, so it opens with no script and the answer is always in
+  the page.
+#}
+<section class="section faq" data-scheme="{{ color|default('iron') }}">
+  <div class="section__inner">
+    {% include 'views/partials/components/rail-tag.twig' with { text: rail_text } %}
+
+    <div class="faq__grid">
+      {% include 'views/partials/components/section-head.twig' %}
+
+      <div class="faq__list">
+        {% for item in items %}
+          <details class="faq__item" {{ open_first and loop.first ? 'open' }}>
+            <summary class="faq__q">
+              <span>{{ item.question|esc_html }}</span>
+              <span class="faq__chev" aria-hidden="true"></span>
+            </summary>
+            <div class="faq__a">{{ item.answer|wp_kses_post }}</div>
+          </details>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</section>

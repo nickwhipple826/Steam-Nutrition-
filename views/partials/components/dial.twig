@@ -1,0 +1,20 @@
+{#
+  components/dial.twig
+  ---------------------------------------------------------------
+  A small pressure dial, decorative only. Same 270-degree sweep as
+  gauge.twig (7:30 to 4:30), drawn as a lit arc plus a needle.
+
+  {% include 'views/partials/components/dial.twig' with { level: 0.6 } %}
+
+  level  0–1. The arc uses pathLength 100, so the dash is just
+         level × 100; the needle angle is 135° + 270° × level.
+#}
+{% set lvl = min(max(level|default(0.5), 0), 1) %}
+<svg class="dial" viewBox="0 0 120 120" aria-hidden="true" focusable="false">
+  <circle cx="60" cy="60" r="56" class="dial__bezel"/>
+  <path d="M28.9 91.1A44 44 0 1 1 91.1 91.1" class="dial__track" pathLength="100"/>
+  <path d="M28.9 91.1A44 44 0 1 1 91.1 91.1" class="dial__fill" pathLength="100"
+        stroke-dasharray="{{ (lvl * 100)|round(1) }} 100"/>
+  <path d="M60 60 92 60" class="dial__needle" transform="rotate({{ (135 + 270 * lvl)|round(1) }} 60 60)"/>
+  <circle cx="60" cy="60" r="6" class="dial__cap"/>
+</svg>

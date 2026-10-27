@@ -1,0 +1,11 @@
+{# The account section's own nav, shared by every signed-in screen. #}
+<nav class="account-nav" aria-label="Account">
+  <ul>
+    {% for item in account_nav %}
+      <li>
+        <a href="{{ item.url|esc_url }}" class="account-nav__link{{ item.current ? ' is-current' }}"
+           {{ item.current ? 'aria-current="page"' }}>{{ item.label|esc_html }}</a>
+      </li>
+    {% endfor %}
+  </ul>
+</nav>

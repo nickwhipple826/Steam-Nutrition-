@@ -1,0 +1,33 @@
+{#
+  sections/cta-band.twig
+  ---------------------------------------------------------------------
+  Closing plate: seal + heading + line on the left, buttons right.
+#}
+<section class="section cta-band" data-scheme="{{ color|default('soot') }}">
+  <div class="section__inner">
+    <div class="cta-band__plate">
+      <div class="cta-band__copy">
+        {% include 'views/partials/components/seal.twig' with { text: seal } only %}
+        <div>
+          <h2 class="cta-band__heading brass-face">{{ heading|esc_html }}</h2>
+          {% if copy %}<p class="cta-band__line">{{ copy|esc_html }}</p>{% endif %}
+        </div>
+      </div>
+
+      {% if buttons %}
+        <div class="cta-band__actions">
+          {% for row in buttons %}
+            {% if row.button.url %}
+              {% include 'views/partials/components/button.twig' with {
+                label: row.button.title,
+                url: row.button.url,
+                target: row.button.target,
+                variant: loop.first ? 'primary' : 'outline',
+              } only %}
+            {% endif %}
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</section>

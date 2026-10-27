@@ -1,0 +1,28 @@
+{% import 'macros/picture.twig' as picture %}
+
+{#
+  sections/gallery.twig
+  ---------------------------------------------------------------------
+  Four-column grid; optionally the first two photos take two columns
+  each. Captions are the Media Library captions.
+#}
+<section class="section gallery" data-scheme="{{ color|default('iron') }}">
+  <div class="section__inner">
+    {% include 'views/partials/components/rail-tag.twig' with { text: rail_text } %}
+    {% include 'views/partials/components/section-head.twig' %}
+
+    <ul class="gallery__grid{{ feature_first ? ' gallery__grid--feature' }}">
+      {% for id in images %}
+        {% set caption = function('wp_get_attachment_caption', id) %}
+        <li class="gallery__item">
+          <figure>
+            <div class="gallery__shot">
+              {{ picture.render(id, loop.index <= 2 and feature_first ? 'large' : 'medium_large', null, 'gallery__img') }}
+            </div>
+            {% if caption %}<figcaption class="gallery__caption">{{ caption|esc_html }}</figcaption>{% endif %}
+          </figure>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+</section>

@@ -241,3 +241,62 @@ main > [data-scheme] + [data-scheme] {
 .seam {
   @include seam;
 }
+
+// ---------------------------------------------------------------------
+// Right-hand label in a heading row — "POINT VALUES SET IN SMILE",
+// "FOLLOW ON INSTAGRAM →". See components/section-head.twig.
+// ---------------------------------------------------------------------
+.section__aside-label {
+  font-family: var(--ff-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted-text-color);
+
+  @at-root a#{&} {
+    color: var(--accent-text-color);
+    text-decoration: none;
+    border-bottom: 1px solid currentColor;
+    padding-bottom: 2px;
+
+    &:hover { color: var(--heading-text-color); }
+  }
+}
+
+// ---------------------------------------------------------------------
+// Dial — components/dial.twig. Decorative pressure dial used by the
+// member card and the tier cards.
+// ---------------------------------------------------------------------
+.dial {
+  display: block;
+  width: 64px;
+  height: 64px;
+  flex: none;
+}
+
+.dial__bezel {
+  fill: $color-black;
+  stroke: var(--frame-color, #{$color-gold-deep});
+  stroke-width: 3;
+}
+
+.dial__track,
+.dial__fill {
+  fill: none;
+  stroke-width: 7;
+}
+
+.dial__track { stroke: $color-rule-dark; }
+
+.dial__fill {
+  stroke: var(--seal-color, #{$color-vermilion});
+  stroke-linecap: butt;
+}
+
+.dial__needle {
+  stroke: $color-gold-light;
+  stroke-width: 3;
+  stroke-linecap: round;
+}
+
+.dial__cap { fill: $color-gold; }
