@@ -1,0 +1,4 @@
+
+# Installer backups
+.*-backup-*/
+*.bak

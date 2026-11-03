@@ -5,8 +5,8 @@ namespace MMM\Shopify;
 use MMM\Traits\Singleton;
 
 /**
- * /cart and /account/… — store pages with no WordPress post behind
- * them, routed the same way ProductRoute routes /products/{handle}.
+ * /cart, /account/… and /search — store pages with no WordPress post
+ * behind them, routed the same way ProductRoute routes /products/{handle}.
  *
  * All of them are one person's data, so every one is sent no-cache.
  * WP Engine's page cache also needs to be told to leave them alone:
@@ -21,7 +21,7 @@ class StoreRoutes
   public const QUERY_VAR = 'steam_store';
   public const PARAM_VAR = 'steam_store_param';
 
-  private const REWRITE_VERSION = '1';
+  private const REWRITE_VERSION = '2';
   private const REWRITE_OPTION = 'steam_store_rewrite_version';
 
   /** URL pattern => route name. */
@@ -33,6 +33,7 @@ class StoreRoutes
     '^account/logout/?$' => 'account-logout',
     '^account/orders/?$' => 'account-orders',
     '^account/orders/([0-9]+)/?$' => 'account-order',
+    '^search/?$' => 'search',
   ];
 
   public function addRewrites(): void
@@ -100,7 +101,11 @@ class StoreRoutes
     }
 
     $classes = array_diff( $classes, [ 'home', 'blog' ] );
-    $classes[] = str_starts_with( $route, 'account' ) ? 'account-page' : 'cart-page';
+    $classes[] = match ( true ) {
+      str_starts_with( $route, 'account' ) => 'account-page',
+      'search' === $route => 'search-page',
+      default => 'cart-page',
+    };
 
     return array_values( $classes );
   }

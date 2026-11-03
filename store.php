@@ -1,12 +1,16 @@
 <?php
 /**
- * /cart and /account/… — routed here by MMM\Shopify\StoreRoutes.
+ * /cart, /account/… and /search — routed here by MMM\Shopify\StoreRoutes.
  */
 
-use MMM\Controllers\{AccountController, CartController};
+use MMM\Controllers\{AccountController, CartController, SearchController};
 use MMM\Shopify\StoreRoutes;
 
 $route = StoreRoutes::route();
 
-$controller = 'cart' === $route ? new CartController() : new AccountController( $route );
+$controller = match ( $route ) {
+  'cart' => new CartController(),
+  'search' => new SearchController(),
+  default => new AccountController( $route ),
+};
 $controller->render();

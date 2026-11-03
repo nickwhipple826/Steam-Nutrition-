@@ -17,7 +17,7 @@ use MMM\Services\{FieldGroupRegistryService,
   ViteService};
 use MMM\Setup\OptionsPage;
 use MMM\Setup\Security;
-use MMM\Shopify\{CartApi, ProductRoute, StoreRoutes};
+use MMM\Shopify\{CartApi, NewsletterApi, ProductRoute, SearchApi, ShopifyConnect, StoreRoutes};
 use MMM\Traits\Singleton;
 use Timber\Timber;
 
@@ -176,6 +176,15 @@ class Theme
     // /cart and /account/…, plus the cart REST API the drawer uses
     StoreRoutes::getInstance();
     CartApi::getInstance();
+
+    // /wp-json/steam/v1/search — the header's live product results
+    SearchApi::getInstance();
+
+    // /wp-json/steam/v1/newsletter — signup + one-time welcome code
+    NewsletterApi::getInstance();
+
+    // Site Settings → Shopify Connection: one-time OAuth for the Admin API
+    ShopifyConnect::getInstance();
 
     // Register hooks
     add_action( 'after_setup_theme', [ $this, 'setup' ] );

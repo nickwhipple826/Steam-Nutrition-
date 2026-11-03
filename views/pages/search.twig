@@ -1,0 +1,106 @@
+{% extends 'views/layouts/base.twig' %}
+
+{#
+  pages/search.twig
+  ---------------------------------------------------------------------
+  /search?q=…, rendered by SearchController from Shopify's search.
+
+  Wears the collection page's classes and data-shop hooks on purpose:
+  the grid, the cards and the Load more button are the same thing, and
+  ui/shop-filters.ts appends the next page here exactly as it does on
+  a collection.
+#}
+
+{% block content %}
+
+  <div class="shop search-page" data-shop>
+
+    <section class="section shop__head" data-scheme="iron">
+      <div class="section__inner">
+        <span class="eyebrow"><span class="eyebrow__dot"></span>探 · Search</span>
+
+        <h1 class="shop__title brass-face">
+          {{ search.query ? search.query : 'Search the shop' }}
+        </h1>
+
+        <form class="search-form search-page__form" role="search" method="get" action="{{ site.search_url|esc_url }}">
+          <label class="screen-reader-text" for="search-page-input">Search products</label>
+          <svg class="search-form__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true">
+            <circle cx="11" cy="11" r="7"/><path d="m20 20-3.6-3.6"/>
+          </svg>
+          <input id="search-page-input" class="search-form__input" type="search" name="q"
+                 value="{{ raw_query|esc_attr }}" placeholder="Pre-workout, hoodie, creatine…"
+                 autocomplete="off" enterkeyhint="search" {{ search.query ? '' : 'autofocus' }}>
+          <button type="submit" class="button primary search-form__go">Search</button>
+        </form>
+      </div>
+    </section>
+
+    <div class="seam"></div>
+
+    <section class="section shop__body" data-scheme="iron">
+      <div class="section__inner">
+
+        {% if search.products %}
+
+          <div class="shop__toolbar">
+            <p class="shop__count" data-shop-count>
+              {%- if is_paged -%}
+                Showing {{ search.products|length }} more
+              {%- else -%}
+                {{ search.total }} {{ search.total == 1 ? 'result' : 'results' }}
+              {%- endif -%}
+            </p>
+          </div>
+
+          <ul class="shop__grid" data-product-grid>
+            {% for product in search.products %}
+              <li>{% include 'views/partials/components/product-card.twig' with { product: product } only %}</li>
+            {% endfor %}
+          </ul>
+
+          {% if next_url %}
+            <div class="shop__more">
+              <a class="button outline" data-shop-more href="{{ next_url|esc_url }}">Load more</a>
+            </div>
+          {% endif %}
+
+        {% elseif not search.configured %}
+
+          <div class="shop__blank">
+            <p class="shop__blank-lead">Search is not connected yet.</p>
+            {% if function('current_user_can', 'manage_options') %}
+              <p class="shop__blank-note">
+                Search reads the Shopify catalogue, so it needs SHOPIFY_STORE_DOMAIN and
+                SHOPIFY_STOREFRONT_TOKEN in <code>wp-config.php</code>, same as the collection pages.
+              </p>
+            {% endif %}
+          </div>
+
+        {% elseif too_short %}
+
+          <div class="shop__blank">
+            <p class="shop__blank-lead">Type at least {{ min_length }} characters.</p>
+          </div>
+
+        {% elseif search.query %}
+
+          <div class="shop__blank">
+            <p class="shop__blank-lead">Nothing matches “{{ search.query|esc_html }}”.</p>
+            <p class="shop__blank-note">Try a broader word — “hoodie” rather than “black forged hoodie XL”.</p>
+          </div>
+
+        {% else %}
+
+          <div class="shop__blank">
+            <p class="shop__blank-lead">Search supplements, apparel and merch.</p>
+          </div>
+
+        {% endif %}
+
+      </div>
+    </section>
+
+  </div>
+
+{% endblock %}

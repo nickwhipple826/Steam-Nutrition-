@@ -35,7 +35,7 @@ class NewsletterBandLayout extends BaseLayout {
       ->addTab( 'form' )
       ->addText( 'action', [
         'label' => 'Form Action URL',
-        'instructions' => 'Where the address is posted — your Klaviyo or Mailchimp endpoint. Leave empty and the form validates and shows the success message without sending anywhere, which is fine for staging but will silently drop signups in production.',
+        'instructions' => 'Leave empty to use the welcome offer (Site Settings → Welcome Offer): signups go to Shopify and each one gets a one-time code. Fill in only to send this form to Klaviyo/Mailchimp instead. With the welcome offer off AND this empty, the form shows the success message without sending anywhere.',
       ] )
       ->addText( 'field_name', [
         'label' => 'Email Field Name',

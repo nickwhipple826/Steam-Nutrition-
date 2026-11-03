@@ -172,8 +172,10 @@ class ShopifyCollectionQuery
 
   /**
    * Flatten one product edge into the shape every template expects.
+   * Public so ShopifySearch shapes its results the same way and
+   * product-card.twig renders them unchanged.
    */
-  private static function shapeProduct( array $edge ): array
+  public static function shapeProduct( array $edge ): array
   {
     $node = $edge['node'];
 
@@ -398,8 +400,8 @@ class ShopifyCollectionQuery
   }
 
   /**
-   * Clear every cached collection response, the collection index and
-   * every cached product page.
+   * Clear every cached collection response, the collection index,
+   * every cached product page and every cached search.
    */
   public static function bustCache(): void
   {
@@ -410,6 +412,8 @@ class ShopifyCollectionQuery
       '_transient_timeout_shopify_collection_',
       '_transient_shopify_product_',
       '_transient_timeout_shopify_product_',
+      '_transient_shopify_search_',
+      '_transient_timeout_shopify_search_',
     ];
 
     foreach ( $prefixes as $prefix ) {

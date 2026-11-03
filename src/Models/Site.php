@@ -65,7 +65,7 @@ class Site extends TimberSite
 
   public function search_url(): string
   {
-    return $this->acfOption( 'search_url' ) ?: home_url( '/?s=' );
+    return $this->acfOption( 'search_url' ) ?: home_url( '/search/' );
   }
 
   public function account_url(): string
@@ -76,6 +76,22 @@ class Site extends TimberSite
   public function cart_url(): string
   {
     return $this->acfOption( 'cart_url' ) ?: home_url( '/cart/' );
+  }
+
+  // ---- Welcome offer --------------------------------------------------
+
+  /**
+   * True when Newsletter Band forms should sign up through the theme
+   * and hand out a welcome code (Site Settings → Welcome Offer).
+   */
+  public function welcome_enabled(): bool
+  {
+    return \MMM\Shopify\WelcomeOffer::isEnabled();
+  }
+
+  public function welcome_offer(): string
+  {
+    return \MMM\Shopify\WelcomeOffer::offerLabel();
   }
 
   // ---- Footer ---------------------------------------------------------

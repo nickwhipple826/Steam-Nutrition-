@@ -8,6 +8,8 @@ import { initNewsletter } from './ui/newsletter.js';
 import { initProduct } from './ui/product.js';
 import { initCart } from './ui/cart.js';
 import { initReveal } from './ui/reveal.js';
+import { initHeroSlider } from './ui/hero-slider.js';
+import { initSearch } from './ui/search.js';
 
 import '@css/main.scss';
 
@@ -15,6 +17,8 @@ document.addEventListener( 'DOMContentLoaded', () => {
   const modules: { name: string, fn: () => any }[] = [
     { name: 'nav', fn: initNav },
     { name: 'header', fn: initHeader },
+    { name: 'search', fn: initSearch },
+    { name: 'hero-slider', fn: initHeroSlider },
     { name: 'modals', fn: initModals },
     { name: 'shop-filters', fn: initShopFilters },
     { name: 'rails', fn: initRails },

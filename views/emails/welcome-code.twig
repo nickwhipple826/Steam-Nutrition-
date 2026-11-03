@@ -1,0 +1,90 @@
+{#
+  emails/welcome-code.twig
+  ---------------------------------------------------------------------
+  The welcome-code email, rendered by Shopify\WelcomeOffer and sent
+  through wp_mail (so through whatever SMTP plugin the site uses).
+
+  Email clients ignore stylesheets and most modern CSS, so this is
+  tables and inline styles on purpose, in the brand's brass-on-black.
+  The code is plain selectable text rather than an image, so it can be
+  copied on a phone.
+#}
+{%- set brass = '#C8964F' -%}
+{%- set parchment = '#F1E6D0' -%}
+{%- set muted = '#CDBFA5' -%}
+{%- set name = site.name|default('Steam Nutrition') -%}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark light">
+  <title>Your welcome code</title>
+</head>
+<body style="margin:0;padding:0;background-color:#0E0C0A;">
+  <div style="display:none;max-height:0;overflow:hidden;opacity:0;">{{ offer|esc_html }} — your code is {{ code|esc_html }}</div>
+
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#0E0C0A;">
+    <tr>
+      <td align="center" style="padding:32px 16px;">
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"
+               style="max-width:560px;background-color:#17120D;border:1px solid #33291F;">
+
+          <tr>
+            <td align="center" style="padding:32px 32px 8px;font-family:Georgia,'Times New Roman',serif;font-size:13px;letter-spacing:4px;text-transform:uppercase;color:{{ brass }};">
+              {{ name|esc_html }}
+            </td>
+          </tr>
+
+          <tr>
+            <td align="center" style="padding:8px 32px 0;font-family:Impact,'Arial Narrow Bold',sans-serif;font-size:34px;line-height:1.1;letter-spacing:1px;text-transform:uppercase;color:{{ parchment }};">
+              Welcome aboard
+            </td>
+          </tr>
+
+          <tr>
+            <td align="center" style="padding:16px 32px 0;font-family:Arial,Helvetica,sans-serif;font-size:16px;line-height:1.6;color:{{ muted }};">
+              {{ intro|default('Thanks for signing up. Here is your code — enter it at checkout.')|esc_html }}
+            </td>
+          </tr>
+
+          <tr>
+            <td align="center" style="padding:28px 32px 8px;">
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="border:2px dashed {{ brass }};">
+                <tr>
+                  <td align="center" style="padding:18px 28px;font-family:'Courier New',Courier,monospace;font-size:26px;font-weight:bold;letter-spacing:3px;color:{{ parchment }};">
+                    {{ code|esc_html }}
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <tr>
+            <td align="center" style="padding:4px 32px 0;font-family:'Courier New',Courier,monospace;font-size:13px;letter-spacing:2px;text-transform:uppercase;color:{{ brass }};">
+              {{ offer|esc_html }}
+            </td>
+          </tr>
+
+          <tr>
+            <td align="center" style="padding:28px 32px 36px;">
+              <a href="{{ shop_url|esc_url }}"
+                 style="display:inline-block;padding:14px 30px;background-color:#A8301C;font-family:Arial,Helvetica,sans-serif;font-size:14px;font-weight:bold;letter-spacing:2px;text-transform:uppercase;text-decoration:none;color:#FBF4E6;">
+                Shop now
+              </a>
+            </td>
+          </tr>
+
+          <tr>
+            <td align="center" style="padding:18px 32px;border-top:1px solid #33291F;font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:1.5;color:#8C7F6A;">
+              One use per customer. Enter it in the discount box at checkout.<br>
+              You are getting this because you signed up at {{ shop_url|replace({'https://': '', 'http://': ''})|trim('/')|esc_html }}.
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>

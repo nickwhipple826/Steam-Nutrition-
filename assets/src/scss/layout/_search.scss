@@ -1,0 +1,404 @@
+// =====================================================================
+// layout/_search.scss
+// ---------------------------------------------------------------------
+// The shared search field, the header's search dialog (ui/search.ts)
+// and the /search results page.
+// =====================================================================
+
+@use '@css/utils/variables/colors' as *;
+
+// ---------------------------------------------------------------------
+// Field — header dialog, mobile drawer and the results page all use it
+// ---------------------------------------------------------------------
+.search-form {
+  position: relative;
+  display: flex;
+  align-items: center;
+  border: 1px solid $color-rule-dark;
+  border-radius: 2px;
+  background-color: $color-black;
+  transition: border-color 150ms ease;
+
+  &:focus-within { border-color: $color-gold; }
+}
+
+.search-form__icon {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  margin-left: 1rem;
+  color: $color-smoke;
+}
+
+.search-form__input {
+  flex: 1;
+  min-width: 0;
+  height: 3.25rem;
+  padding: 0 0.875rem;
+  border: 0;
+  background: none;
+  // 16px minimum, or iOS zooms the page when the field takes focus.
+  font-size: max(1rem, 16px);
+  color: $color-parchment;
+  outline: none;
+
+  &::placeholder { color: $color-smoke; opacity: 0.8; }
+
+  // The clear button WebKit adds to type=search; Esc does the same job.
+  &::-webkit-search-cancel-button { appearance: none; }
+}
+
+.search-form__submit {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 3.25rem;
+  height: 3.25rem;
+  padding: 0;
+  border: 0;
+  border-left: 1px solid $color-rule-dark;
+  background: none;
+  color: $color-gold;
+  cursor: pointer;
+  transition: color 150ms ease, background-color 150ms ease;
+
+  svg { width: 18px; height: 18px; }
+
+  &:hover,
+  &:focus-visible {
+    background-color: color-mix(in srgb, $color-gold 12%, transparent);
+    color: $color-gold-light;
+  }
+}
+
+// ---------------------------------------------------------------------
+// Dialog
+// ---------------------------------------------------------------------
+.site-search {
+  position: fixed;
+  inset: 0;
+  z-index: 320;
+
+  .admin-bar & {
+    top: 32px;
+
+    @media (max-width: 782px) { top: 46px; }
+  }
+}
+
+.site-search__backdrop {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(6, 5, 4, 0.78);
+  backdrop-filter: blur(3px);
+  opacity: 0;
+  transition: opacity 260ms ease;
+
+  .is-open & { opacity: 1; }
+}
+
+.site-search__panel {
+  position: relative;
+  max-height: 100%;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  border-bottom: 1px solid $color-gold-deep;
+  background-color: $color-pitch;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.55);
+  transform: translateY(-1.5rem);
+  opacity: 0;
+  transition: transform 260ms cubic-bezier(0.2, 0.7, 0.3, 1), opacity 200ms ease;
+
+  .is-open & {
+    transform: none;
+    opacity: 1;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transform: none;
+  }
+}
+
+.site-search__inner {
+  max-width: 56rem;
+  margin-inline: auto;
+  padding: clamp(1rem, 3vw, 2rem) var(--space-m, clamp(1.25rem, 5vw, 4rem)) clamp(1.5rem, 3vw, 2.5rem);
+}
+
+.site-search__form {
+  .search-form__input {
+    height: 3.75rem;
+    font-family: var(--ff-display);
+    font-size: clamp(1.125rem, 2.4vw, 1.5rem);
+    letter-spacing: 0.04em;
+  }
+
+  .search-form__submit { height: 3.75rem; width: 3.75rem; }
+}
+
+// Loading: the field's bottom edge runs a brass sweep.
+.site-search.is-loading .site-search__form::after {
+  content: '';
+  position: absolute;
+  inset: auto 0 -1px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, $color-gold, transparent);
+  background-size: 40% 100%;
+  background-repeat: no-repeat;
+  animation: search-sweep 900ms linear infinite;
+}
+
+@keyframes search-sweep {
+  from { background-position: -40% 0; }
+  to   { background-position: 140% 0; }
+}
+
+.site-search__close {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex: none;
+  height: 3.75rem;
+  padding: 0 1rem;
+  border: 0;
+  border-left: 1px solid $color-rule-dark;
+  background: none;
+  font-family: var(--ff-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: $color-smoke;
+  cursor: pointer;
+
+  svg { width: 18px; height: 18px; }
+
+  &:hover,
+  &:focus-visible { color: $color-parchment; }
+
+  @media (max-width: 599px) {
+    padding: 0 0.875rem;
+
+    .site-search__close-label { display: none; }
+  }
+}
+
+// Announced, not shown — the results speak for themselves visually.
+.site-search__status {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.site-search__label {
+  display: block;
+  margin-bottom: 0.625rem;
+  font-family: var(--ff-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: $color-smoke;
+}
+
+// ---- before typing: browse the top-level menu -----------------------
+.site-search__browse {
+  margin-top: 1.5rem;
+
+  ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  a {
+    display: inline-block;
+    padding: 0.5rem 0.875rem;
+    border: 1px solid $color-rule-dark;
+    border-radius: 2px;
+    font-family: var(--ff-display);
+    font-size: 0.875rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: $color-parchment;
+    transition: border-color 150ms ease, color 150ms ease;
+
+    &:hover,
+    &:focus-visible {
+      border-color: $color-gold;
+      color: $color-gold-light;
+    }
+  }
+}
+
+// ---- results ---------------------------------------------------------
+.site-search__results:not(:empty) {
+  margin-top: 1.25rem;
+}
+
+.site-search__suggest {
+  margin-bottom: 1rem;
+
+  ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+}
+
+.site-search__chip {
+  display: inline-block;
+  padding: 0.375rem 0.75rem;
+  border: 1px solid $color-gold-deep;
+  border-radius: 2px;
+  font-size: 0.875rem;
+  text-decoration: none;
+  color: $color-gold-light;
+
+  &:hover,
+  &:focus-visible {
+    border-color: $color-gold;
+    background-color: color-mix(in srgb, $color-gold 12%, transparent);
+    outline: none;
+  }
+}
+
+.site-search__products {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid $color-rule-dark;
+}
+
+.search-hit {
+  display: grid;
+  grid-template-columns: 4rem 1fr auto;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem 0.5rem;
+  border-bottom: 1px solid $color-rule-dark;
+  text-decoration: none;
+  color: $color-parchment;
+  transition: background-color 150ms ease;
+
+  &:hover,
+  &:focus-visible {
+    background-color: $color-soot-raised;
+    outline: none;
+
+    .search-hit__title { color: $color-gold-light; }
+  }
+
+  &:focus-visible { box-shadow: inset 2px 0 0 $color-gold; }
+}
+
+.search-hit__shot {
+  aspect-ratio: 1;
+  overflow: hidden;
+  border: 1px solid $color-rule-dark;
+  background-color: $color-black;
+
+  img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+  }
+
+  .search-hit--sold-out & img { opacity: 0.5; }
+}
+
+.search-hit__info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 0;
+}
+
+.search-hit__title {
+  font-family: var(--ff-display);
+  font-size: 1.0625rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  transition: color 150ms ease;
+}
+
+.search-hit__type {
+  font-family: var(--ff-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: $color-smoke;
+}
+
+.search-hit__price {
+  font-family: var(--ff-mono);
+  font-size: 0.9375rem;
+  color: $color-gold-light;
+  text-align: right;
+  white-space: nowrap;
+
+  s {
+    display: block;
+    font-size: 0.75rem;
+    color: $color-smoke;
+  }
+}
+
+.search-hit__flag {
+  font-size: 0.6875rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: $color-smoke;
+}
+
+.site-search__all {
+  display: inline-flex;
+  gap: 0.375em;
+  margin-top: 1.125rem;
+  font-family: var(--ff-mono);
+  font-size: 0.8125rem;
+  letter-spacing: 0.08em;
+  text-decoration: none;
+  color: $color-gold;
+  border-bottom: 1px solid currentColor;
+  padding-bottom: 2px;
+
+  strong { font-weight: 500; color: $color-gold-light; }
+
+  &:hover,
+  &:focus-visible { color: $color-gold-light; outline: none; }
+}
+
+.site-search__empty {
+  margin: 0;
+  padding: 1rem 0;
+  color: $color-body-muted;
+}
+
+// ---------------------------------------------------------------------
+// /search page
+// ---------------------------------------------------------------------
+.search-page__form {
+  max-width: 40rem;
+  margin-top: var(--space-s, 1.25rem);
+
+  .search-form__go {
+    flex: none;
+    height: 3.25rem;
+    border-radius: 0;
+  }
+
+  @media (max-width: 599px) {
+    .search-form__go { display: none; }
+  }
+}
